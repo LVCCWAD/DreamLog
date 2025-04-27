@@ -2,6 +2,8 @@ import './bootstrap';
 import { createInertiaApp } from '@inertiajs/react'
 import { createRoot } from 'react-dom/client'
 import '../css/app.css'
+import '@mantine/core/styles.css';
+import { MantineProvider } from '@mantine/core';
 
 createInertiaApp({
   resolve: name => {
@@ -9,6 +11,6 @@ createInertiaApp({
     return pages[`./Pages/${name}.jsx`]
   },
   setup({ el, App, props }) {
-    createRoot(el).render(<App {...props} />)
+    createRoot(el).render( <MantineProvider><App {...props} /></MantineProvider>)
   },
 })

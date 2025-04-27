@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 
 class UserAuth extends Controller
@@ -19,7 +20,6 @@ class UserAuth extends Controller
             'password' => ['required', 'min:8', 'max:200'],
         ]);
 
-        
         $registration['password'] = bcrypt($registration['password']);
 
         try {
@@ -57,7 +57,7 @@ class UserAuth extends Controller
                     $request->session()->regenerate();
 
                    
-                    return redirect()->intended('/');
+                    return redirect()->intended('/home');
                 } else {
                     
                     return redirect()->back()->withErrors([

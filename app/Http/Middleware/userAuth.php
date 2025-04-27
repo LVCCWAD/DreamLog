@@ -18,6 +18,6 @@ class userAuth
         if(auth()->guard('web')->check()){
             return $next($request);
         }
-        return redirect('/');
+        return redirect('/home');
     }
 }
