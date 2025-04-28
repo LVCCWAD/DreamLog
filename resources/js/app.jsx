@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client'
 import '../css/app.css'
 import '@mantine/core/styles.css';
 import { MantineProvider } from '@mantine/core';
+import '@mantine/carousel/styles.css';
 
 createInertiaApp({
   resolve: name => {

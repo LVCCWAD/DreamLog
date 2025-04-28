@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button,Modal, Group, TextInput,PasswordInput, Text } from '@mantine/core';
+import { Button,Modal, Group, TextInput,PasswordInput, Text,ActionIcon } from '@mantine/core';
 import DreamLog from '../assets/DreamLog.png';
 import { useDisclosure } from '@mantine/hooks';
 import { useForm, hasLength } from '@mantine/form';
@@ -7,7 +7,7 @@ import { useForm as useInertiaForm } from '@inertiajs/react';
 
 
 
-function Navbar({Lopen, setLopen}) {
+function Navbar({Lopen = false, setLopen , isUser}) {
     const [logInOpen,setLogInOpen] = useState(false)
     const [signUpOpened, { open: openSignUp, close: closeSignUp }] = useDisclosure(false);
     const [loginOpened, { open: openLogin, close: closeLogin }] = useDisclosure(false);
@@ -18,7 +18,10 @@ function Navbar({Lopen, setLopen}) {
             openLogin()
         }
         if(closeLogin){
-            setLopen(false)
+            if(setLopen){
+                setLopen(false)
+            }
+                
         }
       }, [Lopen]);
 
@@ -34,15 +37,26 @@ function Navbar({Lopen, setLopen}) {
       });
 
 
-      const signUP = (e) => {
+      const signUP = async(e) => {
         e.preventDefault();
-        register('/register');
+        await register('/register');
+        window.location.href='/'; 
     }
 
-    const logIN = (e) => {
+    const logIN = async(e) => {
         e.preventDefault();
-        logIn('login');
+        await logIn('login');
+        window.location.href='/'; 
     }
+
+    const handleLogout = () => {
+        Inertia.post('/logout', {}, {
+          onSuccess: () => {
+              window.location.href='/'; 
+          }
+        });
+        
+      };
 
   return (<>
     
@@ -112,11 +126,55 @@ function Navbar({Lopen, setLopen}) {
 
         <header className='w-full h-[90px] flex flex-row justify-between items-center sticky border border-b-gray-500'>
             <img src={DreamLog} className='h-[150px] ml-8'/>
-            <div className='flex gap-3 mr-8'>
-                <Button radius="xl" size='compact-xl' color="rgba(219, 0, 20, 1)" variant="light" onClick={openSignUp}><span className='px-4'>SignUp</span></Button>
+            {
+                isUser ? 
+                
+                (<div className='flex flex-row gap-4 mr-3'>
+                    <TextInput
+                        variant="filled"
+                        radius="xl"
+                        size="lg"
+                        placeholder="Input placeholder"
+                    />
 
-                <Button radius="xl" size='compact-xl' color="rgba(241, 43, 107, 1)" onClick={openLogin}><span className='px-4'>LogIn</span></Button>
-            </div>
+                    <ActionIcon
+                        variant="gradient"
+                        size="xl"
+                        aria-label="Gradient action icon"
+                        gradient={{ from: 'gray', to: 'gray', deg: 171 }}
+                        >
+                        
+                    </ActionIcon>
+
+                    <ActionIcon
+                        variant="gradient"
+                        size="xl"
+                        aria-label="Gradient action icon"
+                        gradient={{ from: 'gray', to: 'gray', deg: 171 }}
+                        >
+                        
+                    </ActionIcon>
+
+                    <ActionIcon
+                        variant="gradient"
+                        size="xl"
+                        aria-label="Gradient action icon"
+                        gradient={{ from: 'gray', to: 'gray', deg: 171 }}
+                        >
+                        
+                    </ActionIcon>
+
+                  </div>) 
+                
+                :(
+                   <div className='flex gap-3 mr-8'>
+                        <Button radius="xl" size='compact-xl' color="rgba(219, 0, 20, 1)" variant="light" onClick={openSignUp}><span className='px-4'>SignUp</span></Button>
+
+                        <Button radius="xl" size='compact-xl' color="rgba(241, 43, 107, 1)" onClick={openLogin}><span className='px-4'>LogIn</span></Button>
+                    </div> 
+                )
+            }
+            
         </header>
     </>
   )

@@ -57,7 +57,7 @@ class UserAuth extends Controller
                     $request->session()->regenerate();
 
                    
-                    return redirect()->intended('/home');
+                    return redirect()->intended('/');
                 } else {
                     
                     return redirect()->back()->withErrors([

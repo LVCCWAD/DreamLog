@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class userAuth
+class notAuth
 {
     /**
      * Handle an incoming request.
@@ -15,9 +15,9 @@ class userAuth
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(auth()->guard('web')->check()){
+        if(!auth()->guard('web')->check()){
             return $next($request);
         }
-        return redirect('/landingpage');
+        return  redirect('/');
     }
 }
