@@ -58,7 +58,7 @@ function Navbar({Lopen = false, setLopen , isUser}) {
         
       };
 
-  return (<>
+  return (<div className='w-[100%]'>
     
         <Modal opened={signUpOpened} onClose={closeSignUp} title="SignUp" centered>
                 <form onSubmit={signUP}>
@@ -176,7 +176,7 @@ function Navbar({Lopen = false, setLopen , isUser}) {
             }
             
         </header>
-    </>
+    </div>
   )
 }
 

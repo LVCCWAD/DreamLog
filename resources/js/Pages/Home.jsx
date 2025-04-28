@@ -9,7 +9,7 @@ function Home({isUser}) {
   return (
     <>
         <Navbar isUser={isUser}/>
-        <div className='flex flex-col justify-center items-center gap-[100px] m-5'>
+        <div className='flex flex-col justify-center items-center gap-[100px] mt-5'>
           <section>
             <div className='m-5 p-5'>Top Blogs</div>
             <Carousel withIndicators className='h-[400px] w-[1400px]'>
@@ -46,7 +46,7 @@ function Home({isUser}) {
             </Carousel>
           </section>
 
-          <section>
+          <section className='w-[100%] bg-pink-50'>
             <div className='m-5 p-5'>Most Viewed</div>
             <div className='flex flex-row justify-center items-center gap-6'>
               <BlogCard/>
