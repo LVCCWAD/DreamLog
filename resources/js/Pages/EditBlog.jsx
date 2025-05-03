@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from 'react'
+import React, {useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
 import BlogComponentText from '../components/BlogComponentText';
 import BlogComponentImage from '../components/BlogComponentImage';
@@ -15,53 +15,102 @@ function EditBlog({blog, isUser}) {
     });
   
     const save = () => {
-      const newComponents = elements.map((element) => ({
+      const newComponents = elements.filter(element => {
+       
+        return !blogComponents.Components.some(obj => obj.position === element.props.position);
+      }).map(element => ({
         position: element.props.position,
         type: element.props.type,
         content: "",
       }));
-    
-      setBlogComponents(() => ({
-        Components: [...newComponents],
+      
+      
+      setBlogComponents(prevState => ({
+        Components: [...prevState.Components, ...newComponents],
       }));
-
     };
+
     
     useEffect(() => {
       console.log("Updated components:", blogComponents);
+      console.log("Updated elements:", elements);
     }, [blogComponents]);
 
-    const handleChange = (position, content) => {
-    
-      // blogComponents.Components.map((component) =>
-      //   component.prop.position == position ? component.content = content : ""
-      // )
+    useEffect(() => {
+      save()
+    }, [elements]);
 
+    const handleChange = (position, content) => {
+      setBlogComponents((prevState) => ({
+        ...prevState,
+        Components: prevState.Components.map((component) =>
+        component.position === position
+        ? { ...component, content }: component
       
+      ),
       
-      setBlogComponents((component) => elements.map((individualComponent) =>
-        individualComponent.position == position ? { 
-          position: element.props.position,
-          type: element.props.type,
-          content: content, 
-        } : { 
-          position: element.props.position,
-          type: element.props.type,
-          content: "",
+      }));
+      
+     }
+
+    const deleteElement = (positionToDelete) => {
+      console.log(positionToDelete)
+      setElements((el) => el.filter((el) => el.props.position !== positionToDelete));
+    
+      setBlogComponents((prevState) => ({
+        ...prevState,
+        Components: prevState.Components.filter((component) => component.position !== positionToDelete)
+      }))
+    };
+
+    const getNextPosition = (elements) => {
+      if (elements.length === 0) {
+        return 1; 
+      }
+    
+      let maxPosition = elements[0].props.position;
+      for (let i = 1; i < elements.length; i++) {
+        if (elements[i].props.position > maxPosition) {
+          maxPosition = elements[i].props.position;
         }
-    ));
-    }
+      }
+      return maxPosition + 1;
+    };
+    
+    
 
 
   const addTextComponent = () => {
-    const position = elements.length + 1;
-    setElements([...elements, <BlogComponentText type={"text"} position={position} handleChange={handleChange}/>]);
+    const position = getNextPosition(elements);
+    setElements([
+      ...elements,
+      <BlogComponentText
+        key={`text-${position}`}
+        position={position}
+        type={'text'}
+        content={""}
+        handleChange={handleChange}
+        deleteElement={deleteElement}
+        
+      />,
+    ]);
   };
 
   const addImageComponent = () => {
-    const position = elements.length;
-    setElements([...elements, <BlogComponentImage type={'image'} position={position} handleChange={handleChange}/>]);
-  };
+    const position = getNextPosition(elements);
+    setElements([
+      ...elements,
+      <BlogComponentImage
+        key={`image-${position}`}
+        position={position}
+        type={'image'}
+        content={""}
+        handleChange={handleChange}
+        deleteElement={deleteElement}
+       
+      />,
+    ]);
+  }
 
   
   return (
@@ -87,12 +136,16 @@ function EditBlog({blog, isUser}) {
                   </div>
 
                   {/* d2 marga components elements */}
-                    <div>
-                        {elements}
-                    </div>
+                  <div>
+                    {elements.map((element, index) => (
+                        <React.Fragment key={`element-${element.props.position}`}>
+                            {element}
+                        </React.Fragment>
+                    ))}
+                </div>
                 </div>
               </div>
-              <button onClick={()=> save()}>save</button>
+              
         </div>
         
     </>

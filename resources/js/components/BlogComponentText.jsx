@@ -8,17 +8,18 @@ import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
 import Superscript from '@tiptap/extension-superscript';
 import SubScript from '@tiptap/extension-subscript';
-import { Text } from '@mantine/core';
+import { Button, Text } from '@mantine/core';
 
-function BlogComponentText({position=0, type, handleChange}) {
+function BlogComponentText({position = componentPosition, type, handleChange, deleteElement}) {
 
-  const [content, setContent] = useState()
+  
+  const [componentContent, setComponentContent] = useState("")
   const [edit, setEdit] = useState(true)
-
+  
   useEffect(()=>{
-    handleChange(position, content)
-    console.log(content)
-  },[content])
+    handleChange(position, componentContent)
+    console.log(componentContent)
+  },[componentContent])
   
   const editor = useEditor({
     extensions: [
@@ -30,9 +31,9 @@ function BlogComponentText({position=0, type, handleChange}) {
       Highlight,
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
     ],
-    content,
+    componentContent,
     onUpdate: ({ editor }) => {
-      setContent(editor.getHTML()) 
+      setComponentContent(editor.getHTML()) 
     },
   })
 
@@ -42,7 +43,7 @@ function BlogComponentText({position=0, type, handleChange}) {
     <>
     {/*d2 marga edit text component */}
     <div className=''>
-      {content}
+      {componentContent}
       
       
        
@@ -85,13 +86,15 @@ function BlogComponentText({position=0, type, handleChange}) {
           </RichTextEditor>
         </div>):
         (<div>
-          <div dangerouslySetInnerHTML={{ __html: content }} />
+          <div dangerouslySetInnerHTML={{ __html: componentContent }} />
         </div>)
       }    
       
 
       
-        <button onClick={()=>setEdit(!edit)}>{edit ? "save":"output"}</button>
+        <Button onClick={()=>setEdit(!edit)}>{edit ? "save":"output"}</Button>
+        
+        <Button onClick={() => deleteElement(position)}>Delete</Button>
     </div>
     </>
   )
