@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
+use App\Models\Component;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -26,14 +27,58 @@ class BlogsController extends Controller
         $blog['user_id'] = auth()->guard('web')->id();
         $blog['Visibility'] = "private";
 
-        Blog::create($blog);
+        $createdBlog = Blog::create($blog);
+        
 
-        Log::info('Incoming request data:', $request->all());
+        return redirect("/editblog/{$createdBlog->id}");
+
+        
 
     }
 
     public function showEditBlog(Blog $blog){
         $isUser = Auth::check();
-        return Inertia("EditBlog",["blog"=>$blog, "isUser"=> $isUser]);
+        $blogComponents = $blog->Components;
+
+        return Inertia("EditBlog",["blog"=>$blog, "isUser"=> $isUser, "blogComponents"=>$blogComponents]);
+    }
+
+    public function createBlogComponents(Request $request,Blog $blog){
+        foreach($request->Components as $component){
+            if($component["type"] == "text"){
+                $comp = ["Position"=>$component["position"],
+                         "Type"=>"text",
+                         "Content"=>$component["content"],
+                         "blog_id"=>$blog->id];
+
+                Component::create($comp);
+            }
+            else if($component["type"] == "image"){
+                $comp = ["Position"=>$component["position"],
+                            "Type"=>"image",
+                            "blog_id"=>$blog->id,
+                            "Content" => null 
+                            ];
+
+                            if (isset($component['content']) && is_array($component['content']) && isset($component['content']['file']) && $component['content']['file']->isValid()) {
+                                $file = $component['content']['file'];
+                                $filePath = $file->store('Component', 'public');
+                                $comp['Content'] = $filePath;
+                            }
+                         
+                Component::create($comp);
+            }
+        }
+        Log::info('Incoming request data:', $request->all());
+    }
+
+    public function Profile (){
+        $user = Auth::user();
+        $userBlogs = $user->Blogs;
+        $userBlogs->load('Creator');
+        $isUser = Auth::check();
+
+
+        return inertia('ProfilePage',['user'=>$user,'userBlogs'=>$userBlogs,"isUser" => $isUser]);
     }
 }

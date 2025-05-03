@@ -1,44 +1,47 @@
 import { Button, FileInput } from '@mantine/core';
 import React, { useEffect, useState } from 'react'
 
-function BlogComponentImage({position, type="image", handleChange, deleteElement,}) {
-    const [image, setImage] = useState()
-    const [previewUrl, setPreviewUrl] = useState()
+function BlogComponentImage({position, type="image", handleChange, deleteElement,content, id=null}) {
+    const [image, setImage] = useState(null)
+    const [previewUrl, setPreviewUrl] = useState(content ? `http://localhost:8000/storage/${content}` : null)
 
     useEffect(() => {
-            if (image) {
-              const objectUrl = URL.createObjectURL(image);
-              setPreviewUrl(objectUrl);
-              
-              return () => URL.revokeObjectURL(objectUrl); 
-              
-            }
-          }, [image]);
-
-
-    useEffect(() => {
-      handleChange(position, image)
+        if (image) {
+            const objectUrl = URL.createObjectURL(image);
+            setPreviewUrl(objectUrl);
+            
+            
+            handleChange(position, { file: image });
+            
+            return () => URL.revokeObjectURL(objectUrl); 
+        }
     }, [image]);
-    
 
-  return (
-    <>
     
-      <div className=''>
-        {/*d2 marga edit image component */}
-          {
-              image && previewUrl  ? <img src={previewUrl} /> : <></>
-          }
-          <FileInput
-              label="Input Image"
-              placeholder="Input png/jpeg"
-              onChange={(file) => setImage(file)}
-          />
-      </div>
-              
-              <Button onClick={() => deleteElement(position)}>Delete</Button>
-    </>
-  )
+    const handleFileChange = (file) => {
+        if (file) {
+            setImage(file);
+        }
+    };
+
+    return (
+        <>
+            <div className=''>
+                {/*d2 marga edit image component */}
+                {
+                    previewUrl ? <img src={previewUrl} alt="Preview" className="my-3 max-h-[300px]" /> : <></>
+                }
+                <FileInput
+                    label="Input Image"
+                    placeholder="Input png/jpeg"
+                    accept="image/png,image/jpeg,image/jpg"
+                    onChange={handleFileChange}
+                />
+            </div>
+            
+            <Button onClick={() => deleteElement(position)}>Delete</Button>
+        </>
+    )
 }
 
 export default BlogComponentImage

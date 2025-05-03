@@ -6,7 +6,45 @@ import { Button, Text, Title,Drawer} from '@mantine/core';
 
 import { useForm as useInertiaForm} from '@inertiajs/react';
 
-function EditBlog({blog, isUser}) {
+function EditBlog({blog, isUser, blogComponents: dbComponents}) {
+    console.log(dbComponents)
+    useEffect(() => {
+      
+      let initialElements = [];
+      
+      
+      dbComponents.forEach((comp) => {
+        if (comp.Type === 'text') {
+          initialElements.push(
+            <BlogComponentText
+              key={`text-${comp.Position}`}
+              id={comp.id}
+              position={comp.Position}
+              type={'text'}
+              content={comp.Content}
+              handleChange={handleChange}
+              deleteElement={deleteElement}
+            />
+          );
+        } else if (comp.Type === 'image') {
+          initialElements.push(
+            <BlogComponentImage
+              key={`image-${comp.Position}`} 
+              position={comp.Position}
+              type={'image'}
+              id={comp.id}
+              content={comp.Content} 
+              handleChange={handleChange}
+              deleteElement={deleteElement}
+            />
+          );
+        }
+      });
+      
+      
+      setElements(initialElements);
+    }, []);
+
     const [elements, setElements] = useState([]);
 
     const { data: blogComponents, setData: setBlogComponents, post: createBlogComponents, processing: BlogComponentsProcessing, errors: BlogComponentsErrors } = useInertiaForm({ 
@@ -16,19 +54,30 @@ function EditBlog({blog, isUser}) {
   
     const save = () => {
       const newComponents = elements.filter(element => {
-       
         return !blogComponents.Components.some(obj => obj.position === element.props.position);
-      }).map(element => ({
-        position: element.props.position,
-        type: element.props.type,
-        content: "",
-      }));
-      
+      }).map(element => {
+        
+        const componentData = {
+          position: element.props.position,
+          type: element.props.type,
+          id: element.props.id ? element.props.id : null
+        };
+        
+        
+        if (element.props.type === 'image') {
+          componentData.content = {};
+        } else {
+          componentData.content = "";
+        }
+        
+        return componentData;
+      });
       
       setBlogComponents(prevState => ({
         Components: [...prevState.Components, ...newComponents],
       }));
     };
+
 
     
     useEffect(() => {
@@ -44,14 +93,11 @@ function EditBlog({blog, isUser}) {
       setBlogComponents((prevState) => ({
         ...prevState,
         Components: prevState.Components.map((component) =>
-        component.position === position
-        ? { ...component, content }: component
-      
-      ),
-      
+          component.position === position
+          ? { ...component, content }: component
+        ),
       }));
-      
-     }
+    }
 
     const deleteElement = (positionToDelete) => {
       console.log(positionToDelete)
@@ -112,6 +158,12 @@ function EditBlog({blog, isUser}) {
     ]);
   }
 
+  const publish = () => {
+    createBlogComponents(`/createcomponents/${blog.id}`, {
+        forceFormData: true,
+      });
+}
+
   
   return (
     <> 
@@ -127,7 +179,7 @@ function EditBlog({blog, isUser}) {
             {/* d2 marga editing Blog */}
             <div className='flex flex-col justify-center items-center'>
               <div className=' border border-b-black w-[1250px] p-10'>
-
+                  <Button onClick={()=> publish()}>Publish</Button>
                   {/*d2 marga Blog Details */}
                   <div className='flex flex-col justify-center items-center'>
                     <img src={`http://localhost:8000/storage/${blog.Thumbnail}`} alt="Example" className='w-full h-[500px]' />

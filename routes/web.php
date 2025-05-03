@@ -24,5 +24,6 @@ Route::middleware('auth')->group(function (){
     Route::get('/',[HomeController::class,'Home']);
     Route::post('/createblog',[BlogsController::class, 'createBlog']);
     Route::get('/editblog/{blog}',[BlogsController::class,'showEditBlog']);
-
+    Route::post('/createcomponents/{blog}',[BlogsController::class, 'createBlogComponents']);
+    Route::get('/profile',[BlogsController::class,'Profile']);
 });

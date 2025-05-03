@@ -260,7 +260,7 @@ function Navbar({Lopen = false, setLopen , isUser, inEdit = false}) {
                         <Menu.Dropdown>
                             
                             <Menu.Item >
-                                Profile
+                                <a href='/profile'>Profile</a>
                             </Menu.Item>
                            
                             <Menu.Divider />

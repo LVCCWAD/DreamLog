@@ -10,10 +10,10 @@ import Superscript from '@tiptap/extension-superscript';
 import SubScript from '@tiptap/extension-subscript';
 import { Button, Text } from '@mantine/core';
 
-function BlogComponentText({position = componentPosition, type, handleChange, deleteElement}) {
+function BlogComponentText({position = componentPosition, type, handleChange, deleteElement, content, id=null}) {
 
   
-  const [componentContent, setComponentContent] = useState("")
+  const [componentContent, setComponentContent] = useState(content)
   const [edit, setEdit] = useState(true)
   
   useEffect(()=>{
@@ -31,7 +31,7 @@ function BlogComponentText({position = componentPosition, type, handleChange, de
       Highlight,
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
     ],
-    componentContent,
+    content,
     onUpdate: ({ editor }) => {
       setComponentContent(editor.getHTML()) 
     },

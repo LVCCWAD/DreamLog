@@ -17,9 +17,6 @@ return new class extends Migration
             $table->enum('Type', ['text', 'image']);
             $table->string('Content');
             $table->integer('Position');
-            $table->integer('Height');
-            $table->integer('Width');
-            $table->integer('Bg_color');
             $table->timestamps();
         });
     }

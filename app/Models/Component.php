@@ -10,9 +10,6 @@ class Component extends Model
         'Type',
         'Content',
         'Position',
-        'Height',
-        'Width',
-        'Bg_color',
         'blog_id'
         
     ];
