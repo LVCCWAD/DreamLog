@@ -16,8 +16,8 @@ class notAuth
     public function handle(Request $request, Closure $next): Response
     {
         if(!auth()->guard('web')->check()){
-            return $next($request);
+            return redirect('/landingpage');
         }
-        return  redirect('/');
+        return redirect('/');
     }
 }

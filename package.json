@@ -23,6 +23,16 @@
         "@mantine/core": "^7.17.5",
         "@mantine/form": "^7.17.5",
         "@mantine/hooks": "^7.17.5",
+        "@mantine/tiptap": "^7.17.5",
+        "@tiptap/extension-highlight": "^2.11.9",
+        "@tiptap/extension-link": "^2.11.9",
+        "@tiptap/extension-subscript": "^2.11.9",
+        "@tiptap/extension-superscript": "^2.11.9",
+        "@tiptap/extension-text-align": "^2.11.9",
+        "@tiptap/extension-underline": "^2.11.9",
+        "@tiptap/pm": "^2.11.9",
+        "@tiptap/react": "^2.11.9",
+        "@tiptap/starter-kit": "^2.11.9",
         "embla-carousel-react": "^7.1.0",
         "react-dom": "^19.1.0"
     }

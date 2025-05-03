@@ -14,7 +14,7 @@ function BlogCard() {
         </Card.Section>
 
         <Group justify="space-between" mt="md" mb="xs">
-            <Text fw={500}>Norway Fjord Adventures</Text>
+            <Text fw={800}>Norway Fjord Adventures</Text>
             <Badge color="pink">Follow</Badge>
         </Group>
 
