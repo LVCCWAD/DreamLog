@@ -10,16 +10,16 @@ import Superscript from '@tiptap/extension-superscript';
 import SubScript from '@tiptap/extension-subscript';
 import { Text } from '@mantine/core';
 
-function BlogComponentText({id=0, type, passContent}) {
+function BlogComponentText({position=0, type, handleChange}) {
 
-  const [content, setContent] = useState(passContent)
+  const [content, setContent] = useState()
   const [edit, setEdit] = useState(true)
 
   useEffect(()=>{
-    passContent = content
-    console.log(passContent)
+    handleChange(position, content)
+    console.log(content)
   },[content])
-
+  
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -40,7 +40,9 @@ function BlogComponentText({id=0, type, passContent}) {
 
   return (
     <>
-    <div>
+    {/*d2 marga edit text component */}
+    <div className=''>
+      {content}
       
       
        

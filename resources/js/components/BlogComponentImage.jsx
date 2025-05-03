@@ -1,7 +1,7 @@
 import { FileInput } from '@mantine/core';
 import React, { useEffect, useState } from 'react'
 
-function BlogComponentImage({position, type, onContentChange,}) {
+function BlogComponentImage({position, type, handleChange,}) {
     const [image, setImage] = useState()
     const [previewUrl, setPreviewUrl] = useState()
 
@@ -16,7 +16,9 @@ function BlogComponentImage({position, type, onContentChange,}) {
     
 
   return (
-    <div>
+    
+    <div className=''>
+      {/*d2 marga edit image component */}
         {
             image && previewUrl  ? <img src={previewUrl} /> : <></>
         }
