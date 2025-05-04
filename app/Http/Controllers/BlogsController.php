@@ -118,6 +118,7 @@ class BlogsController extends Controller
         $isUser = Auth::check();
         $user = Auth::user();
         $components = $blog->Components;
+        $blog->load('Creator');
 
         return inertia('BlogPage',["blog"=>$blog,"isUser"=>$isUser,"user"=>$user,"components"=> $components]);
     }

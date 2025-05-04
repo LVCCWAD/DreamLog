@@ -39,11 +39,11 @@ function BlogComponentImage({position, type="image", handleChange, deleteElement
 
     return (
         <>  
-            <div>
+            <div >
                 {componentEdit ? <><div className=''>
                 {/*d2 marga edit image component */}
                 {
-                    previewUrl ? <img src={previewUrl} alt="Preview" className="my-3 max-h-[300px]" /> : <></>
+                    previewUrl ? <div className="flex justify-center w-full my-4"> <img src={previewUrl} alt="Preview" className="my-3 max-h-[300px]" /> </div>: <></>
                 }
                 <FileInput
                     label="Input Image"
