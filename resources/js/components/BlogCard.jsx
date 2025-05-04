@@ -1,11 +1,13 @@
 import React from 'react'
 import { Card, Image, Text, Badge, Button, Group ,Avatar } from '@mantine/core';
 
-function BlogCard({Title, Description,Thumbnail , Creator}) {
+function BlogCard({Title, Description,Thumbnail , Creator, id}) {
+    
+    
   return (
-    <div className='w-[400px] h-[600px]'>
+    <a href={`/blog/${id}`} className='w-[400px] h-[600px]' >
         <Card shadow="sm" padding="lg" radius="md" withBorder>
-        <Card.Section component="a" href="https://mantine.dev/">
+        <Card.Section>
             <Image
                 src={`http://localhost:8000/storage/${Thumbnail}`}
                 height={160}
@@ -34,7 +36,7 @@ function BlogCard({Title, Description,Thumbnail , Creator}) {
 
         
         </Card>
-    </div>
+    </a>
   )
 }
 

@@ -13,7 +13,8 @@ function ProfilePage({user, userBlogs, isUser}) {
                     Title={blog.BlogTitle}
                     Description={blog.BlogDescription}
                     Creator={blog.creator}
-                    Thumbnail={blog.Thumbnail}/>
+                    Thumbnail={blog.Thumbnail}
+                    id={blog.id}/>
             ))}
         </div>
     </>

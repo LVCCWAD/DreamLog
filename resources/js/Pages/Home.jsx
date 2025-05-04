@@ -4,8 +4,8 @@ import { Carousel } from '@mantine/carousel';
 import { Image } from '@mantine/core';
 import BlogCard from '../components/BlogCard';
 
-function Home({isUser}) {
-    console.log(isUser)
+function Home({isUser, blogs}) {
+    console.log(blogs)
   return (
     <>
         <Navbar isUser={isUser}/>
@@ -49,9 +49,14 @@ function Home({isUser}) {
           <section className='w-[100%] bg-pink-50'>
             <div className='m-5 p-5'>Most Viewed</div>
             <div className='flex flex-row justify-center items-center gap-6'>
-              <BlogCard/>
-              <BlogCard/>
-              <BlogCard/>
+              {blogs.map((blog)=>(
+                              <BlogCard
+                                  Title={blog.BlogTitle}
+                                  Description={blog.BlogDescription}
+                                  Creator={blog.creator}
+                                  Thumbnail={blog.Thumbnail}
+                                  id={blog.id}/>
+                          ))}
             </div>
             
           </section>
@@ -59,9 +64,14 @@ function Home({isUser}) {
           <section>
             <div className='m-5 p-5'>Discover More</div>
             <div className='flex flex-row justify-center items-center gap-6'>
-              <BlogCard/>
-              <BlogCard/>
-              <BlogCard/>
+              {blogs.map((blog)=>(
+                                <BlogCard
+                                    Title={blog.BlogTitle}
+                                    Description={blog.BlogDescription}
+                                    Creator={blog.creator}
+                                    Thumbnail={blog.Thumbnail}
+                                    id={blog.id}/>
+                            ))}
             </div>
             
           </section>

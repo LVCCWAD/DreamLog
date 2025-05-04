@@ -1,10 +1,11 @@
 import { Button, FileInput } from '@mantine/core';
 import React, { useEffect, useState } from 'react'
+import {router} from '@inertiajs/react';
 
-function BlogComponentImage({position, type="image", handleChange, deleteElement,content, id=null}) {
+function BlogComponentImage({position, type="image", handleChange, deleteElement,content, id=null, componentEdit=true}) {
     const [image, setImage] = useState(null)
     const [previewUrl, setPreviewUrl] = useState(content ? `http://localhost:8000/storage/${content}` : null)
-
+    
     useEffect(() => {
         if (image) {
             const objectUrl = URL.createObjectURL(image);
@@ -24,9 +25,22 @@ function BlogComponentImage({position, type="image", handleChange, deleteElement
         }
     };
 
+    const handleDelete = (position) =>{
+        console.log(id)
+        if(id){
+          router.post(`/deletecomponent/${id}`);
+          deleteElement(position)
+        }
+        else{
+          deleteElement(position)
+        }
+        
+      }
+
     return (
-        <>
-            <div className=''>
+        <>  
+            <div>
+                {componentEdit ? <><div className=''>
                 {/*d2 marga edit image component */}
                 {
                     previewUrl ? <img src={previewUrl} alt="Preview" className="my-3 max-h-[300px]" /> : <></>
@@ -39,7 +53,11 @@ function BlogComponentImage({position, type="image", handleChange, deleteElement
                 />
             </div>
             
-            <Button onClick={() => deleteElement(position)}>Delete</Button>
+            <Button onClick={() => handleDelete(position)}>Delete</Button></>:
+            <img src={previewUrl} alt="Preview" className="my-3 max-h-[300px]" />
+            }
+            </div>
+            
         </>
     )
 }

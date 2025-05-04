@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Blog;
 use App\Models\Component;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -45,40 +46,83 @@ class BlogsController extends Controller
 
     public function createBlogComponents(Request $request,Blog $blog){
         foreach($request->Components as $component){
-            if($component["type"] == "text"){
-                $comp = ["Position"=>$component["position"],
-                         "Type"=>"text",
-                         "Content"=>$component["content"],
-                         "blog_id"=>$blog->id];
-
-                Component::create($comp);
+            if ($component["type"] == "text") {
+                if (!empty($component["id"])) {
+                    
+                    $comp = Component::find($component["id"]);
+                   if ($comp && !empty($component["content"])) {
+                        $comp->Content = $component["content"];
+                        $comp->Position = $component["position"];
+                        $comp->save();
+                    }
+                } else {
+                    
+                    Component::create([
+                        "Position" => $component["position"],
+                        "Type" => "text",
+                        "Content" => $component["content"],
+                        "blog_id" => $blog->id
+                    ]);
+                }
             }
-            else if($component["type"] == "image"){
-                $comp = ["Position"=>$component["position"],
-                            "Type"=>"image",
-                            "blog_id"=>$blog->id,
-                            "Content" => null 
-                            ];
+            else if ($component["type"] == "image") {
+                if (!empty($component["id"])) {
+                    
+                    $comp = Component::find($component["id"]);
+                    if ($comp && isset($component['content']) && is_array($component['content']) &&
+                            isset($component['content']['file']) && $component['content']['file']->isValid()) {
 
-                            if (isset($component['content']) && is_array($component['content']) && isset($component['content']['file']) && $component['content']['file']->isValid()) {
-                                $file = $component['content']['file'];
-                                $filePath = $file->store('Component', 'public');
-                                $comp['Content'] = $filePath;
-                            }
-                         
-                Component::create($comp);
+                            $file = $component['content']['file'];
+                            $filePath = $file->store('Component', 'public');
+                            $comp->Content = $filePath;
+                            $comp->save();
+                    }
+                } else {
+                   
+                    $newComponent = [
+                        "Position" => $component["position"],
+                        "Type" => "image",
+                        "blog_id" => $blog->id,
+                        "Content" => null
+                    ];
+            
+                    if (isset($component['content']) && is_array($component['content']) &&
+                        isset($component['content']['file']) && $component['content']['file']->isValid()) {
+                        $file = $component['content']['file'];
+                        $filePath = $file->store('Component', 'public');
+                        $newComponent['Content'] = $filePath;
+                    }
+            
+                    Component::create($newComponent);
+                }
             }
+            
         }
+
+        $blog->Visibility = "public";
+        $blog->save();
+
         Log::info('Incoming request data:', $request->all());
     }
 
-    public function Profile (){
-        $user = Auth::user();
+    public function Profile (User $user){
         $userBlogs = $user->Blogs;
         $userBlogs->load('Creator');
         $isUser = Auth::check();
 
 
         return inertia('ProfilePage',['user'=>$user,'userBlogs'=>$userBlogs,"isUser" => $isUser]);
+    }
+
+    public function BlogPage(Blog $blog){
+        $isUser = Auth::check();
+        $user = Auth::user();
+        $components = $blog->Components;
+
+        return inertia('BlogPage',["blog"=>$blog,"isUser"=>$isUser,"user"=>$user,"components"=> $components]);
+    }
+
+    public function deleteComponent(Component $component){
+        $component->delete();
     }
 }

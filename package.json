@@ -34,6 +34,7 @@
         "@tiptap/react": "^2.11.9",
         "@tiptap/starter-kit": "^2.11.9",
         "embla-carousel-react": "^7.1.0",
+        "html-react-parser": "^5.2.3",
         "react-dom": "^19.1.0"
     }
 }

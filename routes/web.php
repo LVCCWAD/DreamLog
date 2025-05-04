@@ -25,5 +25,7 @@ Route::middleware('auth')->group(function (){
     Route::post('/createblog',[BlogsController::class, 'createBlog']);
     Route::get('/editblog/{blog}',[BlogsController::class,'showEditBlog']);
     Route::post('/createcomponents/{blog}',[BlogsController::class, 'createBlogComponents']);
-    Route::get('/profile',[BlogsController::class,'Profile']);
+    Route::get('/profile/{user}',[BlogsController::class,'Profile']);
+    Route::get('/blog/{blog}',[BlogsController::class,'BlogPage']);
+    Route::post('/deletecomponent/{component}',[BlogsController::class, 'deleteComponent']);
 });
