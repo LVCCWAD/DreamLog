@@ -37,11 +37,11 @@ function LandingPage({isUser}) {
 
       <section className=' flex flex-col justify-center items-center gap-10 p-12 mt-4'>
         <div className='flex flex-row justify-center items-center gap-10'>
-          <div className='w-[727px] h-[328px] bg-pink-100 hover:w-[750px] hover:h-[350px] rounded-lg'>
-
+          <div className='w-[727px] h-[328px] bg-pink-50 hover:w-[750px] hover:h-[350px] rounded-lg'>
+          {/* pink na box */}
           </div>
           <div className='w-[727px] h-[328px] bg-pink-100 hover:w-[750px] hover:h-[350px] rounded-lg'>
-
+          {/* pink na box */}
           </div>
         </div>
         
@@ -63,7 +63,7 @@ function LandingPage({isUser}) {
       {/* d2 part ung about us */}
       <section className='h-[600px] flex flex-col justify-center items-center gap-4 bg-pink-50 my-[100px]'>
         <span className='text-2xl font-bold'>About Us</span>
-        <span className='w-[400px] text-center'>
+        <span className='w-[600px] text-center'>
           This platform was created with a clear mission: to share valuable knowledge and innovative ideas across various fields.
           It offers expert insights, practical tips, and impactful content designed to inspire creativity, growth, and personal development.
           The site empowers users to unleash their creativity, one post at a time,

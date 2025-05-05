@@ -91,7 +91,16 @@ function Navbar({Lopen = false, setLopen , isUser, inEdit = false}) {
 
         {/* eto ung signup modal */}
         <Modal opened={signUpOpened} onClose={closeSignUp} title="SignUp" centered>
-                <form onSubmit={signUP}>
+
+                <Group justify="center">
+                    <div className='flex flex-col justify-center items-center'>
+                        <img src={DreamLog} className='h-[150px] ml-8'/>
+                        <Text>Welcome To DreamLOG</Text>
+                    </div>
+                    
+                </Group>
+                <form onSubmit={signUP}>   
+                    
                     
                     <TextInput
                         withAsterisk
@@ -130,7 +139,14 @@ function Navbar({Lopen = false, setLopen , isUser, inEdit = false}) {
 
         {/* lag in modal */}
         <Modal opened={loginOpened} onClose={closeLogin} title="LogIn" centered>
-        <form onSubmit={logIN}>
+            {/* <Group justify="center">
+                        <div className='flex flex-col justify-center items-center'>
+                            <img src={DreamLog} className='h-[150px] ml-8'/>
+                            <Text>Welcome To DreamLOG</Text>
+                        </div>
+                        
+            </Group> */}
+            <form onSubmit={logIN}>
                     <TextInput
                         withAsterisk
                         label="Email"
@@ -223,9 +239,11 @@ function Navbar({Lopen = false, setLopen , isUser, inEdit = false}) {
             
             <img src={DreamLog} className='h-[150px] ml-8'/>
             {
-                isUser ? 
-                
-                (<div className='flex flex-row gap-4 mr-3'>
+                isUser ?
+
+                // d2 ung nakalag in na
+
+                (<div className=' searchbar flex flex-row gap-4 mr-3'>
                     <TextInput
                         variant="filled"
                         radius="xl"
@@ -243,7 +261,33 @@ function Navbar({Lopen = false, setLopen , isUser, inEdit = false}) {
                         
                     </ActionIcon>)}
                     
-                    
+                   
+                        {/* d2 ung notification */}
+                        <Menu shadow="md" width={200}>
+                        <Menu.Target>
+                            <ActionIcon
+                                variant="gradient"
+                                size="xl"
+                                aria-label="Gradient action icon"
+                                gradient={{ from: 'gray', to: 'gray', deg: 171 }}
+                                >
+                            
+                            </ActionIcon>
+                        </Menu.Target>
+
+                        <Menu.Dropdown>
+                            
+                            <Menu.Item >
+                                Notifications
+                            </Menu.Item>
+                           
+                            <Menu.Divider />
+                            <Text>Notification</Text>
+                            
+                        </Menu.Dropdown>
+                        </Menu>
+
+                         
                     {/* d2 ung menu  button */}
                     <Menu shadow="md" width={200}>
                         <Menu.Target>
@@ -275,30 +319,6 @@ function Navbar({Lopen = false, setLopen , isUser, inEdit = false}) {
                         </Menu.Dropdown>
                         </Menu>
 
-                        {/* d2 ung notification */}
-                        <Menu shadow="md" width={200}>
-                        <Menu.Target>
-                            <ActionIcon
-                                variant="gradient"
-                                size="xl"
-                                aria-label="Gradient action icon"
-                                gradient={{ from: 'gray', to: 'gray', deg: 171 }}
-                                >
-                            
-                            </ActionIcon>
-                        </Menu.Target>
-
-                        <Menu.Dropdown>
-                            
-                            <Menu.Item >
-                                Notifications
-                            </Menu.Item>
-                           
-                            <Menu.Divider />
-                            <Text>Notification</Text>
-                            
-                        </Menu.Dropdown>
-                        </Menu>
 
                   </div>) 
                 

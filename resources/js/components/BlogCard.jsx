@@ -5,6 +5,7 @@ function BlogCard({Title, Description,Thumbnail , Creator, id}) {
     
     
   return (
+    <div className='w-[300px] h-[300px]'>
     <a href={`/blog/${id}`} className='w-[400px] h-[600px]' >
         <Card shadow="sm" padding="lg" radius="md" withBorder>
         <Card.Section>
@@ -37,6 +38,7 @@ function BlogCard({Title, Description,Thumbnail , Creator, id}) {
         
         </Card>
     </a>
+    </div>
   )
 }
 
