@@ -254,11 +254,11 @@ function Navbar({Lopen = false, setLopen , isUser, inEdit = false}) {
                     {inEdit ? <></>:(<ActionIcon
                         variant="gradient"
                         size="xl"
-                        aria-label="Gradient action icon"
-                        gradient={{ from: 'gray', to: 'gray', deg: 171 }}
+                        aria-label="Create Blog"
+                        gradient={{ from: 'pink', to: 'red', deg: 120 }}
                         onClick={openCreateBlog}
                         >
-                        
+                            <i className="bx bx-plus text-xl text-white dark:text-black transition-transform duration-150 hover:scale-110"></i>
                     </ActionIcon>)}
                     
                    
@@ -268,10 +268,10 @@ function Navbar({Lopen = false, setLopen , isUser, inEdit = false}) {
                             <ActionIcon
                                 variant="gradient"
                                 size="xl"
-                                aria-label="Gradient action icon"
+                                aria-label="Notifications"
                                 gradient={{ from: 'gray', to: 'gray', deg: 171 }}
                                 >
-                            
+                                    <i className="bx bx-bell text-xl text-gray-800 dark:text-white"></i>
                             </ActionIcon>
                         </Menu.Target>
 
@@ -294,16 +294,16 @@ function Navbar({Lopen = false, setLopen , isUser, inEdit = false}) {
                             <ActionIcon
                                 variant="gradient"
                                 size="xl"
-                                aria-label="Gradient action icon"
+                                aria-label="Menu"
                                 gradient={{ from: 'gray', to: 'gray', deg: 171 }}
                                 >
-                            
+                                    <i className="bx bx-menu text-xl text-gray-800 dark:text-white"></i>
                             </ActionIcon>
                         </Menu.Target>
 
                         <Menu.Dropdown>
                             
-                            <Menu.Item >
+                            <Menu.Item icon={<i className="bx bx-user text-gray-700 dark:text-white"></i>} >
                                 <a href='/profile'>Profile</a>
                             </Menu.Item>
                            
@@ -312,6 +312,7 @@ function Navbar({Lopen = false, setLopen , isUser, inEdit = false}) {
                             <Menu.Label>Danger zone</Menu.Label>
                             <Menu.Item
                                 color="red"
+                                icon={<i className="bx bx-log-out text-red-600 dark:text-red-400"></i>}
                                 onClick={()=>handleLogout()}
                                 >
                             LogOut
