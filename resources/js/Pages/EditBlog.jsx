@@ -2,12 +2,17 @@ import React, {useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
 import BlogComponentText from '../components/BlogComponentText';
 import BlogComponentImage from '../components/BlogComponentImage';
-import { Button, Text, Title,Drawer} from '@mantine/core';
+import { Button, Text, Title,Drawer, FileInput, TextInput, Group} from '@mantine/core';
 
-import { useForm as useInertiaForm} from '@inertiajs/react';
+import { useForm as useInertiaForm, router} from '@inertiajs/react';
 
-function EditBlog({blog, isUser, blogComponents: dbComponents}) {
-    console.log(dbComponents)
+function EditBlog({blog, isUser, blogComponents: dbComponents, categories}) {
+
+    const [blogCategories, setBlogCategories] = useState(blog.categories)
+    const [isBlogEdit, setIsBlogEdit] = useState(false)
+    const [previewUrl, setPreviewUrl] = useState()
+
+    console.log(blogCategories)
     useEffect(() => {
       
       let initialElements = [];
@@ -164,6 +169,49 @@ function EditBlog({blog, isUser, blogComponents: dbComponents}) {
       });
 }
 
+          const { data: blogData, setData: setBlogData, post: updateBlog, processing: BlogProcessing, errors: BlogErrors } = useInertiaForm({
+                BlogTitle: blog.BlogTitle,
+                BlogDescription: blog.BlogDescription,
+                Thumbnail: null,
+                categories:[]
+            });
+        
+        const submitUpdateBlog = (e) => {
+              e.preventDefault();
+              console.log(blogData.Thumbnail)
+              updateBlog(`/blog/${blog.id}/update`, {
+                  forceFormData: true,
+              });
+              setIsBlogEdit(!isBlogEdit)
+              setBlogData('categories', []);
+          }
+
+          const removeCategory = ({ id }) => {
+            setBlogCategories((prev) => {
+              const exists = prev.some(c => c.id === id);
+
+              if (exists) {
+                
+                router.post(`/category/${blog.id}/remove`, {
+                  category: id
+                });
+              }
+
+              
+              return prev.filter(c => c.id !== id);
+            });
+            setBlogData('categories', (blogData.categories ?? []).filter(cid => cid !== id));
+          };
+
+              useEffect(() => {
+                      if (blogData.Thumbnail) {
+                          const objectUrl = URL.createObjectURL(blogData.Thumbnail);
+                          setPreviewUrl(objectUrl);
+              
+                          return () => URL.revokeObjectURL(objectUrl);
+                      }
+                  }, [blogData.Thumbnail]);
+
   
   return (
     <> 
@@ -180,14 +228,91 @@ function EditBlog({blog, isUser, blogComponents: dbComponents}) {
             <div className='flex flex-col justify-center items-center'>
               <div className=' border border-b-black w-[1250px] p-10'>
                   <Button onClick={()=> publish()}>Publish</Button>
+                  <Button onClick={()=> setIsBlogEdit(!isBlogEdit)}>EditBlog</Button>
                   {/*d2 marga Blog Details */}
-                  <div className='flex flex-col justify-center items-center'>
+                  {isBlogEdit ? <div className='flex flex-col gap-3'>
+                    {blogCategories.map((category) => (
+                      <div className="bg-slate-300 p-4 w-[250px] flex justify-between items-center">
+                        <Button className="bg-slate-50 p-3">
+                          {category.categoryName}
+                        </Button>
+                        <Button
+                          onClick={() => removeCategory(category)}
+                          className="bg-red-400 text-white px-3"
+                        >
+                          X
+                        </Button>
+                      </div>
+                    ))}
+                    <form onSubmit={submitUpdateBlog}>
+                                    {
+                                        blogData.Thumbnail && previewUrl ? <img src={previewUrl} /> : <></>
+                                    }
+                                    <FileInput
+                                        label="Input Thumbnail"
+                                        placeholder="Input png/jpeg"
+                                        onChange={(file) => setBlogData('Thumbnail', file)}
+                                    />
+                                    <div>
+                                        {categories.map((category) => (
+                                            <Button
+                                                key={category.id}
+                                                disabled={(blogCategories ?? []).some(c => c.id === category.id)}
+                                                onClick={() => {
+                                                        if (!(blogData.categories || []).includes(category.id)) {
+                                                        setBlogCategories((prev)=> [...prev, category])
+                                                        setBlogData('categories', [...(blogData.categories || []), category.id]);
+                                                        }
+                                                    }}
+                                                className="bg-slate-100 p-3 rounded-md w-[50px]"
+                                            >
+                                                <span>{category.categoryName}</span>
+                                            </Button>
+                                        ))}
+                                        </div>
+                                    
+                                    <TextInput
+                                        withAsterisk
+                                        label="Blog Title"
+                                        placeholder="Blog Title"
+                                        value={blogData.BlogTitle}
+                                        onChange={(e) => setBlogData('BlogTitle', e.target.value)}
+                    
+                    
+                                    />
+                    
+                                    <TextInput
+                                        withAsterisk
+                                        label="Blog Description"
+                                        placeholder="Blog Description"
+                                        value={blogData.BlogDescription}
+                                        onChange={(e) => setBlogData('BlogDescription', e.target.value)}
+                    
+                                    />
+                    
+                    
+                    
+                                    <Group justify="center" mt="md">
+                                        <Button type="submit">Submit</Button>
+                                    </Group>
+                                </form>
+                  </div>:<div className='flex flex-col justify-center items-center'>
                     <img src={`http://localhost:8000/storage/${blog.Thumbnail}`} alt="Example" className='w-full h-[500px]' />
                     <Title order={1} fw={1000}>{blog.BlogTitle}</Title>
                     <Text >{blog.BlogDescription}</Text>
+                    <Text>Categories: </Text>
+                    <div className='flex flex-row gap-3'>
+                    {blog.categories.map((category) => (
+                      <Button key={category.id} className='bg-slate-50 p-3 '>{category.categoryName}</Button>
+                    ))}
                   </div>
+                  </div>}
+                  
 
-                  {/* d2 marga components elements */}
+                  
+                </div>
+              </div>
+              {/* d2 marga components elements */}
                   <div>
                     {elements.map((element, index) => (
                         <React.Fragment key={`element-${element.props.position}`}>
@@ -195,8 +320,6 @@ function EditBlog({blog, isUser, blogComponents: dbComponents}) {
                         </React.Fragment>
                     ))}
                 </div>
-                </div>
-              </div>
               
         </div>
         

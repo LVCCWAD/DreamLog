@@ -8,12 +8,13 @@ import { useForm as useInertiaForm, router } from '@inertiajs/react';
 
 
 
-function Navbar({ Lopen = false, setLopen, isUser, inEdit = false }) {
+function Navbar({ Lopen = false, setLopen, isUser, inEdit = false , categories=[] }) {
     const [logInOpen, setLogInOpen] = useState(false)
     const [signUpOpened, { open: openSignUp, close: closeSignUp }] = useDisclosure(false);
     const [loginOpened, { open: openLogin, close: closeLogin }] = useDisclosure(false);
     const [createBlogOpened, { open: openCreateBlog, close: closeCreateBlog }] = useDisclosure(false);
     const [previewUrl, setPreviewUrl] = useState()
+    const [dropdown, setDropdown] = useState(false)
 
     const [notificationOpened, { open: openNotification, close: closeNotification }] = useDisclosure(false);
 
@@ -45,6 +46,11 @@ function Navbar({ Lopen = false, setLopen, isUser, inEdit = false }) {
         BlogTitle: '',
         BlogDescription: '',
         Thumbnail: null,
+        categories:[]
+    });
+    const { data: categoryData, setData: setCategoryData, post: createCategory, processing: CategoryProcessing, errors: CategoryErrors } = useInertiaForm({
+        categoryName: '',
+        thumbnail: null,
     });
 
 
@@ -77,6 +83,14 @@ function Navbar({ Lopen = false, setLopen, isUser, inEdit = false }) {
         });
     }
 
+    const submitCategory = (e) => {
+        e.preventDefault();
+       
+        createCategory('/createcategory', {
+            forceFormData: true,
+        });
+    }
+
     useEffect(() => {
         if (blogData.Thumbnail) {
             const objectUrl = URL.createObjectURL(blogData.Thumbnail);
@@ -85,6 +99,9 @@ function Navbar({ Lopen = false, setLopen, isUser, inEdit = false }) {
             return () => URL.revokeObjectURL(objectUrl);
         }
     }, [blogData.Thumbnail]);
+    useEffect(()=>{
+        console.log(blogData)
+    },[blogData])
 
 
     return (<div className='w-[100%]'>
@@ -174,6 +191,29 @@ function Navbar({ Lopen = false, setLopen, isUser, inEdit = false }) {
 
         {/* kre eyt blag modal */}
         <Modal opened={createBlogOpened} onClose={closeCreateBlog} title="Create Blog" centered>
+            <div>
+                    <div className='flex flex-row justify-between '><span >Create a Category?</span><span onClick={()=>setDropdown(!dropdown)}>+</span></div>
+                    {dropdown && <div className='w-[300px] bg-slate-50 flex flex-col gap-3'>
+                        <form onSubmit={submitCategory}>
+                            <TextInput
+                                withAsterisk
+                                label="Category Name"
+                                placeholder="Category Name"
+                                onChange={(e) => setCategoryData('categoryName', e.target.value)}
+
+                            />
+                                <FileInput
+                                label="Input Thumbnail"
+                                placeholder="Input png/jpeg"
+                                onChange={(file) => setCategoryData('thumbnail', file)}
+                                />
+                            <Button type='submit'>
+                                <span>Create Category</span>
+                            </Button>
+                        </form>
+                    </div>}
+                    
+                </div>
             <form onSubmit={submitBlog}>
                 {
                     blogData.Thumbnail && previewUrl ? <img src={previewUrl} /> : <></>
@@ -183,7 +223,22 @@ function Navbar({ Lopen = false, setLopen, isUser, inEdit = false }) {
                     placeholder="Input png/jpeg"
                     onChange={(file) => setBlogData('Thumbnail', file)}
                 />
-
+                <div>
+                    {categories.map((category) => (
+                        <Button
+                        key={category.id}
+                        onClick={() => {
+                            if (!(blogData.categories || []).includes(category.id)) {
+                            setBlogData('categories', [...(blogData.categories || []), category.id]);
+                            }
+                        }}
+                        className='bg-slate-100 p-3 rounded-md w-[50px]'
+                        >
+                        <span>{category.categoryName}</span>
+                        </Button>
+                    ))}
+                    </div>
+                
                 <TextInput
                     withAsterisk
                     label="Blog Title"
@@ -303,10 +358,11 @@ function Navbar({ Lopen = false, setLopen, isUser, inEdit = false }) {
                             </Menu.Target>
 
                             <Menu.Dropdown>
-
-                                <Menu.Item icon={<i className="bx bx-user text-gray-700 dark:text-white"></i>} >
-                                    <a href='/profile'>Profile</a>
-                                </Menu.Item>
+                                <a href='/profile/1'>
+                                    <Menu.Item icon={<i className="bx bx-user text-gray-700 dark:text-white"></i>} >
+                                        Profile
+                                    </Menu.Item>
+                                </a>
 
                                 <Menu.Divider />
 

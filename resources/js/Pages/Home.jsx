@@ -5,11 +5,11 @@ import { Image } from '@mantine/core';
 import BlogCard from '../components/BlogCard';
 import { Text, Title } from '@mantine/core';
 
-function Home({isUser, blogs}) {
+function Home({isUser, blogs, categories}) {
     console.log(blogs)
   return (
     <>
-        <Navbar isUser={isUser}/>
+        <Navbar isUser={isUser} categories={categories}/>
         <section className='w-full'> </section>
         <div className="max-w-[1400px] px-5 mx-auto">
           <section>
@@ -65,7 +65,7 @@ function Home({isUser, blogs}) {
 
           <section>
            <Title order={2} className='m-5 p-5'>Discover more</Title>
-            <div className='flex flex-row justify-center items-center gap-6'>
+            <div className='flex flex-row justify-center items-center gap-6 h-[300px]'>
               {blogs.map((blog)=>(
                                 <BlogCard
                                     Title={blog.BlogTitle}

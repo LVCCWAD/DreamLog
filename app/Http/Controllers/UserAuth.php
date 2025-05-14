@@ -25,6 +25,11 @@ class UserAuth extends Controller
         try {
             
             $user = User::create($registration);
+            $user->profile()->create(
+                [
+                    'userName' => '@'. $user->name
+                ]
+            );
             
             auth()->guard('web')->login($user);
 

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('components', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('blog_id');
+            $table->foreignId('blog_id')->constrained()->onDelete('cascade');;
             $table->enum('Type', ['text', 'image']);
             $table->string('Content');
             $table->integer('Position');

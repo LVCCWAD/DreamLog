@@ -49,4 +49,19 @@ class User extends Authenticatable
     public function Blogs(){
         return $this->hasMany(Blog::class,'user_id');
     }
+    
+    public function followings()
+    {
+        return $this->belongsToMany(User::class, 'user_follower', 'follower_id', 'user_id')->withTimestamps();
+    }
+
+   
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'user_follower', 'user_id', 'follower_id')->withTimestamps();
+    }
+
+    public function profile(){
+        return $this->hasOne(Profile::class,'user_id');
+    }
 }

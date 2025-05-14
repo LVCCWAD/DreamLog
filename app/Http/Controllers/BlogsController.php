@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
+use App\Models\Category;
 use App\Models\Component;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -19,6 +20,8 @@ class BlogsController extends Controller
             'Thumbnail' => ['nullable', 'file', 'mimes:jpg,png,pdf,gif', 'max:51200'],
         ]);
 
+        
+
         if ($request->hasFile('Thumbnail')) {
             $file = $request->file('Thumbnail');
             $filePath = $file->store('Thumbnails', 'public'); 
@@ -29,6 +32,13 @@ class BlogsController extends Controller
         $blog['Visibility'] = "private";
 
         $createdBlog = Blog::create($blog);
+
+        
+
+        $categories = $request->input('categories', []);
+        if (!empty($categories)) {
+            $createdBlog->categories()->attach($categories);
+        }
         
 
         return redirect("/editblog/{$createdBlog->id}");
@@ -37,11 +47,47 @@ class BlogsController extends Controller
 
     }
 
+    public function updateBlog(Request $request,Blog $blog){
+
+        $updateBlog = $request->validate([
+            'BlogTitle'=>['required','string','max:50'],
+            'BlogDescription'=>['required','string',"max:100"],
+            'Thumbnail' => ['nullable', 'file', 'mimes:jpg,png,pdf,gif', 'max:51200'],
+        ]);
+
+        
+
+        if ($request->hasFile('Thumbnail') && $request['Thumbnail'] != null) {
+            $file = $request->file('Thumbnail');
+            $filePath = $file->store('Thumbnails', 'public'); 
+            $updateBlog['Thumbnail'] = $filePath;
+        }else{
+            $updateBlog['Thumbnail'] = $blog->Thumbnail;
+        }
+        
+        
+        
+
+        $blog->update($updateBlog);
+
+        $categories = $request->input('categories', []);
+        if (!empty($categories)) {
+            $blog->categories()->attach($categories);
+        }
+
+        
+
+        return redirect("/editblog/{$blog->id}");
+
+    }
+
     public function showEditBlog(Blog $blog){
         $isUser = Auth::check();
         $blogComponents = $blog->Components;
+        $blog->load('categories');
+        $categories = Category::all();
 
-        return Inertia("EditBlog",["blog"=>$blog, "isUser"=> $isUser, "blogComponents"=>$blogComponents]);
+        return Inertia("EditBlog",["blog"=>$blog, "isUser"=> $isUser, "blogComponents"=>$blogComponents, "categories"=> $categories]);
     }
 
     public function createBlogComponents(Request $request,Blog $blog){
@@ -119,11 +165,32 @@ class BlogsController extends Controller
         $user = Auth::user();
         $components = $blog->Components;
         $blog->load('Creator');
+        $blog->load('categories');
+        $categories = Category::all();
 
-        return inertia('BlogPage',["blog"=>$blog,"isUser"=>$isUser,"user"=>$user,"components"=> $components]);
+        return inertia('BlogPage',["blog"=>$blog,"isUser"=>$isUser,"user"=>$user,"components"=> $components, "categories"=> $categories]);
     }
 
     public function deleteComponent(Component $component){
         $component->delete();
+    }
+
+    public function createCategory(Request $request){
+        $category = $request->validate([
+            'categoryName'=>['required','string','max:50'],
+            'thumbnail' => ['nullable', 'file', 'mimes:jpg,png,pdf,gif', 'max:51200'],
+        ]);
+
+         if ($request->hasFile('thumbnail')) {
+            $file = $request->file('thumbnail');
+            $filePath = $file->store('CategoryThumbnails', 'public'); 
+            $category['thumbnail'] = $filePath;
+        }
+
+        Category::create($category);
+    }
+
+    public function removeCategory(Request $request, Blog $blog){
+        $blog->categories()->detach($request['category']);
     }
 }

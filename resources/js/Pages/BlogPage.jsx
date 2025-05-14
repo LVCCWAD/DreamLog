@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import BlogComponentText from '../components/BlogComponentText';
 import BlogComponentImage from '../components/BlogComponentImage';
 import Navbar from '../components/Navbar';
+import { useForm as useInertiaForm } from '@inertiajs/react';
 
 function BlogPage({isUser, user, components, blog}) {
     console.log(blog)
@@ -46,6 +47,8 @@ function BlogPage({isUser, user, components, blog}) {
           setElements(initialElements);
         }, []);
 
+        
+
   return (
     <>
     <Navbar isUser={true}></Navbar>
@@ -58,6 +61,79 @@ function BlogPage({isUser, user, components, blog}) {
                             <Title order={1} fw={1000}>{blog.BlogTitle}</Title>
                             <Text >{blog.BlogDescription}</Text>
                           </div>
+                          Categories: 
+                          {blog.categories.map((category) => (
+                                                
+                                                  <span className="bg-slate-50 p-3">
+                                                    {category.categoryName}
+                                                  </span>
+                                                 
+                                               
+                                              ))}
+
+                          {/* <form onSubmit={submitBlog}>
+                                  {
+                                      blogData.Thumbnail && previewUrl ? <img src={previewUrl} /> : <></>
+                                  }
+                                  <FileInput
+                                      label="Input Thumbnail"
+                                      placeholder="Input png/jpeg"
+                                      onChange={(file) => setBlogData('Thumbnail', file)}
+                                  />
+                                  <div>
+                                      {categories.map((category) => (
+                                          <Button
+                                          key={category.id}
+                                          onClick={() => {
+                                              if (!(blogData.categories || []).includes(category.id)) {
+                                              setBlogData('categories', [...(blogData.categories || []), category.id]);
+                                              }
+                                          }}
+                                          className='bg-slate-100 p-3 rounded-md w-[50px]'
+                                          >
+                                          <span>{category.categoryName}</span>
+                                          </Button>
+                                      ))}
+                                      </div>
+                                  
+                                  <TextInput
+                                      withAsterisk
+                                      label="Blog Title"
+                                      placeholder="Blog Title"
+                                      onChange={(e) => setBlogData('BlogTitle', e.target.value)}
+                  
+                  
+                                  />
+                  
+                                  <TextInput
+                                      withAsterisk
+                                      label="Blog Description"
+                                      placeholder="Blog Description"
+                                      onChange={(e) => setBlogData('BlogDescription', e.target.value)}
+                  
+                                  />
+                  
+                  
+                  
+                                  <Group justify="center" mt="md">
+                                      <Button type="submit">Submit</Button>
+                                  </Group>
+                              </form> */}
+
+                          {/* {categories.map((category) => (
+                                                  <Button
+                                                  key={category.id}
+                                                  onClick={() => {
+                                                      if (!(blogData.categories || []).includes(category.id)) {
+                                                      setBlogData('categories', [...(blogData.categories || []), category.id]);
+                                                      }
+                                                  }}
+                                                  className='bg-slate-100 p-3 rounded-md w-[50px]'
+                                                  >
+                                                  <span>{category.categoryName}</span>
+                                                  </Button>
+                                              ))}
+                                              </div> */}
         
                           {/* d2 marga components elements */}
                           <div className='flex flex-col'>

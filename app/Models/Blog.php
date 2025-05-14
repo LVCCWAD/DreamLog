@@ -22,4 +22,9 @@ class Blog extends Model
     public function Creator(){
         return $this->belongsTo(User::class,'user_id');
     }
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class);
+    }
 }
