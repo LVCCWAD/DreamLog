@@ -157,9 +157,13 @@ class BlogsController extends Controller
         $userBlogs = $user->Blogs;
         $userBlogs->load('Creator');
         $isUser = Auth::check();
+        $categories = Category::all();
+        $user->load(['profile','followings','followers']);
+        $authUser = Auth::user();
+        
 
 
-        return inertia('ProfilePage',['user'=>$user,'userBlogs'=>$userBlogs,"isUser" => $isUser]);
+        return inertia('ProfilePage',['user'=>$user,'userBlogs'=>$userBlogs,"isUser" => $isUser, 'authUser' => $authUser, 'categories'=>$categories ]);
     }
 
     public function BlogPage(Blog $blog){
@@ -169,6 +173,7 @@ class BlogsController extends Controller
         $blog->load('Creator');
         $blog->load('categories');
         $categories = Category::all();
+
 
         return inertia('BlogPage',["blog"=>$blog,"isUser"=>$isUser,"user"=>$user,"components"=> $components, "categories"=> $categories]);
     }

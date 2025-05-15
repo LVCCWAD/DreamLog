@@ -2,17 +2,19 @@ import React from 'react'
 import Navbar from '../components/Navbar'
 import BlogCard from '../components/BlogCard';
 
-function ProfilePage({user, userBlogs, isUser}) {
-    console.log(userBlogs)
+function ProfilePage({user, userBlogs, isUser, categories}) {
+    console.log(user)
   return (
     <>
-        <Navbar isUser={isUser}/>
-        <div  className='flex flex-col justify-center items-center h-[900px]'>
+        <Navbar isUser={isUser} categories={categories}/>
+        <div  className='flex flex-col justify-center items-center h-[400px] '>
           
         <div  className='flex flex-col justify-center items-center'>
-          {user.name}
+          
         </div>
-          <div className='flex flex-row justify-center items-center gap-3'>
+          
+        </div>
+        <div className='flex flex-row justify-center items-center gap-3'>
               {userBlogs.map((blog)=>(
                   <BlogCard
                       Title={blog.BlogTitle}
@@ -22,7 +24,6 @@ function ProfilePage({user, userBlogs, isUser}) {
                       id={blog.id}/>
               ))}
           </div>
-        </div>
     </>
   )
 }
