@@ -1,12 +1,20 @@
 import React from 'react'
 import { Card, Image, Text, Badge, Button, Group ,Avatar } from '@mantine/core';
+import { router } from '@inertiajs/react';
 
-function BlogCard({Title, Description,Thumbnail , Creator, id}) {
+function BlogCard({Title, Description,Thumbnail , Creator, id, authUser}) {
+
+    const handleFollow = () =>{
+        router.post(`/profile/${authUser.id}/follow`, {
+                      user_id: Creator.id
+                    });
+    }
+     
     
     
   return (
     <div className='w-[300px] h-[300px]'>
-        <a href={`/blog/${id}`} className='w-[400px] h-[600px]' >
+       
             <Card shadow="sm" padding="lg" radius="md" withBorder>
             <Card.Section>
                 <Image
@@ -15,11 +23,14 @@ function BlogCard({Title, Description,Thumbnail , Creator, id}) {
             
                 />
             </Card.Section>
-
-            <Group justify="space-between" mt="md" mb="xs">
-                <Text fw={800}>{Title}</Text>
-                <Badge color="pink">Follow</Badge>
-            </Group>
+            
+                <Group justify="space-between" mt="md" mb="xs">
+                    <a href={`/blog/${id}`} >
+                        <Text fw={800}>{Title}</Text>
+                    </a>
+                    <Badge color="pink" onClick={()=> handleFollow()}>Follow</Badge>
+                </Group>
+            
 
             <Text size="m">
                 {Description}
@@ -37,7 +48,7 @@ function BlogCard({Title, Description,Thumbnail , Creator, id}) {
 
             
             </Card>
-        </a>
+        
     </div>
   )
 }

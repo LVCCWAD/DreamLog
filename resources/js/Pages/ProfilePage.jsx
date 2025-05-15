@@ -2,7 +2,7 @@ import React from 'react'
 import Navbar from '../components/Navbar'
 import BlogCard from '../components/BlogCard';
 
-function ProfilePage({user, userBlogs, isUser, categories}) {
+function ProfilePage({user, userBlogs, isUser, categories, authUser}) {
     console.log(user)
   return (
     <>
@@ -21,7 +21,8 @@ function ProfilePage({user, userBlogs, isUser, categories}) {
                       Description={blog.BlogDescription}
                       Creator={blog.creator}
                       Thumbnail={blog.Thumbnail}
-                      id={blog.id}/>
+                      id={blog.id}
+                      authUser={authUser}/>
               ))}
           </div>
     </>

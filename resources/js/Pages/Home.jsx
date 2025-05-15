@@ -5,7 +5,7 @@ import { Image } from '@mantine/core';
 import BlogCard from '../components/BlogCard';
 import { Text, Title } from '@mantine/core';
 
-function Home({isUser, blogs, categories}) {
+function Home({isUser, blogs, categories, authUser}) {
     console.log(blogs)
   return (
     <>
@@ -57,7 +57,8 @@ function Home({isUser, blogs, categories}) {
                                   Description={blog.BlogDescription}
                                   Creator={blog.creator}
                                   Thumbnail={blog.Thumbnail}
-                                  id={blog.id}/>
+                                  id={blog.id}
+                                  authUser={authUser}/>
                           ))}
             </div>
             

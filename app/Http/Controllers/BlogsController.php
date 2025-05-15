@@ -170,7 +170,7 @@ class BlogsController extends Controller
         $isUser = Auth::check();
         $user = Auth::user();
         $components = $blog->Components;
-        $blog->load('Creator');
+        $blog->load(['Creator','Creator.followers']);
         $blog->load('categories');
         $categories = Category::all();
 
@@ -206,4 +206,14 @@ class BlogsController extends Controller
 
         return redirect('/');
     }
+
+    public function follow(Request $request)
+        {
+            Auth::user()->followings()->attach($request->user_id);
+        }
+
+    public function unFollow(Request $request)
+        {
+            Auth::user()->followings()->detach($request->user_id);
+        }
 }

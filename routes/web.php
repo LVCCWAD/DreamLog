@@ -32,4 +32,6 @@ Route::middleware('auth')->group(function (){
     Route::post('/blog/{blog}/update',[BlogsController::class, 'updateBlog']);
     Route::post('/category/{blog}/remove',[BlogsController::class, 'removeCategory']);
     Route::post('/blog/{blog}/delete',[BlogsController::class, 'deleteBlog']);
+    Route::post('/profile/{user}/follow',[BlogsController::class,'follow']);
+    Route::post('/profile/{user}/unfollow',[BlogsController::class,'unFollow']);
 });

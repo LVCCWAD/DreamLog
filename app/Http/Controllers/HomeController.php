@@ -13,11 +13,12 @@ class HomeController extends Controller
     public function Home(){
         $isUser = Auth::check();
         $blogs = Blog::all();
-        $blogs->load('Creator');
+        $blogs->load(['Creator','Creator.followers']);
         $categories = Category::all();
+        $authUser = Auth::user();
 
         
-        return inertia('Home',['isUser'=>$isUser,'blogs'=>$blogs, 'categories'=>$categories]);
+        return inertia('Home',['isUser'=>$isUser,'blogs'=>$blogs, 'categories'=>$categories, 'authUser'=>$authUser]);
     }
     public function LandingPage(){
         $isUser = Auth::check();
