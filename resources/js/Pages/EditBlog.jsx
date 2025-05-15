@@ -203,6 +203,10 @@ function EditBlog({blog, isUser, blogComponents: dbComponents, categories}) {
             setBlogData('categories', (blogData.categories ?? []).filter(cid => cid !== id));
           };
 
+          const handleDelete = () => {
+            router.post (`/blog/${blog.id}/delete`)
+          }
+
               useEffect(() => {
                       if (blogData.Thumbnail) {
                           const objectUrl = URL.createObjectURL(blogData.Thumbnail);
@@ -229,6 +233,7 @@ function EditBlog({blog, isUser, blogComponents: dbComponents, categories}) {
               <div className=' border border-b-black w-[1250px] p-10'>
                   <Button onClick={()=> publish()}>Publish</Button>
                   <Button onClick={()=> setIsBlogEdit(!isBlogEdit)}>EditBlog</Button>
+                  <Button onClick={()=> handleDelete()}>Delete Blog</Button>
                   {/*d2 marga Blog Details */}
                   {isBlogEdit ? <div className='flex flex-col gap-3'>
                     {blogCategories.map((category) => (

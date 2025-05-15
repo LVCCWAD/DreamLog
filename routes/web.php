@@ -31,4 +31,5 @@ Route::middleware('auth')->group(function (){
     Route::post('/createcategory',[BlogsController::class, 'createCategory']);
     Route::post('/blog/{blog}/update',[BlogsController::class, 'updateBlog']);
     Route::post('/category/{blog}/remove',[BlogsController::class, 'removeCategory']);
+    Route::post('/blog/{blog}/delete',[BlogsController::class, 'deleteBlog']);
 });

@@ -149,6 +149,8 @@ class BlogsController extends Controller
         $blog->save();
 
         Log::info('Incoming request data:', $request->all());
+
+        return redirect("/blog/{$blog->id}");
     }
 
     public function Profile (User $user){
@@ -192,5 +194,11 @@ class BlogsController extends Controller
 
     public function removeCategory(Request $request, Blog $blog){
         $blog->categories()->detach($request['category']);
+    }
+
+    public function deleteBlog(Request $request,Blog $blog){
+        $blog->delete();
+
+        return redirect('/');
     }
 }
