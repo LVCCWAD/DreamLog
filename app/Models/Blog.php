@@ -27,4 +27,8 @@ class Blog extends Model
     {
         return $this->belongsToMany(Category::class);
     }
+
+    public function likes(){
+        return $this->belongsToMany(User::class);
+    }
 }

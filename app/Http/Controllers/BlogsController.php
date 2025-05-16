@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class BlogsController extends Controller
 {
@@ -84,7 +85,7 @@ class BlogsController extends Controller
     public function showEditBlog(Blog $blog){
         $isUser = Auth::check();
         $blogComponents = $blog->Components;
-        $blog->load('categories');
+        $blog->load(['Creator','likes']);
         $categories = Category::all();
 
         return Inertia("EditBlog",["blog"=>$blog, "isUser"=> $isUser, "blogComponents"=>$blogComponents, "categories"=> $categories]);
@@ -153,24 +154,13 @@ class BlogsController extends Controller
         return redirect("/blog/{$blog->id}");
     }
 
-    public function Profile (User $user){
-        $userBlogs = $user->Blogs;
-        $userBlogs->load('Creator');
-        $isUser = Auth::check();
-        $categories = Category::all();
-        $user->load(['profile','followings','followers']);
-        $authUser = Auth::user();
-        
-
-
-        return inertia('ProfilePage',['user'=>$user,'userBlogs'=>$userBlogs,"isUser" => $isUser, 'authUser' => $authUser, 'categories'=>$categories ]);
-    }
+    
 
     public function BlogPage(Blog $blog){
         $isUser = Auth::check();
         $user = Auth::user();
         $components = $blog->Components;
-        $blog->load(['Creator','Creator.followers']);
+        $blog->load(['Creator','Creator.followers','likes']);
         $blog->load('categories');
         $categories = Category::all();
 
@@ -216,4 +206,19 @@ class BlogsController extends Controller
         {
             Auth::user()->followings()->detach($request->user_id);
         }
+
+    public function like(Request $request)
+    {
+        $user = Auth::user();
+        $user->liked_blogs()->syncWithoutDetaching([$request->blog_id]);
+        return back();
+    }
+
+    public function unlike(Request $request)
+    {
+        $user = Auth::user();
+        $user->liked_blogs()->detach($request->blog_id);
+        return back();
+    }
+    
 }

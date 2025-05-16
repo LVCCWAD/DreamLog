@@ -13,9 +13,10 @@ class HomeController extends Controller
     public function Home(){
         $isUser = Auth::check();
         $blogs = Blog::all();
-        $blogs->load(['Creator','Creator.followers']);
+        $blogs->load(['Creator','likes']);
         $categories = Category::all();
         $authUser = Auth::user();
+        $authUser->load(['followings','liked_blogs']);
 
         
         return inertia('Home',['isUser'=>$isUser,'blogs'=>$blogs, 'categories'=>$categories, 'authUser'=>$authUser]);

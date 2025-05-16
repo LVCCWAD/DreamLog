@@ -6,6 +6,7 @@ import BlogCard from '../components/BlogCard';
 import { Text, Title } from '@mantine/core';
 
 function Home({isUser, blogs, categories, authUser}) {
+    console.log(authUser)
     console.log(blogs)
   return (
     <>
@@ -58,7 +59,8 @@ function Home({isUser, blogs, categories, authUser}) {
                                   Creator={blog.creator}
                                   Thumbnail={blog.Thumbnail}
                                   id={blog.id}
-                                  authUser={authUser}/>
+                                  authUser={authUser}
+                                  likes={blog.likes}/>
                           ))}
             </div>
             
@@ -69,11 +71,13 @@ function Home({isUser, blogs, categories, authUser}) {
             <div className='flex flex-row justify-center items-center gap-6 h-[300px]'>
               {blogs.map((blog)=>(
                                 <BlogCard
-                                    Title={blog.BlogTitle}
-                                    Description={blog.BlogDescription}
-                                    Creator={blog.creator}
-                                    Thumbnail={blog.Thumbnail}
-                                    id={blog.id}/>
+                                  Title={blog.BlogTitle}
+                                  Description={blog.BlogDescription}
+                                  Creator={blog.creator}
+                                  Thumbnail={blog.Thumbnail}
+                                  id={blog.id}
+                                  authUser={authUser}
+                                  likes={blog.likes}/>
                             ))}
             </div>
             
