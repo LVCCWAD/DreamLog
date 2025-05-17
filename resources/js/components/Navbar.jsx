@@ -8,7 +8,7 @@ import { useForm as useInertiaForm, router } from '@inertiajs/react';
 
 
 
-function Navbar({ Lopen = false, setLopen, isUser, inEdit = false , categories=[] }) {
+function Navbar({ Lopen = false, setLopen, isUser, inEdit = false , categories=[] ,authUser}) {
     const [logInOpen, setLogInOpen] = useState(false)
     const [signUpOpened, { open: openSignUp, close: closeSignUp }] = useDisclosure(false);
     const [loginOpened, { open: openLogin, close: closeLogin }] = useDisclosure(false);
@@ -358,7 +358,7 @@ function Navbar({ Lopen = false, setLopen, isUser, inEdit = false , categories=[
                             </Menu.Target>
 
                             <Menu.Dropdown>
-                                <a href='/profile/1'>
+                                <a href={`/profile/${authUser?.id}`}>
                                     <Menu.Item icon={<i className="bx bx-user text-gray-700 dark:text-white"></i>} >
                                         Profile
                                     </Menu.Item>

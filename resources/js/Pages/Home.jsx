@@ -10,7 +10,7 @@ function Home({isUser, blogs, categories, authUser}) {
     console.log(blogs)
   return (
     <>
-        <Navbar isUser={isUser} categories={categories}/>
+        <Navbar isUser={isUser} categories={categories} authUser={authUser}/>
         <section className='w-full'> </section>
         <div className="max-w-[1400px] px-5 mx-auto">
           <section>

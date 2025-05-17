@@ -11,7 +11,7 @@ function ProfilePage({user, userBlogs, isUser, categories, authUser}) {
     console.log(profile.profilePicture)
   return (
     <>
-        <Navbar isUser={isUser} categories={categories}/>
+        <Navbar isUser={isUser} categories={categories} authUser={authUser}/>
         
         <ProfileBanner
             user={user}

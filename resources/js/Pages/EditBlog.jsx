@@ -6,7 +6,9 @@ import { Button, Text, Title,Drawer, FileInput, TextInput, Group} from '@mantine
 
 import { useForm as useInertiaForm, router} from '@inertiajs/react';
 
-function EditBlog({blog, isUser, blogComponents: dbComponents, categories}) {
+function EditBlog({blog, isUser, blogComponents: dbComponents, categories, authUser}) {
+
+    console.log(blog.categories)
 
     const [blogCategories, setBlogCategories] = useState(blog.categories)
     const [isBlogEdit, setIsBlogEdit] = useState(false)
@@ -219,7 +221,7 @@ function EditBlog({blog, isUser, blogComponents: dbComponents, categories}) {
   
   return (
     <> 
-        <Navbar isUser={isUser} inEdit={true}/>
+        <Navbar isUser={isUser} inEdit={true} authUser={authUser}/>
         
         <div className='grid grid-cols-[20%_80%] my-10'>
             {/* d2 marga toolbox */}
@@ -236,7 +238,7 @@ function EditBlog({blog, isUser, blogComponents: dbComponents, categories}) {
                   <Button onClick={()=> handleDelete()}>Delete Blog</Button>
                   {/*d2 marga Blog Details */}
                   {isBlogEdit ? <div className='flex flex-col gap-3'>
-                    {blogCategories.map((category) => (
+                    {blogCategories?.map((category) => (
                       <div className="bg-slate-300 p-4 w-[250px] flex justify-between items-center">
                         <Button className="bg-slate-50 p-3">
                           {category.categoryName}
@@ -259,14 +261,14 @@ function EditBlog({blog, isUser, blogComponents: dbComponents, categories}) {
                                         onChange={(file) => setBlogData('Thumbnail', file)}
                                     />
                                     <div>
-                                        {categories.map((category) => (
+                                        {categories?.map((category) => (
                                             <Button
                                                 key={category.id}
                                                 disabled={(blogCategories ?? []).some(c => c.id === category.id)}
                                                 onClick={() => {
-                                                        if (!(blogData.categories || []).includes(category.id)) {
+                                                        if (!(blogData?.categories || []).includes(category.id)) {
                                                         setBlogCategories((prev)=> [...prev, category])
-                                                        setBlogData('categories', [...(blogData.categories || []), category.id]);
+                                                        setBlogData('categories', [...(blogData?.categories || []), category.id]);
                                                         }
                                                     }}
                                                 className="bg-slate-100 p-3 rounded-md w-[50px]"
@@ -307,7 +309,7 @@ function EditBlog({blog, isUser, blogComponents: dbComponents, categories}) {
                     <Text >{blog.BlogDescription}</Text>
                     <Text>Categories: </Text>
                     <div className='flex flex-row gap-3'>
-                    {blog.categories.map((category) => (
+                    {blog.categories?.map((category) => (
                       <Button key={category.id} className='bg-slate-50 p-3 '>{category.categoryName}</Button>
                     ))}
                   </div>

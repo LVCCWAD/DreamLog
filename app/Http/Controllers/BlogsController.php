@@ -85,10 +85,12 @@ class BlogsController extends Controller
     public function showEditBlog(Blog $blog){
         $isUser = Auth::check();
         $blogComponents = $blog->Components;
-        $blog->load(['Creator','likes']);
+        $blog->load(['Creator','likes','categories']);
         $categories = Category::all();
+        $authUser = Auth::user();
+        $authUser->load(['followings','liked_blogs']);
 
-        return Inertia("EditBlog",["blog"=>$blog, "isUser"=> $isUser, "blogComponents"=>$blogComponents, "categories"=> $categories]);
+        return Inertia("EditBlog",["blog"=>$blog, "isUser"=> $isUser, "blogComponents"=>$blogComponents, "categories"=> $categories, "authUser"=> $authUser]);
     }
 
     public function createBlogComponents(Request $request,Blog $blog){
