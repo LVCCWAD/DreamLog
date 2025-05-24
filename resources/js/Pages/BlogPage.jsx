@@ -54,25 +54,24 @@ function BlogPage({isUser, user, components, blog}) {
     <Navbar isUser={true}></Navbar>
         <div className='flex flex-col justify-center items-center'>
                       <div className='w-[1250px]'>
-                      <a href={`/editblog/${blog.id}`}><Button> edit</Button></a>
+                      <a href={`/editblog/${blog.id}`}><Button className="mb-3"> Edit </Button></a>
                           {/*d2 marga Blog Details */}
-                          <div className='flex flex-col justify-center items-center bg-slate-100 p-4'>
+                          <div className='flex flex-col justify-center items-center bg-slate-100 p-4 rounded-lg'>
                             <img src={`http://localhost:8000/storage/${blog.Thumbnail}`} alt="Example" className='w-full h-[500px]' />
                             <Title order={1} fw={1000}>{blog.BlogTitle}</Title>
                             <Text >{blog.BlogDescription}</Text>
                           </div>
-                          Categories: 
-                          {blog.categories.map((category) => (
-                                                
-                                                  <span className="bg-slate-50 p-3">
-                                                    {category.categoryName}
-                                                  </span>
+                          <div>
+                              <span className="font-bold">Categories:</span>
+                              {blog.categories.map((category) => (
+                                
+                                <span key={category.id} className="px-4 py-2 inline-block">
+                                  {category.categoryName}
+                                </span>
+                              ))}
+                            </div>
                                                  
-                                               
-                                              ))}
-
-                          
-        
+                                            
                           {/* d2 marga components elements */}
                           <div className='flex flex-col'>
                             {elements}

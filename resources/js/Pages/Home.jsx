@@ -49,7 +49,7 @@ function Home({isUser, blogs, categories, authUser}) {
             </Carousel>
           </section>
 
-          <section className='w-[100%] bg-pink-50'>
+          <section className='w-full bg-pink-50 p-9 mt-10 rounded-xl'>
             <Title order={2} className='m-5 p-5'>Most Viewed</Title>
             <div className='flex flex-row justify-center items-center gap-6'>
               {blogs.map((blog)=>(

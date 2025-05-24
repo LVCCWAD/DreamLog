@@ -141,7 +141,7 @@ function Navbar({ Lopen = false, setLopen, isUser, inEdit = false , categories=[
                 <PasswordInput
                     withAsterisk
                     label="Password"
-                    defaultValue="secret"
+                    defaultValue=""
                     visible={visible}
                     onVisibilityChange={toggle}
                     onChange={(e) => (setSignUpData('password', e.target.value))}
@@ -176,7 +176,7 @@ function Navbar({ Lopen = false, setLopen, isUser, inEdit = false , categories=[
                 <PasswordInput
                     withAsterisk
                     label="Password"
-                    defaultValue="secret"
+                    defaultValue=""
                     visible={visible}
                     onVisibilityChange={toggle}
                     onChange={(e) => setLogInData('password', e.target.value)}
@@ -279,7 +279,7 @@ function Navbar({ Lopen = false, setLopen, isUser, inEdit = false , categories=[
                 <PasswordInput
                     withAsterisk
                     label="Password"
-                    defaultValue="secret"
+                    defaultValue=""
                     visible={visible}
                     onVisibilityChange={toggle}
                     onChange={(e) => setLogInData('password', e.target.value)}
@@ -304,7 +304,7 @@ function Navbar({ Lopen = false, setLopen, isUser, inEdit = false , categories=[
                             variant="filled"
                             radius="xl"
                             size="lg"
-                            placeholder="Input placeholder"
+                            placeholder="Search"
                         />
 
                         {inEdit ? <></> : (<ActionIcon

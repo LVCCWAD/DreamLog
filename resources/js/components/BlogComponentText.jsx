@@ -77,7 +77,7 @@ function BlogComponentText({position = componentPosition, type, handleChange, de
   return (
     <>
     {/*d2 marga edit text component */}
-    {componentEdit ? <div className=''>
+    {componentEdit ? <div className='flex flex-col items-start space-y-2'>
       {
         edit ? (
           <div>
@@ -124,9 +124,10 @@ function BlogComponentText({position = componentPosition, type, handleChange, de
           </div>
         )
       }    
-      
+      <div className="flex space-x-2">
       <Button onClick={()=>setEdit(!edit)}>{edit ? "save":"output"}</Button>
       <Button onClick={() => handleDelete(position) }>Delete</Button>
+      </div>
     </div> : (
       <div className="rich-text-content">
         {parsedContent()}

@@ -42,7 +42,7 @@ function BlogCard({Title, Description,Thumbnail , Creator, id, authUser , likes}
                 <Image
                     src={`http://localhost:8000/storage/${Thumbnail}`}
                     height={160}
-            
+                    className="object-cover w-full h-[160px]" //TANGGALIN MO NA LANG IF DI MO GUSTO//
                 />
             </Card.Section>
             
@@ -54,7 +54,7 @@ function BlogCard({Title, Description,Thumbnail , Creator, id, authUser , likes}
                     {!followed ? (
                         <Badge color="pink" onClick={handleFollow} className="cursor-pointer">Follow</Badge>
                     ) : (
-                        <Badge color="pink" onClick={handleUnFollow} className="cursor-pointer">Un Follow</Badge>
+                        <Badge color="pink" onClick={handleUnFollow} className="cursor-pointer">Unfollow</Badge>
                     )}
 
                     
@@ -73,12 +73,12 @@ function BlogCard({Title, Description,Thumbnail , Creator, id, authUser , likes}
             <Text size="m">
                 {Description}
             </Text>
-            <Text size="m">
+            <Text size="xs">
                 {likesCount}
             </Text>
             
 
-            <div className='flex flex-row justify-center items-center gap-5 m-3'>
+            <div className='flex flex-row justify-center items-center gap-4 m-1'>
                 
                 <Avatar radius="xl" />
                 <Text size="xs" c="dimmed">

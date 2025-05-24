@@ -82,7 +82,7 @@ function ProfileBanner({user,authUser}) {
   <BackgroundImage
     src={`http://localhost:8000/storage/${profile.banner}`}
     radius="sm"
-    className="w-full h-64"
+    className="w-full h-80"
   >
     <div className="w-full h-full bg-black/30 flex justify-end items-start p-4">
       {user.id === authUser?.id && (
@@ -157,7 +157,7 @@ function ProfileBanner({user,authUser}) {
                           !followed ? (
                               <Badge color="pink" onClick={handleFollow}>Follow</Badge>
                           ) : (
-                              <Badge color="pink" onClick={handleUnFollow}>Un Follow</Badge>
+                              <Badge color="pink" onClick={handleUnFollow}>Unfollow</Badge>
                           )
                           )}
       </div>

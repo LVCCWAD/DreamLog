@@ -225,7 +225,7 @@ function EditBlog({blog, isUser, blogComponents: dbComponents, categories, authU
         
         <div className='grid grid-cols-[20%_80%] my-10'>
             {/* d2 marga toolbox */}
-            <div className='bg-slate-100 h-full'>
+            <div className='flex space-x-2 bg-slate-100 h-full'>
                 <Button onClick={addTextComponent}>Add Text</Button>
                 <Button onClick={addImageComponent}>Add Image</Button>
             </div>
@@ -233,9 +233,11 @@ function EditBlog({blog, isUser, blogComponents: dbComponents, categories, authU
             {/* d2 marga editing Blog */}
             <div className='flex flex-col justify-center items-center'>
               <div className=' border border-b-black w-[1250px] p-10'>
+                  <div className="flex gap-2 mb-4">
                   <Button onClick={()=> publish()}>Publish</Button>
                   <Button onClick={()=> setIsBlogEdit(!isBlogEdit)}>EditBlog</Button>
                   <Button onClick={()=> handleDelete()}>Delete Blog</Button>
+              </div>
                   {/*d2 marga Blog Details */}
                   {isBlogEdit ? <div className='flex flex-col gap-3'>
                     {blogCategories?.map((category) => (

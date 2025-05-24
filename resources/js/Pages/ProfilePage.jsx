@@ -16,7 +16,7 @@ function ProfilePage({user, userBlogs, isUser, categories, authUser}) {
         <ProfileBanner
             user={user}
             authUser={authUser}/>
-        <div className='flex flex-row justify-center items-center gap-3'>
+        <div className='flex flex-wrap justify-center items-center gap-3'> {/*justify-center*/}
               {userBlogs.map((blog)=>(
                                 <BlogCard
                                   Title={blog.BlogTitle}
