@@ -2,13 +2,22 @@ import React, {useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
 import BlogComponentText from '../components/BlogComponentText';
 import BlogComponentImage from '../components/BlogComponentImage';
-import { Button, Text, Title,Drawer, FileInput, TextInput, Group} from '@mantine/core';
+import { Button, Text, Title,Drawer, FileInput, TextInput, Group, Modal} from '@mantine/core';
 
-import { useForm as useInertiaForm, router} from '@inertiajs/react';
+import { useForm as useInertiaForm, router, usePage} from '@inertiajs/react';
+import Error404 from './Error404';
+import { useDisclosure } from '@mantine/hooks';
 
-function EditBlog({blog, isUser, blogComponents: dbComponents, categories, authUser}) {
+function EditBlog({blog, blogComponents: dbComponents, categories,}) {
+
+    
 
     console.log(blog.categories)
+    const { auth } = usePage().props;
+
+    if (auth.user.id !== blog.creator.id) {
+        return <Error404/>
+      }
 
     const [blogCategories, setBlogCategories] = useState(blog.categories)
     const [isBlogEdit, setIsBlogEdit] = useState(false)
@@ -218,117 +227,142 @@ function EditBlog({blog, isUser, blogComponents: dbComponents, categories, authU
                       }
                   }, [blogData.Thumbnail]);
 
-  
+    
+       const [opened, { open, close }] = useDisclosure(false);
+
+    
+
+
   return (
     <> 
-        <Navbar isUser={isUser} inEdit={true} authUser={authUser}/>
+        <Navbar  inEdit={true} />
         
         <div className='grid grid-cols-[20%_80%] my-10'>
+
             {/* d2 marga toolbox */}
             <div className='flex space-x-2 bg-slate-100 h-full'>
                 <Button onClick={addTextComponent}>Add Text</Button>
                 <Button onClick={addImageComponent}>Add Image</Button>
             </div>
 
-            {/* d2 marga editing Blog */}
             <div className='flex flex-col justify-center items-center'>
-              <div className=' border border-b-black w-[1250px] p-10'>
-                  <div className="flex gap-2 mb-4">
-                  <Button onClick={()=> publish()}>Publish</Button>
-                  <Button onClick={()=> setIsBlogEdit(!isBlogEdit)}>EditBlog</Button>
-                  <Button onClick={()=> handleDelete()}>Delete Blog</Button>
-              </div>
-                  {/*d2 marga Blog Details */}
-                  {isBlogEdit ? <div className='flex flex-col gap-3'>
-                    {blogCategories?.map((category) => (
-                      <div className="bg-slate-300 p-4 w-[250px] flex justify-between items-center">
-                        <Button className="bg-slate-50 p-3">
-                          {category.categoryName}
+              {/* d2 marga editing Blog */}
+              <div className='flex flex-col justify-center items-center'>
+                <div className=' border border-b-black w-[1250px] p-10'>
+                    <div className="flex gap-2 mb-4">
+                    <Button onClick={()=> publish()}>Publish</Button>
+                    <Button onClick={()=> setIsBlogEdit(!isBlogEdit)}>EditBlog</Button>
+                    <Button color="red" onClick={open}>
+                      Delete Blog
+                    </Button>
+
+                    <Modal opened={opened} onClose={close} title="Confirm Deletion" centered>
+                      <Text size="sm" mb="md">
+                        Are you sure you want to delete this blog? This action cannot be undone.
+                      </Text>
+                      <div className="flex justify-end gap-2">
+                        <Button variant="default" onClick={close}>
+                          Cancel
                         </Button>
-                        <Button
-                          onClick={() => removeCategory(category)}
-                          className="bg-red-400 text-white px-3"
-                        >
-                          X
+                        <Button color="red" onClick={handleDelete}>
+                          Yes, Delete
                         </Button>
                       </div>
-                    ))}
-                    <form onSubmit={submitUpdateBlog}>
-                                    {
-                                        blogData.Thumbnail && previewUrl ? <img src={previewUrl} /> : <></>
-                                    }
-                                    <FileInput
-                                        label="Input Thumbnail"
-                                        placeholder="Input png/jpeg"
-                                        onChange={(file) => setBlogData('Thumbnail', file)}
-                                    />
-                                    <div>
-                                        {categories?.map((category) => (
-                                            <Button
-                                                key={category.id}
-                                                disabled={(blogCategories ?? []).some(c => c.id === category.id)}
-                                                onClick={() => {
-                                                        if (!(blogData?.categories || []).includes(category.id)) {
-                                                        setBlogCategories((prev)=> [...prev, category])
-                                                        setBlogData('categories', [...(blogData?.categories || []), category.id]);
-                                                        }
-                                                    }}
-                                                className="bg-slate-100 p-3 rounded-md w-[50px]"
-                                            >
-                                                <span>{category.categoryName}</span>
-                                            </Button>
-                                        ))}
-                                        </div>
-                                    
-                                    <TextInput
-                                        withAsterisk
-                                        label="Blog Title"
-                                        placeholder="Blog Title"
-                                        value={blogData.BlogTitle}
-                                        onChange={(e) => setBlogData('BlogTitle', e.target.value)}
-                    
-                    
-                                    />
-                    
-                                    <TextInput
-                                        withAsterisk
-                                        label="Blog Description"
-                                        placeholder="Blog Description"
-                                        value={blogData.BlogDescription}
-                                        onChange={(e) => setBlogData('BlogDescription', e.target.value)}
-                    
-                                    />
-                    
-                    
-                    
-                                    <Group justify="center" mt="md">
-                                        <Button type="submit">Submit</Button>
-                                    </Group>
-                                </form>
-                  </div>:<div className='flex flex-col justify-center items-center'>
-                    <img src={`http://localhost:8000/storage/${blog.Thumbnail}`} alt="Example" className='w-full h-[500px]' />
-                    <Title order={1} fw={1000}>{blog.BlogTitle}</Title>
-                    <Text >{blog.BlogDescription}</Text>
-                    <Text>Categories: </Text>
-                    <div className='flex flex-row gap-3'>
-                    {blog.categories?.map((category) => (
-                      <Button key={category.id} className='bg-slate-50 p-3 '>{category.categoryName}</Button>
-                    ))}
-                  </div>
-                  </div>}
+                    </Modal>
                   
+                </div>
+                    {/*d2 marga Blog Details */}
+                    {isBlogEdit ? <div className='flex flex-col gap-3'>
+                      {blogCategories?.map((category) => (
+                        <div className="bg-slate-300 p-4 w-[250px] flex justify-between items-center">
+                          <Button className="bg-slate-50 p-3">
+                            {category.categoryName}
+                          </Button>
+                          <Button
+                            onClick={() => removeCategory(category)}
+                            className="bg-red-400 text-white px-3"
+                          >
+                            X
+                          </Button>
+                        </div>
+                      ))}
+                      <form onSubmit={submitUpdateBlog}>
+                                      {
+                                          blogData.Thumbnail && previewUrl ? <img src={previewUrl} /> : <></>
+                                      }
+                                      <FileInput
+                                          label="Input Thumbnail"
+                                          placeholder="Input png/jpeg"
+                                          onChange={(file) => setBlogData('Thumbnail', file)}
+                                      />
+                                      <div>
+                                          {categories?.map((category) => (
+                                              <Button
+                                                  key={category.id}
+                                                  disabled={(blogCategories ?? []).some(c => c.id === category.id)}
+                                                  onClick={() => {
+                                                          if (!(blogData?.categories || []).includes(category.id)) {
+                                                          setBlogCategories((prev)=> [...prev, category])
+                                                          setBlogData('categories', [...(blogData?.categories || []), category.id]);
+                                                          }
+                                                      }}
+                                                  className="bg-slate-100 p-3 rounded-md w-[50px]"
+                                              >
+                                                  <span>{category.categoryName}</span>
+                                              </Button>
+                                          ))}
+                                          </div>
+                                      
+                                      <TextInput
+                                          withAsterisk
+                                          label="Blog Title"
+                                          placeholder="Blog Title"
+                                          value={blogData.BlogTitle}
+                                          onChange={(e) => setBlogData('BlogTitle', e.target.value)}
+                      
+                      
+                                      />
+                      
+                                      <TextInput
+                                          withAsterisk
+                                          label="Blog Description"
+                                          placeholder="Blog Description"
+                                          value={blogData.BlogDescription}
+                                          onChange={(e) => setBlogData('BlogDescription', e.target.value)}
+                      
+                                      />
+                      
+                      
+                      
+                                      <Group justify="center" mt="md">
+                                          <Button type="submit">Submit</Button>
+                                      </Group>
+                                  </form>
+                    </div>:<div className='flex flex-col justify-center items-center'>
+                      <img src={`http://localhost:8000/storage/${blog.Thumbnail}`} alt="Example" className='w-full h-[500px]' />
+                      <Title order={1} fw={1000}>{blog.BlogTitle}</Title>
+                      <Text >{blog.BlogDescription}</Text>
+                      <Text>Categories: </Text>
+                      <div className='flex flex-row gap-3'>
+                      {blog.categories?.map((category) => (
+                        <Button key={category.id} className='bg-slate-50 p-3 '>{category.categoryName}</Button>
+                      ))}
+                    </div>
+                    </div>}
+                    
 
-                  
+                    
+                  </div>
+                </div>
+                {/* d2 marga components elements */}
+                    <div>
+                      {elements.map((element, index) => (
+                          <React.Fragment key={`element-${element.props.position}`}>
+                              {element}
+                          </React.Fragment>
+                      ))}
                 </div>
               </div>
-              {/* d2 marga components elements */}
-                  <div>
-                    {elements.map((element, index) => (
-                        <React.Fragment key={`element-${element.props.position}`}>
-                            {element}
-                        </React.Fragment>
-                    ))}
-                </div>
               
         </div>
         

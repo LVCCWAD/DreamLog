@@ -110,11 +110,14 @@ function BlogComponentText({position = componentPosition, type, handleChange, de
                 <RichTextEditor.ControlsGroup>
                   <RichTextEditor.Undo />
                   <RichTextEditor.Redo />
+                  
                 </RichTextEditor.ControlsGroup>
+                <Button onClick={() => handleDelete(position) } color='red'>X</Button>
               </RichTextEditor.Toolbar>
     
               <RichTextEditor.Content />
             </RichTextEditor>
+            
           </div>
         ) : (
           <div>
@@ -125,8 +128,8 @@ function BlogComponentText({position = componentPosition, type, handleChange, de
         )
       }    
       <div className="flex space-x-2">
-      <Button onClick={()=>setEdit(!edit)}>{edit ? "save":"output"}</Button>
-      <Button onClick={() => handleDelete(position) }>Delete</Button>
+      
+      
       </div>
     </div> : (
       <div className="rich-text-content">

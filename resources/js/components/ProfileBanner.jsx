@@ -14,14 +14,18 @@ import {
   BackgroundImage,
   Badge
 } from '@mantine/core';
-import { useForm as useInertiaForm, router } from '@inertiajs/react';
+import { useForm as useInertiaForm, router, usePage } from '@inertiajs/react';
 import { useDisclosure } from '@mantine/hooks';
 
-function ProfileBanner({user,authUser}) {
+function ProfileBanner({user}) {
 
+    const { auth } = usePage().props;
+    const authUser = auth.user;
     const profile = user.profile
     const followings = user.followings.length
     const followers = user.followers.length
+
+    const [error, setError] = useState(null);
 
     const [updateOpened, { open, close }] = useDisclosure(false);
 
@@ -74,6 +78,29 @@ function ProfileBanner({user,authUser}) {
                           user_id: user.id
                         });
         }
+
+      const handleFileChange = (file) => {
+    if (!file) return;
+
+    const img = new Image();
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      img.src = e.target.result;
+
+      img.onload = () => {
+        if (img.width > img.height) {
+          setError(null);
+          setCategoryData('thumbnail', file);
+        } else {
+          setError('Please upload a landscape image (width must be greater than height).');
+          setCategoryData('thumbnail', null);
+        }
+      };
+    };
+
+    reader.readAsDataURL(file);
+  };
     
   return (
     <div className="flex flex-col justify-center items-center bg-white w-full mb-20">
@@ -102,7 +129,10 @@ function ProfileBanner({user,authUser}) {
       <FileInput
         label="Input Banner"
         placeholder="Input png/jpeg"
-        onChange={(file) => setData('banner', file)}
+        onChange={(file) => {setData('banner', file)
+          handleFileChange(file)
+        }}
+        error={error}
       />
 
       {data.profilePicture && previewUrlProfilePicture && (

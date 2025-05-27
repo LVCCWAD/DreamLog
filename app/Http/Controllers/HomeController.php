@@ -11,19 +11,18 @@ class HomeController extends Controller
 {
     
     public function Home(){
-        $isUser = Auth::check();
-        $blogs = Blog::all();
-        $blogs->load(['Creator','likes']);
+        
+        $blogs = Blog::where('visibility', 'public')->get();
+        $blogs->load(['Creator','Creator.profile','likes']);
         $categories = Category::all();
-        $authUser = Auth::user();
-        $authUser->load(['followings','liked_blogs']);
+        
 
         
-        return inertia('Home',['isUser'=>$isUser,'blogs'=>$blogs, 'categories'=>$categories, 'authUser'=>$authUser]);
+        return inertia('Home',['blogs'=>$blogs, 'categories'=>$categories]);
     }
     public function LandingPage(){
-        $isUser = Auth::check();
+        
 
-        return inertia('LandingPage',['isUser'=>$isUser]); 
+        return inertia('LandingPage'); 
     }
 }

@@ -68,4 +68,9 @@ class User extends Authenticatable
     public function liked_blogs(){
         return $this->belongsToMany(Blog::class);
     }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, 'user_id');
+    }
 }

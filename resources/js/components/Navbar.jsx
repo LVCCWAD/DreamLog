@@ -1,14 +1,23 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Modal, Group, TextInput, PasswordInput, Text, ActionIcon, FileInput, Menu, } from '@mantine/core';
+import { Button, Modal, Group, TextInput, PasswordInput, Text, ActionIcon, FileInput, Menu, ScrollArea, } from '@mantine/core';
 import DreamLog from '../assets/DreamLog.png';
 import { useDisclosure } from '@mantine/hooks';
-import { useForm as useInertiaForm, router } from '@inertiajs/react';
+import { useForm as useInertiaForm, router, usePage } from '@inertiajs/react';
+import BlogCard from './BlogCard';
 
 
 
 
 
-function Navbar({ Lopen = false, setLopen, isUser, inEdit = false , categories=[] ,authUser}) {
+function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
+
+    const { auth, categories, blogs } = usePage().props;
+
+    const isUser = auth.user ? true : false;
+    const authUser = auth.user;
+    const notifications = authUser ? auth.user.notifications : []
+    const [error, setError] = useState(null);
+
     const [logInOpen, setLogInOpen] = useState(false)
     const [signUpOpened, { open: openSignUp, close: closeSignUp }] = useDisclosure(false);
     const [loginOpened, { open: openLogin, close: closeLogin }] = useDisclosure(false);
@@ -103,6 +112,43 @@ function Navbar({ Lopen = false, setLopen, isUser, inEdit = false , categories=[
         console.log(blogData)
     },[blogData])
 
+    const [query, setQuery] = useState('');
+    const[filteredBlogs,setFilteredBlogs] = useState([])
+
+    useEffect(()=>{
+        setFilteredBlogs (blogs.filter(blog =>
+        blog.BlogTitle.toLowerCase().includes(query.toLowerCase()) ||
+        blog.BlogDescription.toLowerCase().includes(query.toLowerCase())
+    ))
+
+    },[query])
+
+    console.log(blogs)
+
+    const handleFileChange = (file) => {
+    if (!file) return;
+
+    const img = new Image();
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      img.src = e.target.result;
+
+      img.onload = () => {
+        if (img.width > img.height) {
+          setError(null);
+          setCategoryData('thumbnail', file);
+        } else {
+          setError('Please upload a landscape image (width must be greater than height).');
+          setCategoryData('thumbnail', null);
+        }
+      };
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+    
 
     return (<div className='w-[100%]'>
 
@@ -205,7 +251,11 @@ function Navbar({ Lopen = false, setLopen, isUser, inEdit = false , categories=[
                                 <FileInput
                                 label="Input Thumbnail"
                                 placeholder="Input png/jpeg"
-                                onChange={(file) => setCategoryData('thumbnail', file)}
+                                onChange={(file) => {setCategoryData('thumbnail', file)
+                                    handleFileChange(file)
+                                }}
+                                error={error}
+                                
                                 />
                             <Button type='submit'>
                                 <span>Create Category</span>
@@ -227,12 +277,16 @@ function Navbar({ Lopen = false, setLopen, isUser, inEdit = false , categories=[
                     {categories.map((category) => (
                         <Button
                         key={category.id}
+                        
                         onClick={() => {
                             if (!(blogData.categories || []).includes(category.id)) {
-                            setBlogData('categories', [...(blogData.categories || []), category.id]);
+                                setBlogData('categories', [...(blogData.categories || []), category.id]);
+                            }else{
+                                setBlogData('categories', (blogData.categories || []).filter(catId => catId !== category.id));
                             }
                         }}
-                        className='bg-slate-100 p-3 rounded-md w-[50px]'
+                        className={`${(blogData.categories || []).includes(category.id) ? "bg-slate-100":"bg-slate-200"} p-3 rounded-md w-[50px]`}
+                        color={!(blogData.categories || []).includes(category.id) ? "rgba(250, 155, 155, 1)" : "gray"}
                         >
                         <span>{category.categoryName}</span>
                         </Button>
@@ -259,7 +313,7 @@ function Navbar({ Lopen = false, setLopen, isUser, inEdit = false , categories=[
 
 
                 <Group justify="center" mt="md">
-                    <Button type="submit">Submit</Button>
+                    <Button type="submit" color='rgba(250, 155, 155, 1)'>Submit</Button>
                 </Group>
             </form>
         </Modal>
@@ -291,21 +345,52 @@ function Navbar({ Lopen = false, setLopen, isUser, inEdit = false , categories=[
             </form>
         </Modal>
 
-        <header className='w-full h-[90px] flex flex-row justify-between items-center sticky border border-b-gray-500'>
+        <header className='w-full h-[90px] flex flex-row justify-between items-center sticky border border-b-gray-500 z-10'>
 
-            <img src={DreamLog} className='h-[150px] ml-8' />
+            <a href="/"><img src={DreamLog} className='h-[150px] ml-8' /></a>
             {
                 isUser ?
 
                     // d2 ung nakalag in na
 
-                    (<div className=' searchbar flex flex-row gap-4 mr-3'>
-                        <TextInput
-                            variant="filled"
-                            radius="xl"
-                            size="lg"
-                            placeholder="Search"
-                        />
+                    (<div className=' searchbar flex flex-row justify-center items-center gap-4 mr-3'>
+                        <div className="relative w-full max-w-xl mx-auto z-10">
+                            <TextInput
+                                variant="filled"
+                                radius="xl"
+                                size="lg"
+                                placeholder="Search"
+                                value={query}
+                                onChange={(e) => setQuery(e.target.value)}
+                            />
+
+                            {query.length >= 2 && (
+                                <div className="absolute z-20 bg-white w-full max-h-80 overflow-y-auto mt-2 rounded-lg shadow-lg border border-gray-200">
+                                    {filteredBlogs.length > 0 ? (
+                                        filteredBlogs.map(blog => (
+                                            <div
+                                                key={blog.id}
+                                                className="flex items-center gap-4 px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                                                onClick={() => window.location.href = `/blog/${blog.id}`}
+                                            >
+                                                <img
+                                                    src={`http://localhost:8000/storage/${blog.Thumbnail}`}
+                                                    alt={blog.BlogTitle}
+                                                    className="w-14 h-14 object-cover rounded-md"
+                                                />
+                                                <div className='flex flex-col justify-start'>
+                                                    <p className="text-sm font-medium text-gray-800">{blog.BlogTitle}</p>
+                                                    <p className="text-sm font-thin text-gray-800">Created by:{blog.creator.name}</p>
+                                                </div>
+                                                
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <p className="text-gray-500 text-center py-2">No matching blogs found.</p>
+                                    )}
+                                </div>
+                            )}
+                        </div>
 
                         {inEdit ? <></> : (<ActionIcon
                             variant="gradient"
@@ -319,29 +404,44 @@ function Navbar({ Lopen = false, setLopen, isUser, inEdit = false , categories=[
 
 
                         {/* d2 ung notification */}
-                        <Menu shadow="md" width={200}>
+                        <Menu shadow="md" width={280}>
                             <Menu.Target>
                                 <ActionIcon
-                                    variant="gradient"
-                                    size="xl"
-                                    aria-label="Notifications"
-                                    gradient={{ from: 'gray', to: 'gray', deg: 171 }}
+                                variant="gradient"
+                                size="xl"
+                                aria-label="Notifications"
+                                gradient={{ from: 'gray', to: 'gray', deg: 171 }}
                                 >
-                                    <i className="bx bx-bell text-xl text-gray-800 dark:text-white"></i>
+                                <i className="bx bx-bell text-xl text-gray-800 dark:text-white"></i>
                                 </ActionIcon>
                             </Menu.Target>
 
                             <Menu.Dropdown>
-
-                                <Menu.Item >
-                                    Notifications
-                                </Menu.Item>
-
+                                <Menu.Label>Notifications</Menu.Label>
                                 <Menu.Divider />
-                                <Text>Notification</Text>
-
+                                <ScrollArea style={{ maxHeight: 250, overflowY: 'auto' }}>
+                                {notifications.length === 0 && (
+                                    <Text size="sm" color="dimmed" align="center" py="md">
+                                    No notifications
+                                    </Text>
+                                )}
+                                {notifications.map((notification) => (
+                                    <Menu.Item
+                                    key={notification.id}
+                                    component="a"
+                                    href={notification.url || '#'}
+                                    target="_blank"
+                                    styles={{ root: { whiteSpace: 'normal', lineHeight: 1.3 } }}
+                                    >
+                                    {notification.message}
+                                    <Text size="xs" color="dimmed" mt={4}>
+                                        {new Date(notification.created_at).toLocaleString()}
+                                    </Text>
+                                    </Menu.Item>
+                                ))}
+                                </ScrollArea>
                             </Menu.Dropdown>
-                        </Menu>
+                            </Menu>
 
 
                         {/* d2 ung menu  button */}

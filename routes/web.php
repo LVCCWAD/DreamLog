@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BlogsController;
+use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfilesController;
 use App\Http\Controllers\UserAuth;
@@ -29,13 +30,15 @@ Route::middleware('auth')->group(function (){
     Route::get('/profile/{user}',[ProfilesController::class,'Profile']);
     Route::get('/blog/{blog}',[BlogsController::class,'BlogPage']);
     Route::post('/deletecomponent/{component}',[BlogsController::class, 'deleteComponent']);
-    Route::post('/createcategory',[BlogsController::class, 'createCategory']);
+    Route::post('/createcategory',[CategoriesController::class, 'createCategory']);
     Route::post('/blog/{blog}/update',[BlogsController::class, 'updateBlog']);
-    Route::post('/category/{blog}/remove',[BlogsController::class, 'removeCategory']);
+    Route::post('/category/{blog}/remove',[CategoriesController::class, 'removeCategory']);
     Route::post('/blog/{blog}/delete',[BlogsController::class, 'deleteBlog']);
-    Route::post('/profile/{user}/follow',[BlogsController::class,'follow']);
-    Route::post('/profile/{user}/unfollow',[BlogsController::class,'unFollow']);
-    Route::post('like/blog',[BlogsController::class,'like']);
-    Route::post('unlike/blog',[BlogsController::class,'unLike']);
+    Route::post('/profile/{user}/follow',[ProfilesController::class,'follow']);
+    Route::post('/profile/{user}/unfollow',[ProfilesController::class,'unFollow']);
+    Route::post('like/blog',[ProfilesController::class,'like']);
+    Route::post('unlike/blog',[ProfilesController::class,'unLike']);
     Route::post('/profile/update', [ProfilesController::class, 'updateProfile']);
+    Route::get('/category/{category}', [BlogsController::class, 'getBlogsByCategory']);
+
 });

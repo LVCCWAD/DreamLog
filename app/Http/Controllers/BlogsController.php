@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\BlogCreated;
+use App\Events\BlogDeleted;
 use App\Models\Blog;
 use App\Models\Category;
 use App\Models\Component;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -50,6 +53,8 @@ class BlogsController extends Controller
 
     public function updateBlog(Request $request,Blog $blog){
 
+         Gate::authorize('update', $blog);
+
         $updateBlog = $request->validate([
             'BlogTitle'=>['required','string','max:50'],
             'BlogDescription'=>['required','string',"max:100"],
@@ -83,17 +88,23 @@ class BlogsController extends Controller
     }
 
     public function showEditBlog(Blog $blog){
-        $isUser = Auth::check();
+
+        Gate::authorize('view', $blog);
+
         $blogComponents = $blog->Components;
         $blog->load(['Creator','likes','categories']);
         $categories = Category::all();
-        $authUser = Auth::user();
-        $authUser->load(['followings','liked_blogs']);
 
-        return Inertia("EditBlog",["blog"=>$blog, "isUser"=> $isUser, "blogComponents"=>$blogComponents, "categories"=> $categories, "authUser"=> $authUser]);
+        
+       
+
+        return Inertia("EditBlog",["blog"=>$blog, "blogComponents"=>$blogComponents, "categories"=> $categories]);
     }
 
     public function createBlogComponents(Request $request,Blog $blog){
+
+         Gate::authorize('update', $blog);
+
         foreach($request->Components as $component){
             if ($component["type"] == "text") {
                 if (!empty($component["id"])) {
@@ -151,6 +162,8 @@ class BlogsController extends Controller
         $blog->Visibility = "public";
         $blog->save();
 
+        BlogCreated::dispatch($blog);
+
         Log::info('Incoming request data:', $request->all());
 
         return redirect("/blog/{$blog->id}");
@@ -159,68 +172,40 @@ class BlogsController extends Controller
     
 
     public function BlogPage(Blog $blog){
-        $isUser = Auth::check();
-        $user = Auth::user();
+       
+       
         $components = $blog->Components;
-        $blog->load(['Creator','Creator.followers','likes']);
-        $blog->load('categories');
+        $blog->load(['Creator','Creator.followers','likes','Creator.profile','categories']);
         $categories = Category::all();
+        $blog->increment('view_count');
 
 
-        return inertia('BlogPage',["blog"=>$blog,"isUser"=>$isUser,"user"=>$user,"components"=> $components, "categories"=> $categories]);
+        return inertia('BlogPage',["blog"=>$blog,"components"=> $components, "categories"=> $categories]);
     }
 
     public function deleteComponent(Component $component){
+        Gate::authorize('delete', $component);
         $component->delete();
     }
 
-    public function createCategory(Request $request){
-        $category = $request->validate([
-            'categoryName'=>['required','string','max:50'],
-            'thumbnail' => ['nullable', 'file', 'mimes:jpg,png,pdf,gif', 'max:51200'],
-        ]);
-
-         if ($request->hasFile('thumbnail')) {
-            $file = $request->file('thumbnail');
-            $filePath = $file->store('CategoryThumbnails', 'public'); 
-            $category['thumbnail'] = $filePath;
-        }
-
-        Category::create($category);
-    }
-
-    public function removeCategory(Request $request, Blog $blog){
-        $blog->categories()->detach($request['category']);
-    }
+    
 
     public function deleteBlog(Request $request,Blog $blog){
+        Gate::authorize('delete', $blog);
+        BlogDeleted::dispatch($blog);
         $blog->delete();
 
         return redirect('/');
     }
 
-    public function follow(Request $request)
-        {
-            Auth::user()->followings()->attach($request->user_id);
-        }
+    
 
-    public function unFollow(Request $request)
-        {
-            Auth::user()->followings()->detach($request->user_id);
-        }
-
-    public function like(Request $request)
+    public function getBlogsByCategory(Category $category)
     {
-        $user = Auth::user();
-        $user->liked_blogs()->syncWithoutDetaching([$request->blog_id]);
-        return back();
+        $blogs = $category->blogs()->with(['Creator','Creator.profile', 'likes'])->get();
+        return inertia('CategoryBlogs', ['blogs' => $blogs, 'category' => $category]);
     }
 
-    public function unlike(Request $request)
-    {
-        $user = Auth::user();
-        $user->liked_blogs()->detach($request->blog_id);
-        return back();
-    }
+    
     
 }

@@ -3,10 +3,11 @@ import React, { useEffect, useState } from 'react'
 import BlogComponentText from '../components/BlogComponentText';
 import BlogComponentImage from '../components/BlogComponentImage';
 import Navbar from '../components/Navbar';
-import { useForm as useInertiaForm } from '@inertiajs/react';
+import { useForm as useInertiaForm, usePage } from '@inertiajs/react';
 
-function BlogPage({isUser, user, components, blog}) {
+function BlogPage({components, blog}) {
     console.log(blog)
+    const { auth } = usePage().props;
     const [elements, setElements] = useState()
 
     useEffect(() => {
@@ -51,10 +52,14 @@ function BlogPage({isUser, user, components, blog}) {
 
   return (
     <>
-    <Navbar isUser={true}></Navbar>
+    <Navbar ></Navbar>
         <div className='flex flex-col justify-center items-center'>
                       <div className='w-[1250px]'>
-                      <a href={`/editblog/${blog.id}`}><Button className="mb-3"> Edit </Button></a>
+                      {
+                        auth.user.id == blog.creator.id ? <a href={`/editblog/${blog.id}`}><Button className="mb-3"> Edit </Button></a> : <></>
+                      }
+                      
+
                           {/*d2 marga Blog Details */}
                           <div className='flex flex-col justify-center items-center bg-slate-100 p-4 rounded-lg'>
                             <img src={`http://localhost:8000/storage/${blog.Thumbnail}`} alt="Example" className='w-full h-[500px]' />

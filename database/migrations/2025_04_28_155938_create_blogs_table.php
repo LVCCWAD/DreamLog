@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('BlogDescription');
             $table->string('Thumbnail');
             $table->enum('Visibility', ['private', 'public']);
+            $table->integer("view_count")->default(0);
             $table->timestamps();
         });
     }

@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UserFollowed;
+use App\Events\UserLiked;
+use App\Models\Blog;
 use App\Models\Category;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class ProfilesController extends Controller
@@ -15,28 +19,28 @@ class ProfilesController extends Controller
         'profile',
         'followings',
         'followers',
-        'blogs.creator',  // eager load nested creator
-        'blogs.likes'     // eager load blog likes
+        'blogs.creator', 
+        'blogs.likes' ,
+        'blogs.creator.profile',    
     ]);
 
     $userBlogs = $user->blogs;
 
-    $isUser = Auth::check();
-    $categories = Category::all();
+    
+    
 
-    $authUser = Auth::user();
+    
 
-    if ($authUser) {
-        $authUser->load(['followings', 'liked_blogs']);
-    }
+    
         
 
 
-        return inertia('ProfilePage',['user'=>$user,'userBlogs'=>$userBlogs,"isUser" => $isUser, 'authUser' => $authUser, 'categories'=>$categories ]);
+        return inertia('ProfilePage',['user'=>$user,'userBlogs'=>$userBlogs ]);
     }
 
     public function updateProfile(Request $request)
     {
+        Gate::authorize('update', Auth::user()->profile());
         $request->validate([
             'userName' => 'required|string|max:255',
             'bio' => 'nullable|string|max:500',
@@ -82,6 +86,33 @@ class ProfilesController extends Controller
         $user->profile->save();
         
         return redirect()->back()->with('success', 'Profile updated successfully!');
+    }
+
+    public function follow(Request $request)
+        {
+            Auth::user()->followings()->attach($request->user_id);
+            UserFollowed::dispatch(Auth::user(), User::find($request->user_id));
+        }
+
+    public function unFollow(Request $request)
+        {
+            Auth::user()->followings()->detach($request->user_id);
+        }
+
+    public function like(Request $request)
+    {
+        $user = Auth::user();
+        $user->liked_blogs()->syncWithoutDetaching([$request->blog_id]);
+        $blog = Blog::find($request->blog_id);
+        UserLiked::dispatch($user,$blog);
+        return back();
+    }
+
+    public function unlike(Request $request)
+    {
+        $user = Auth::user();
+        $user->liked_blogs()->detach($request->blog_id);
+        return back();
     }
 
 
