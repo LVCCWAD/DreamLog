@@ -202,7 +202,7 @@ class BlogsController extends Controller
 
     public function getBlogsByCategory(Category $category)
     {
-        $blogs = $category->blogs()->with(['Creator','Creator.profile', 'likes'])->get();
+        $blogs = $category->blogs()->where('Visibility', 'public')->with(['Creator','Creator.profile', 'likes'])->get();
         return inertia('CategoryBlogs', ['blogs' => $blogs, 'category' => $category]);
     }
 
