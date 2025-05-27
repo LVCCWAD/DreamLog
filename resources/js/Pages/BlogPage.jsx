@@ -1,4 +1,4 @@
-import { Button, Text, Title } from '@mantine/core'
+import { Avatar, Badge, Button, Group, Text, Title } from '@mantine/core'
 import React, { useEffect, useState } from 'react'
 import BlogComponentText from '../components/BlogComponentText';
 import BlogComponentImage from '../components/BlogComponentImage';
@@ -9,6 +9,7 @@ function BlogPage({components, blog}) {
     console.log(blog)
     const { auth } = usePage().props;
     const [elements, setElements] = useState()
+    const authUser = auth.user
 
     useEffect(() => {
           
@@ -50,6 +51,7 @@ function BlogPage({components, blog}) {
 
         
 
+  
   return (
     <>
     <Navbar ></Navbar>
@@ -61,7 +63,7 @@ function BlogPage({components, blog}) {
                       
 
                           {/*d2 marga Blog Details */}
-                          <div className='flex flex-col justify-center items-center bg-slate-100 p-4 rounded-lg'>
+                          <div className='flex flex-col justify-center items-center p-4 rounded-lg'>
                             <img src={`http://localhost:8000/storage/${blog.Thumbnail}`} alt="Example" className='w-full h-[500px]' />
                             <Title order={1} fw={1000}>{blog.BlogTitle}</Title>
                             <Text >{blog.BlogDescription}</Text>
@@ -74,13 +76,34 @@ function BlogPage({components, blog}) {
                                   {category.categoryName}
                                 </span>
                               ))}
+                          </div>
+                          
+                            
+                            <div>
+                              <a href={`/profile/${blog.creator?.id}`}>
+                                              <div className='flex flex-row justify-center items-center gap-4 m-1'>
+                                                  <Avatar
+                                                      src={`http://localhost:8000/storage/${blog.creator?.profile.profilePicture}`}
+                                                      size={50}
+                                                      radius={999}
+                                                      alt={blog.creator?.profile.userName}
+                                                      className="border-4 border-white shadow-md"
+                                                      />
+                                                  <Text size="xs" c="dimmed">
+                                                      Created By: {blog.creator?.name}
+                                                  </Text>
+                                              </div>
+                                              </a>
                             </div>
+
+                           
+                          
                                                  
                                             
                           {/* d2 marga components elements */}
                           <div className='flex flex-col'>
                             {elements}
-                        </div>
+                          </div>
                         </div>
     </div>
     </>
