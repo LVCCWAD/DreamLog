@@ -26,6 +26,7 @@ function ProfilePage({user, userBlogs, categories,}) {
             />
        <div>
       {/* Published Section */}
+      <section className='w-full bg-pink-50 rounded-xl p-6'>
       <h2 className='text-xl font-bold mb-2'>Published</h2>
       <div className='flex flex-wrap justify-center items-center gap-3'>
         {publishedBlogs.map((blog) => (
@@ -56,7 +57,7 @@ function ProfilePage({user, userBlogs, categories,}) {
           />
         ))}
       </div></>)}
-      
+      </section>
     </div>
     </>
   )
