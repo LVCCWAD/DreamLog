@@ -40,7 +40,6 @@ class ProfilesController extends Controller
 
     public function updateProfile(Request $request)
     {
-        Gate::authorize('update', Auth::user()->profile());
         $request->validate([
             'userName' => 'required|string|max:255',
             'bio' => 'nullable|string|max:500',
