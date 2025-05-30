@@ -240,7 +240,7 @@ function EditBlog({blog, blogComponents: dbComponents, categories,}) {
         <div className='grid grid-cols-[20%_80%] my-10'>
 
             {/* d2 marga toolbox */}
-            <div className='flex space-x-2 bg-slate-100 h-full'>
+            <div className='flex space-x-2 bg-slate-100 rounded-xl h-full pt-4'>
                 <Button onClick={addTextComponent}>Add Text</Button>
                 <Button onClick={addImageComponent}>Add Image</Button>
             </div>
