@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar'
 import BlogComponentText from '../components/BlogComponentText';
 import BlogComponentImage from '../components/BlogComponentImage';
 import { Button, Text, Title,Drawer, FileInput, TextInput, Group, Modal} from '@mantine/core';
-
+import PencilIcon from '../assets/pencil-square.png';
 import { useForm as useInertiaForm, router, usePage} from '@inertiajs/react';
 import Error404 from './Error404';
 import { useDisclosure } from '@mantine/hooks';
@@ -237,13 +237,16 @@ function EditBlog({blog, blogComponents: dbComponents, categories,}) {
     <> 
         <Navbar  inEdit={true} />
         
-        <div className='grid grid-cols-[20%_80%] my-10'>
+        <div className='grid grid-cols-[20%_80%] my-5'>
 
-            {/* d2 marga toolbox */}
-            <div className='flex space-x-2 bg-slate-100 h-full'>
-                <Button onClick={addTextComponent}>Add Text</Button>
-                <Button onClick={addImageComponent}>Add Image</Button>
-            </div>
+        {/* d2 marga toolbox */}
+        <div className="flex flex-col items-start bg-slate-50 rounded-lg border border-black pl-3 pt-10 space-y-4 min-h-full max-w-[120px]">
+        <Button variant="filled" color="violet" radius="lg" size="lg" onClick={addTextComponent}>
+        <img src={PencilIcon} alt="Pencil Icon" className="w-6 h-6" /></Button>
+          
+        <Button variant="filled" color="gray" radius="lg" size="lg" onClick={addImageComponent}>
+          🖼️ </Button>
+        </div>
 
             <div className='flex flex-col justify-center items-center'>
               {/* d2 marga editing Blog */}
@@ -295,7 +298,7 @@ function EditBlog({blog, blogComponents: dbComponents, categories,}) {
                                           placeholder="Input png/jpeg"
                                           onChange={(file) => setBlogData('Thumbnail', file)}
                                       />
-                                      <div>
+                                      <div className="flex flex-row space-x-3 py-2">
                                           {categories?.map((category) => (
                                               <Button
                                                   key={category.id}

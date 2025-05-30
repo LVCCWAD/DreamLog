@@ -77,7 +77,7 @@ function BlogComponentText({position = componentPosition, type, handleChange, de
   return (
     <>
     {/*d2 marga edit text component */}
-    {componentEdit ? <div className='flex flex-col items-start space-y-2'>
+    {componentEdit ? <div className='flex flex-col items-start space-y-2 px-34'>
       {
         edit ? (
           <div>

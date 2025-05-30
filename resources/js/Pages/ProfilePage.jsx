@@ -19,16 +19,15 @@ function ProfilePage({user, userBlogs, categories,}) {
   return (
     <>
         <Navbar  categories={categories}/>
-        
+      <div className='min-h-screen bg-stone-100 py-1'>  
         <ProfileBanner
             profile={profile}
             user={user}
             />
        <div>
       {/* Published Section */}
-      <section className='w-full bg-pink-50 rounded-xl p-6'>
-      <h2 className='text-xl font-bold mb-2'>Published</h2>
-      <div className='flex flex-wrap justify-center items-center gap-3'>
+      <h2 className='text-3xl font-bold p-5 '>Published</h2>
+      <div className='flex flex-wrap justify-center items-center mb-5 gap-1'>
         {publishedBlogs.map((blog) => (
           <BlogCard
             key={blog.id}
@@ -43,7 +42,8 @@ function ProfilePage({user, userBlogs, categories,}) {
       </div>
 
       {authUser.id === user.id && 
-      (<><h2 className='text-xl font-bold mt-6 mb-2'>Drafts</h2>
+      <div className='bg-white py-2'>
+      <h2 className='text-3xl font-bold mt-0 mb-2 p-5'>Drafts</h2>
       <div className='flex flex-wrap justify-center items-center gap-3'>
         {draftBlogs.map((blog) => (
           <BlogCard
@@ -56,8 +56,8 @@ function ProfilePage({user, userBlogs, categories,}) {
             likes={blog.likes}
           />
         ))}
-      </div></>)}
-      </section>
+      </div></div>}
+      </div>
     </div>
     </>
   )
