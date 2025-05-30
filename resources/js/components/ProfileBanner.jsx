@@ -103,13 +103,13 @@ function ProfileBanner({user}) {
   };
     
   return (
-    <div className="flex flex-col justify-center items-center bg-white w-full mb-20">
+    <div className="flex flex-col justify-center items-center bg-stone-100 w-full mb-10">
 
   {/* Banner Image */}
   <BackgroundImage
     src={`http://localhost:8000/storage/${profile.banner}`}
     radius="sm"
-    className="w-full h-80"
+    className="w-full h-96"
   >
     <div className="w-full h-full bg-black/30 flex justify-end items-start p-4">
       {user.id === authUser?.id && (
@@ -121,7 +121,9 @@ function ProfileBanner({user}) {
   </BackgroundImage>
 
   {/* Edit Modal */}
-  <Modal opened={updateOpened} onClose={close} title="Update Profile" centered>
+      <Modal opened={updateOpened} onClose={close} title={
+        <div className="flex justify-center font-bold text-lg"> Update Profile </div>
+      } >
     <form onSubmit={updateProfile}>
       {data.banner && previewUrlBanner && (
         <img src={previewUrlBanner} alt="Banner preview" className="mb-4 rounded-md" />
