@@ -153,11 +153,12 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
     return (<div className='w-[100%]'>
 
         {/* eto ung signup modal */}
-        <Modal opened={signUpOpened} onClose={closeSignUp} title="SignUp" centered>
+        <Modal opened={signUpOpened} onClose={closeSignUp} title="Sign Up" centered>
+            
 
             <Group justify="center">
                 <div className='flex flex-col justify-center items-center'>
-                    <img src={DreamLog} className='h-[150px] ml-8' />
+                    <img src={DreamLog} className='h-[150px] ml-8 mr-8' />
                     <Text>Welcome To DreamLOG</Text>
                 </div>
 
@@ -202,7 +203,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
         </Modal>
 
         {/* log in modal */}
-        <Modal opened={loginOpened} onClose={closeLogin} title="LogIn" centered>
+        <Modal opened={loginOpened} onClose={closeLogin} title="Log In" centered>
 
             {/* <Group justify="center">
                 <div className='flex flex-col justify-center items-center'>
@@ -237,8 +238,15 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
 
         {/* kre eyt blag modal */}
         <Modal opened={createBlogOpened} onClose={closeCreateBlog} title="Create Blog" centered>
+
+            <Group justify="center">
+                <div className='flex flex-col justify-center items-center'>
+                    <img src={DreamLog} className='h-[150px] ml-8 mr-8' />
+                </div>
+            </Group>
+
             <div>
-                    <div className='flex flex-row justify-between '><span >Create a Category?</span><span onClick={()=>setDropdown(!dropdown)}>+</span></div>
+                    <div className='flex flex-row justify-between mb-4 '><span className='text-lg font-bold' >Create a Category?</span><span onClick={()=>setDropdown(!dropdown)}>+</span></div>
                     {dropdown && <div className='w-[300px] bg-slate-50 flex flex-col gap-3'>
                         <form onSubmit={submitCategory}>
                             <TextInput
@@ -246,9 +254,11 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
                                 label="Category Name"
                                 placeholder="Category Name"
                                 onChange={(e) => setCategoryData('categoryName', e.target.value)}
+                                className='mb-2'
 
                             />
                                 <FileInput
+                                withAsterisk
                                 label="Input Thumbnail"
                                 placeholder="Input png/jpeg"
                                 onChange={(file) => {setCategoryData('thumbnail', file)
@@ -257,7 +267,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
                                 error={error}
                                 
                                 />
-                            <Button type='submit'>
+                            <Button type='submit' className='mt-2 mb-5'>
                                 <span>Create Category</span>
                             </Button>
                         </form>
@@ -273,7 +283,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
                     placeholder="Input png/jpeg"
                     onChange={(file) => setBlogData('Thumbnail', file)}
                 />
-                <div>
+                <div className="flex flex-wrap gap-1">
                     {categories.map((category) => (
                         <Button
                         key={category.id}
@@ -285,8 +295,8 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
                                 setBlogData('categories', (blogData.categories || []).filter(catId => catId !== category.id));
                             }
                         }}
-                        className={`${(blogData.categories || []).includes(category.id) ? "bg-slate-100":"bg-slate-200"} p-3 rounded-md w-[50px]`}
-                        color={!(blogData.categories || []).includes(category.id) ? "rgba(250, 155, 155, 1)" : "gray"}
+                        className={`${(blogData.categories || []).includes(category.id) ? "bg-slate-100":"bg-slate-200"} p-3 rounded-md w-[50px] m-1`}
+                        color={!(blogData.categories || []).includes(category.id) ? "gray" :  "rgba(250, 155, 155, 1)"}
                         >
                         <span>{category.categoryName}</span>
                         </Button>
@@ -298,6 +308,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
                     label="Blog Title"
                     placeholder="Blog Title"
                     onChange={(e) => setBlogData('BlogTitle', e.target.value)}
+                    className='mt-5'
 
 
                 />
@@ -307,6 +318,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
                     label="Blog Description"
                     placeholder="Blog Description"
                     onChange={(e) => setBlogData('BlogDescription', e.target.value)}
+                    className='mt-2'
 
                 />
 
@@ -320,7 +332,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
 
 
 
-        <Modal opened={loginOpened} onClose={closeLogin} title="LogIn" centered>
+        <Modal opened={loginOpened} onClose={closeLogin} title="Log In" centered>
             <form onSubmit={logIN}>
                 <TextInput
                     withAsterisk
@@ -482,9 +494,9 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
 
                     : (
                         <div className='flex gap-3 mr-8'>
-                            <Button radius="xl" size='compact-xl' color="rgba(219, 0, 20, 1)" variant="light" onClick={openSignUp}><span className='px-4'>SignUp</span></Button>
+                            <Button radius="xl" size='compact-xl' color="rgba(219, 0, 20, 1)" variant="light" onClick={openSignUp}><span className='px-4'>Sign Up</span></Button>
 
-                            <Button radius="xl" size='compact-xl' color="rgba(241, 43, 107, 1)" onClick={openLogin}><span className='px-4'>LogIn</span></Button>
+                            <Button radius="xl" size='compact-xl' color="rgba(241, 43, 107, 1)" onClick={openLogin}><span className='px-4'>Log In</span></Button>
                         </div>
                     )
             }

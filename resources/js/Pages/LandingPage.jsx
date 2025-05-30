@@ -13,9 +13,9 @@ import { usePage } from '@inertiajs/react';
 function LandingPage() {
   const [logInOpen, setLogInOpen] = useState(false)
 
-  const { auth,categories } = usePage().props;
+  const { auth, categories } = usePage().props;
   const isUser = auth.user;
-  
+
 
   const getStarted = () => {
     if (isUser) {
@@ -51,7 +51,7 @@ function LandingPage() {
       <section className=' flex flex-col justify-center items-center gap-10 p-12 mt-4'>
         <div className='flex flex-row justify-center items-center gap-10'>
 
-          <div className="w-[650px] h-[328px] bg-pink-100 hover:w-[700px] hover:h-[350px] rounded-lg flex items-center justify-between p-6 shadow-lg">
+          <div className="w-[650px] h-[328px] bg-pink-100 rounded-lg flex items-center justify-between p-6 shadow-lg transition-transform duration-300 hover:scale-105">
             <div className="w-[360px] flex flex-col justify-center p-6">
               <Title className="text-sm font-bold leading-tight text-gray-900 ">
                 AI Chatbot Assistant
@@ -66,7 +66,7 @@ function LandingPage() {
             </div>
           </div>
 
-          <div className="w-[650px] h-[328px] bg-pink-100 hover:w-[700px] hover:h-[350px] rounded-lg flex items-center justify-between p-6 shadow-lg">
+          <div className="w-[650px] h-[328px] bg-pink-100 rounded-lg flex items-center justify-between p-6 shadow-lg transition-transform duration-300 hover:scale-105">
             <div className="w-[360px] flex flex-col justify-center p-6">
               <Title className="text-sm font-bold leading-tight text-gray-900 ">
                 <span>Create a Blog That’s</span> <span>Uniquely Yours</span>
@@ -82,19 +82,37 @@ function LandingPage() {
 
         </div>
 
-        {/* d2 ung sa categories */}
-        <div className='flex flex-col gap-3'>
-          <Title order={2} className="text-3xl font-bold text-center text-gray-900 ">
+       
+      </section>
+
+      {/* d2 ung sa categories */}
+      {/* <section className= 'h-full flex flex-col items-start p-20'>
+        <div className='max-w-[1500px] w-full mx-auto px-6'>
+          <Title order={2} className="text-3xl font-bold text-gray-900 mb-16">
             Multiple Categories to Choose From
           </Title>
-          <div className='flex flex-row justify-center items-center gap-10'>
-            {categories.map((category)=>(
-                          <CategoriesCard Category={category.categoryName} Thumbnail={category.thumbnail}/>
-                        ))}
+          <div className='flex flex-row flex-wrap gap-x-9 gap-y-9 mt-15'>
+            {categories.map((category) => (
+              <CategoriesCard Category={category.categoryName} Thumbnail={category.thumbnail} className='mb-6' />
+            ))}
           </div>
         </div>
+      </section> */}
 
-      </section >
+      <section className='h-full flex flex-col items-start m-15'>
+          <div className="max-w-[1500px] w-full mx-auto px-6"> 
+            <Title order={2} className="text-3xl font-bold text-gray-900 mb-16">
+              Multiple Categories to Choose From
+            </Title>
+            <div className="flex flex-row flex-wrap gap-x-9 gap-y-9 mt-15">
+              {categories.map((category) => (        
+                  <CategoriesCard Category={category.categoryName} Thumbnail={category.thumbnail} className='m-3'/>                
+              ))}
+            </div>
+          </div>
+          </section>
+
+
 
       {/* d2 part ung about us */}
       < section className='h-[300px] flex flex-col justify-center items-center gap-4 bg-pink-50 my-[100px]' >

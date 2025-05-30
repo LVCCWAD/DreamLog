@@ -70,8 +70,8 @@ function Home( {blogs}) {
             </Carousel>
           </section>
 
-          <section className='w-full  bg-pink-50   rounded-xl'>
-            <Title order={2} className=' p-5'>Most Viewed</Title>
+          <section className='w-full  bg-pink-50   rounded-xl pb-10'>
+            <Title order={2} className=' p-10'>Most Viewed</Title>
             <div className='flex flex-row justify-center items-center gap-6'>
                 {blogs
                   .sort((a, b) => b.view_count - a.view_count)  // Sort in descending order of views
@@ -90,9 +90,9 @@ function Home( {blogs}) {
             
           </section>
 
-          <section>
-           <Title order={2} className='m-5 p-5'>Discover more</Title>
-            <div className='flex flex-row justify-center items-center gap-6 h-[300px]'>
+          <section className='w-full  rounded-xl pb-10'>
+           <Title order={2} className=' p-10'>Discover more</Title>
+            <div className='flex flex-row justify-center items-center gap-6'>
               {blogs.map((blog)=>(
                                 <BlogCard
                                   Title={blog.BlogTitle}
@@ -107,15 +107,15 @@ function Home( {blogs}) {
             
           </section>
 
-          <section className='mt-10'>
-          <div className="flex flex-row gap-3 max-w-screen overflow-y-auto px-10 mt-10">
-            <Title order={2} className="text-3xl font-bold text-center text-gray-900 dark:text-white">
+          <section className='w-full flex flex-col items-start bg-pink-50 rounded-xl pt-10'>
+  
+            <Title order={2} className="p-10">
               Multiple Categories to Choose From
             </Title>
 
-            <div className="flex flex-row gap-6 items-center">
+            <div className="flex flex-row flex-wrap gap-3 m-10">
               {categories.map((category) => (
-                <a key={category.id} href={`category/${category.id}`} className="w-full max-w-md">
+                <a key={category.id} href={`category/${category.id}`} className="m-3">
                   <CategoriesCard
                     Category={category.categoryName}
                     Thumbnail={category.thumbnail}
@@ -123,7 +123,7 @@ function Home( {blogs}) {
                 </a>
               ))}
             </div>
-          </div>
+          
           </section>
 
         </div>
