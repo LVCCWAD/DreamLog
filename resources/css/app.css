@@ -108,3 +108,53 @@
   text-transform: uppercase;
   cursor: default;
 }
+
+/* Hover effect for Create Blog ActionIcon */
+.create-blog-hover {
+  transition: all 0.3s ease;
+  border-radius: 50%;
+}
+
+.create-blog-hover:hover {
+  background-color: #ec4899; /* Pink hover background */
+  transform: scale(1.05);
+}
+
+.create-blog-hover:hover i {
+  color: #ffffff; /* White icon on hover */
+}
+
+@media (prefers-color-scheme: dark) {
+  .create-blog-hover:hover {
+    background-color: #be185d; /* Deep pink in dark mode */
+  }
+
+  .create-blog-hover:hover i {
+    color: #ffffff;
+  }
+}
+
+/* Hover effect for Notification and Menu icons */
+.hover-effect-icon {
+  transition: all 0.3s ease;
+  border-radius: 50%;
+}
+
+.hover-effect-icon:hover {
+  background-color: #ec4899; /* Pink background */
+  transform: scale(1.05);
+}
+
+.hover-effect-icon:hover i {
+  color: #ffffff; /* White icon on hover */
+}
+
+@media (prefers-color-scheme: dark) {
+  .hover-effect-icon:hover {
+  background-color: #be185d; /* Deep pink for dark mode */
+  }
+
+  .hover-effect-icon:hover i {
+    color: #ffffff; /* Light icon in dark mode */
+  }
+}
