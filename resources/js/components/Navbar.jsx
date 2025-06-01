@@ -410,6 +410,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
                             aria-label="Create Blog"
                             gradient={{ from: 'pink', to: 'red', deg: 120 }}
                             onClick={openCreateBlog}
+                            className="create-blog-hover"
                         >
                             <i className="bx bx-plus text-xl text-white dark:text-black transition-transform duration-150 hover:scale-110"></i>
                         </ActionIcon>)}
@@ -422,9 +423,10 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
                                 variant="gradient"
                                 size="xl"
                                 aria-label="Notifications"
-                                gradient={{ from: 'gray', to: 'gray', deg: 171 }}
+                                gradient={{ from: 'pink', to: 'red', deg: 120 }}
+                                className="hover-effect-icon"
                                 >
-                                <i className="bx bx-bell text-xl text-gray-800 dark:text-white"></i>
+                                 <i className="bx bx-bell text-xl text-white-800 dark:text-white transition duration-200"></i>
                                 </ActionIcon>
                             </Menu.Target>
 
@@ -463,9 +465,10 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
                                     variant="gradient"
                                     size="xl"
                                     aria-label="Menu"
-                                    gradient={{ from: 'gray', to: 'gray', deg: 171 }}
+                                    gradient={{ from: 'pink', to: 'red', deg: 120 }}
+                                    className="hover-effect-icon"
                                 >
-                                    <i className="bx bx-menu text-xl text-gray-800 dark:text-white"></i>
+                                    <i className="bx bx-menu text-xl text-white-800 dark:text-white transition duration-200"></i>
                                 </ActionIcon>
                             </Menu.Target>
 
