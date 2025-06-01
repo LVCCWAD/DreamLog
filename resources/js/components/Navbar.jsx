@@ -231,7 +231,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
 
 
                 <Group justify="center" mt="md">
-                    <Button type="submit">Submit</Button>
+                    <Button color="pink" type="submit">Submit</Button>
                 </Group>
             </form>
         </Modal>
