@@ -44,6 +44,11 @@ function ProfileBanner({user}) {
         
         post('/profile/update', {
             forceFormData: true,
+            // preserveScroll: true,
+            onSuccess: () => {
+              close(); 
+              reset();
+            },
         });
     }
 

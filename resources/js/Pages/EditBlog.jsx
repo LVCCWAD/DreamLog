@@ -4,6 +4,7 @@ import BlogComponentText from '../components/BlogComponentText';
 import BlogComponentImage from '../components/BlogComponentImage';
 import { Button, Text, Title,Drawer, FileInput, TextInput, Group, Modal} from '@mantine/core';
 import PencilIcon from '../assets/pencil-square.png';
+import ImageIcon from '../assets/image-plus.png';
 import { useForm as useInertiaForm, router, usePage} from '@inertiajs/react';
 import Error404 from './Error404';
 import { useDisclosure } from '@mantine/hooks';
@@ -240,11 +241,12 @@ function EditBlog({blog, blogComponents: dbComponents, categories,}) {
         <div className='grid grid-cols-[20%_80%] my-5'>
 
         {/* d2 marga toolbox */}
-        <div className="flex flex-col items-start bg-slate-50 rounded-lg border border-black pl-3 pt-10 space-y-4 min-h-full max-w-[120px]">
+        <div className="flex flex-col items-start bg-slate-0 rounded-sm border border-black pl-3 pt-10 space-y-4 min-h-full max-w-[120px]">
         <Button variant="filled" color="pink" radius="lg" size="lg" onClick={addTextComponent}>
         <img src={PencilIcon} alt="Pencil Icon" className="w-6 h-6" /></Button>
           
-        <Button variant="filled" color="pink" radius="lg" size="lg" onClick={addImageComponent}> 🖼️ </Button></div>
+        <Button variant="filled" color="pink" radius="lg" size="lg" onClick={addImageComponent}>
+        <img src={ImageIcon} alt="Image Icon" className="w-6 h-6" /></Button> </div>
 
             <div className='flex flex-col justify-center items-center'>
               {/* d2 marga editing Blog */}

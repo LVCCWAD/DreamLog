@@ -46,11 +46,11 @@ function BlogCard({Title, Description,Thumbnail , Creator, id,  likes}) {
                 <Image
                     src={`http://localhost:8000/storage/${Thumbnail}`}
                     height={160}
-                    className="object-cover w-full h-[200px]" //TANGGALIN MO NA LANG IF DI MO GUSTO//
+                    className="object-cover w-full h-[200px]" 
                 />
             </Card.Section>
             
-            <Group justify="space-between" mt="md" mb="xs">
+            <Group justify="space-between" mt="md" mb="xs"> {/*mb="xs"*/}
                 
                     <Text fw={800}><a href={`/blog/${id}`}>{Title}</a></Text>
                
@@ -64,7 +64,7 @@ function BlogCard({Title, Description,Thumbnail , Creator, id,  likes}) {
                 
             
 
-            <Text size="m">
+            <Text size="md">
                 {Description}
             </Text>
             <Text size="xs">

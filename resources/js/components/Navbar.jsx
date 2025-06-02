@@ -371,7 +371,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
                                 variant="filled"
                                 radius="xl"
                                 size="lg"
-                                placeholder="Search"
+                                placeholder="Search Title"
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
                             />
