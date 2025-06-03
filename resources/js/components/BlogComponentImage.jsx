@@ -1,8 +1,9 @@
 import { Button, FileInput } from '@mantine/core';
 import React, { useEffect, useState } from 'react'
-import {router} from '@inertiajs/react';
+import {router, usePage} from '@inertiajs/react';
 
 function BlogComponentImage({position, type="image", handleChange, deleteElement,content, id=null, componentEdit=true}) {
+    const { url } = usePage().props;
     const [image, setImage] = useState(null)
     const [previewUrl, setPreviewUrl] = useState(content ? `${url}/storage/${content}` : null)
     
