@@ -55,10 +55,10 @@ function BlogPage({components, blog}) {
   return (
     <>
     <Navbar ></Navbar>
-        <div className='flex flex-col justify-center items-center p-4 bg-pink-50 min-h-screen'>
+        <div className='flex flex-col justify-center items-center p-4 bg-pink-50 h-full'>
                       <div className='w-[1250px]'>
                       {
-                        auth.user.id == blog.creator.id ? <a href={`/editblog/${blog.id}`}><Button className="mb-1"> Edit </Button></a> : <></>
+                        auth.user.id == blog.creator.id ? <a href={`/editblog/${blog.id}`}><Button color="pink" className="mb-1"> Edit </Button></a> : <></>
                       }
                       
 

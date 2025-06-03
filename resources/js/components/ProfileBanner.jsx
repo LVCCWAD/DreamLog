@@ -44,6 +44,11 @@ function ProfileBanner({user}) {
         
         post('/profile/update', {
             forceFormData: true,
+            // preserveScroll: true,
+            onSuccess: () => {
+              close(); 
+              reset();
+            },
         });
     }
 
@@ -162,7 +167,7 @@ function ProfileBanner({user}) {
       />
 
       <Group justify="center" mt="md">
-        <Button type="submit">Submit</Button>
+        <Button color="pink" type="submit">Submit</Button>
       </Group>
     </form>
   </Modal>

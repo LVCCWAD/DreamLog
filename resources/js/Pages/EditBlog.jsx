@@ -4,6 +4,7 @@ import BlogComponentText from '../components/BlogComponentText';
 import BlogComponentImage from '../components/BlogComponentImage';
 import { Button, Text, Title,Drawer, FileInput, TextInput, Group, Modal} from '@mantine/core';
 import PencilIcon from '../assets/pencil-square.png';
+import ImageIcon from '../assets/image-plus.png';
 import { useForm as useInertiaForm, router, usePage} from '@inertiajs/react';
 import Error404 from './Error404';
 import { useDisclosure } from '@mantine/hooks';
@@ -240,24 +241,21 @@ function EditBlog({blog, blogComponents: dbComponents, categories,}) {
         <div className='grid grid-cols-[20%_80%] my-5'>
 
         {/* d2 marga toolbox */}
-        <div className="flex flex-col items-start bg-slate-50 rounded-lg border border-black pl-3 pt-10 space-y-4 min-h-full max-w-[120px]">
-        <Button variant="filled" color="violet" radius="lg" size="lg" onClick={addTextComponent}>
+        <div className="flex flex-col items-start bg-slate-0 rounded-sm border border-black pl-3 pt-10 space-y-4 min-h-full max-w-[120px]">
+        <Button variant="filled" color="pink" radius="lg" size="lg" onClick={addTextComponent}>
         <img src={PencilIcon} alt="Pencil Icon" className="w-6 h-6" /></Button>
           
-        <Button variant="filled" color="gray" radius="lg" size="lg" onClick={addImageComponent}>
-          🖼️ </Button>
-        </div>
+        <Button variant="filled" color="pink" radius="lg" size="lg" onClick={addImageComponent}>
+        <img src={ImageIcon} alt="Image Icon" className="w-6 h-6" /></Button> </div>
 
             <div className='flex flex-col justify-center items-center'>
               {/* d2 marga editing Blog */}
               <div className='flex flex-col justify-center items-center'>
                 <div className=' border border-b-black w-[1250px] p-10'>
                     <div className="flex gap-2 mb-4">
-                    <Button onClick={()=> publish()}>Publish</Button>
-                    <Button onClick={()=> setIsBlogEdit(!isBlogEdit)}>EditBlog</Button>
-                    <Button color="red" onClick={open}>
-                      Delete Blog
-                    </Button>
+                    <Button color="pink" onClick={() => publish()}> Publish </Button>
+                    <Button color="pink" onClick={() => setIsBlogEdit(!isBlogEdit)}> Edit Blog </Button>
+                    <Button color="red" onClick={open}> Delete Blog </Button>
 
                     <Modal opened={opened} onClose={close} title="Confirm Deletion" centered>
                       <Text size="sm" mb="md">
@@ -278,12 +276,12 @@ function EditBlog({blog, blogComponents: dbComponents, categories,}) {
                     {isBlogEdit ? <div className='flex flex-col gap-3'>
                       {blogCategories?.map((category) => (
                         <div className="bg-slate-300 p-4 w-[250px] flex justify-between items-center">
-                          <Button className="bg-slate-50 p-3">
+                          <Button color="pink" className=" p-3">
                             {category.categoryName}
                           </Button>
-                          <Button
+                          <Button color="red"
                             onClick={() => removeCategory(category)}
-                            className="bg-red-400 text-white px-3"
+                            className=" text-white px-3"
                           >
                             X
                           </Button>
@@ -300,7 +298,7 @@ function EditBlog({blog, blogComponents: dbComponents, categories,}) {
                                       />
                                       <div className="flex flex-row space-x-3 py-2">
                                           {categories?.map((category) => (
-                                              <Button
+                                              <Button color="pink"
                                                   key={category.id}
                                                   disabled={(blogCategories ?? []).some(c => c.id === category.id)}
                                                   onClick={() => {
@@ -338,7 +336,7 @@ function EditBlog({blog, blogComponents: dbComponents, categories,}) {
                       
                       
                                       <Group justify="center" mt="md">
-                                          <Button type="submit">Submit</Button>
+                                          <Button color="pink" type="submit">Submit</Button>
                                       </Group>
                                   </form>
                     </div>:<div className='flex flex-col justify-center items-center'>

@@ -230,7 +230,9 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
 
 
                 <Group justify="center" mt="md">
-                    <Button type="submit" color='rgba(250, 155, 155, 1)'>Submit</Button>
+                  
+                    <Button color="pink" type="submit">Submit</Button>
+
                 </Group>
             </form>
         </Modal>
@@ -370,7 +372,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
                                 variant="filled"
                                 radius="xl"
                                 size="lg"
-                                placeholder="Search"
+                                placeholder="Search Title"
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
                             />
