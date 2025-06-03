@@ -97,10 +97,7 @@ function EditBlog({blog, blogComponents: dbComponents, categories,}) {
 
 
     
-    useEffect(() => {
-      console.log("Updated components:", blogComponents);
-      console.log("Updated elements:", elements);
-    }, [blogComponents]);
+    
 
     useEffect(() => {
       save()
@@ -232,7 +229,8 @@ function EditBlog({blog, blogComponents: dbComponents, categories,}) {
        const [opened, { open, close }] = useDisclosure(false);
 
     
-
+  const isValidToPublish = blogComponents.Components.length > 0 &&
+    blogComponents.Components.every(c => c.content !== "" && c.content !== null);
 
   return (
     <> 
@@ -253,7 +251,7 @@ function EditBlog({blog, blogComponents: dbComponents, categories,}) {
               <div className='flex flex-col justify-center items-center'>
                 <div className=' border border-b-black w-[1250px] p-10'>
                     <div className="flex gap-2 mb-4">
-                    <Button color="pink" onClick={() => publish()}> Publish </Button>
+                    <Button color="pink" onClick={() => publish()} disabled={!isValidToPublish}> Publish </Button>
                     <Button color="pink" onClick={() => setIsBlogEdit(!isBlogEdit)}> Edit Blog </Button>
                     <Button color="red" onClick={open}> Delete Blog </Button>
 

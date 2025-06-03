@@ -37,6 +37,7 @@ function ProfilePage({user, userBlogs, categories,}) {
             Thumbnail={blog.Thumbnail}
             id={blog.id}
             likes={blog.likes}
+            view_count={blog.view_count}
           />
         ))}
       </div>
@@ -54,6 +55,7 @@ function ProfilePage({user, userBlogs, categories,}) {
             Thumbnail={blog.Thumbnail}
             id={blog.id}
             likes={blog.likes}
+            view_count={blog.view_count}
           />
         ))}
       </div></div>}

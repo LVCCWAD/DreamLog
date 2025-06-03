@@ -1,162 +1,182 @@
-import React, { useEffect, useState } from 'react'
-import { Button, Modal, Group, TextInput, PasswordInput, Text, ActionIcon, FileInput, Menu, ScrollArea, } from '@mantine/core';
+import React, { useEffect, useState } from 'react';
+import {
+  Button, Modal, Group, TextInput, PasswordInput, Text,
+  ActionIcon, FileInput, Menu, ScrollArea, Notification
+} from '@mantine/core';
 import DreamLog from '../assets/DreamLog.png';
 import { useDisclosure } from '@mantine/hooks';
 import { useForm as useInertiaForm, router, usePage } from '@inertiajs/react';
-import BlogCard from './BlogCard';
+import { IconCheck, IconX } from '@tabler/icons-react';
 
+function Navbar({ Lopen = false, setLopen, inEdit = false }) {
+  const { auth, categories, blogs } = usePage().props;
+  const isUser = !!auth.user;
+  const authUser = auth.user;
+  const notifications = authUser ? auth.user.notifications : [];
 
+  const [logInOpen, setLogInOpen] = useState(false);
+  const [signUpOpened, { open: openSignUp, close: closeSignUp }] = useDisclosure(false);
+  const [loginOpened, { open: openLogin, close: closeLogin }] = useDisclosure(false);
+  const [createBlogOpened, { open: openCreateBlog, close: closeCreateBlog }] = useDisclosure(false);
+  const [notificationOpened, { open: openNotification, close: closeNotification }] = useDisclosure(false);
 
+  const [previewUrl, setPreviewUrl] = useState();
+  const [dropdown, setDropdown] = useState(false);
+  const [visible, { toggle }] = useDisclosure(false);
+  const [snackbar, setSnackbar] = useState({ message: '', color: '', icon: null });
+  const [showSnackbar, setShowSnackbar] = useState(false);
 
+  const showNotification = (message, color = 'red', icon = <IconX size={16} />) => {
+    setSnackbar({ message, color, icon });
+    setShowSnackbar(true);
+    setTimeout(() => setShowSnackbar(false), 3000);
+  };
 
-function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
+  useEffect(() => {
+    if (Lopen) openLogin();
+    if (closeLogin && setLopen) setLopen(false);
+  }, [Lopen]);
 
-    const { auth, categories, blogs } = usePage().props;
+  const { data: signUpData, setData: setSignUpData, post: register, processing, errors } = useInertiaForm({
+    name: '', email: '', password: ''
+  });
+  const { data: logInData, setData: setLogInData, post: logIn, processing: logInProcessing, errors: logInErrors, reset: logInReset } = useInertiaForm({
+    email: '', password: ''
+  });
+  const { data: blogData, setData: setBlogData, post: createBlog, processing: BlogProcessing, errors: BlogErrors,reset: blogReset } = useInertiaForm({
+    BlogTitle: '', BlogDescription: '', Thumbnail: null, categories: []
+  });
+  const { data: categoryData, setData: setCategoryData, post: createCategory, processing: CategoryProcessing, errors: CategoryErrors } = useInertiaForm({
+    categoryName: '', thumbnail: null
+  });
 
-    const isUser = auth.user ? true : false;
-    const authUser = auth.user;
-    const notifications = authUser ? auth.user.notifications : []
-    const [error, setError] = useState(null);
+  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-    const [logInOpen, setLogInOpen] = useState(false)
-    const [signUpOpened, { open: openSignUp, close: closeSignUp }] = useDisclosure(false);
-    const [loginOpened, { open: openLogin, close: closeLogin }] = useDisclosure(false);
-    const [createBlogOpened, { open: openCreateBlog, close: closeCreateBlog }] = useDisclosure(false);
-    const [previewUrl, setPreviewUrl] = useState()
-    const [dropdown, setDropdown] = useState(false)
-
-    const [notificationOpened, { open: openNotification, close: closeNotification }] = useDisclosure(false);
-
-    const [visible, { toggle }] = useDisclosure(false);
-
-    useEffect(() => {
-        if (Lopen) {
-            openLogin()
-        }
-        if (closeLogin) {
-            if (setLopen) {
-                setLopen(false)
-            }
-
-        }
-    }, [Lopen]);
-
-
-    const { data: signUpData, setData: setSignUpData, post: register, processing, errors } = useInertiaForm({
-        name: '',
-        email: '',
-        password: '',
-    });
-    const { data: logInData, setData: setLogInData, post: logIn, processing: logInProcessing, errors: logInErrors } = useInertiaForm({
-        email: '',
-        password: '',
-    });
-    const { data: blogData, setData: setBlogData, post: createBlog, processing: BlogProcessing, errors: BlogErrors } = useInertiaForm({
-        BlogTitle: '',
-        BlogDescription: '',
-        Thumbnail: null,
-        categories:[]
-    });
-    const { data: categoryData, setData: setCategoryData, post: createCategory, processing: CategoryProcessing, errors: CategoryErrors } = useInertiaForm({
-        categoryName: '',
-        thumbnail: null,
-    });
-
-
-    const signUP = async (e) => {
-        e.preventDefault();
-        await register('/register');
-
+  const signUP = async (e) => {
+    e.preventDefault();
+    if (!signUpData.name || !signUpData.email || !signUpData.password) {
+      return showNotification("All fields are required");
     }
-
-    const logIN = async (e) => {
-        e.preventDefault();
-        await logIn('login');
-
+    if (!validateEmail(signUpData.email)) {
+      return showNotification("Invalid email format");
     }
-
-    const handleLogout = () => {
-        router.post('/logout', {}, {
-            onSuccess: () => {
-                window.location.href = '/';
-            }
-        });
-
-    };
-
-    const submitBlog = (e) => {
-        e.preventDefault();
-        console.log(blogData.Thumbnail)
-        createBlog('/createblog', {
-            forceFormData: true,
-        });
+    await register('/register');
+    if(errors.name){
+        return showNotification(errors.name);
+    }else if (errors.email){
+        return showNotification(errors.email);
     }
+  };
 
-    const submitCategory = (e) => {
-        e.preventDefault();
-       
-        createCategory('/createcategory', {
-            forceFormData: true,
-        });
+  const logIN = async (e) => {
+    e.preventDefault();
+    if (!logInData.email || !logInData.password) {
+      return showNotification("Email and password required");
     }
+    if (!validateEmail(logInData.email)) {
+      return showNotification("Invalid email format");
+    }
+    await logIn('login');
+    if(logInErrors.name){
+        return showNotification(logInErrors.name);
+    }else if (logInErrors.email){
+        return showNotification(logInErrors.email);
+    }
+  };
 
-    useEffect(() => {
-        if (blogData.Thumbnail) {
-            const objectUrl = URL.createObjectURL(blogData.Thumbnail);
-            setPreviewUrl(objectUrl);
+  const submitBlog = (e) => {
+    e.preventDefault();
+    if (!blogData.BlogTitle || !blogData.BlogDescription || !blogData.Thumbnail) {
+      return showNotification("All blog fields are required");
+    }
+    createBlog('/createblog', { forceFormData: true });
+  };
 
-            return () => URL.revokeObjectURL(objectUrl);
-        }
-    }, [blogData.Thumbnail]);
-    useEffect(()=>{
-        console.log(blogData)
-    },[blogData])
+  const submitCategory = (e) => {
+    e.preventDefault();
+    if (!categoryData.categoryName || !categoryData.thumbnail) {
+      return showNotification("Category name and thumbnail are required");
+    }
+    createCategory('/createcategory', { forceFormData: true });
+  };
 
-    const [query, setQuery] = useState('');
-    const[filteredBlogs,setFilteredBlogs] = useState([])
+  const handleLogout = () => {
+    router.post('/logout', {}, {
+      onSuccess: () => { window.location.href = '/'; }
+    });
+  };
 
-    useEffect(()=>{
-        setFilteredBlogs (blogs.filter(blog =>
-        blog.BlogTitle.toLowerCase().includes(query.toLowerCase()) ||
-        blog.BlogDescription.toLowerCase().includes(query.toLowerCase())
-    ))
+  const [query, setQuery] = useState('');
+  const [filteredBlogs, setFilteredBlogs] = useState([]);
+  useEffect(() => {
+    setFilteredBlogs(blogs.filter(blog =>
+      blog.BlogTitle.toLowerCase().includes(query.toLowerCase()) ||
+      blog.BlogDescription.toLowerCase().includes(query.toLowerCase())
+    ));
+  }, [query]);
 
-    },[query])
-
-    console.log(blogs)
-
-    const handleFileChange = (file) => {
+  const handleFileChange = (file, mode) => {
     if (!file) return;
-
     const img = new Image();
     const reader = new FileReader();
-
     reader.onload = (e) => {
       img.src = e.target.result;
-
       img.onload = () => {
         if (img.width > img.height) {
-          setError(null);
           setCategoryData('thumbnail', file);
         } else {
-          setError('Please upload a landscape image (width must be greater than height).');
-          setCategoryData('thumbnail', null);
+            {mode == "category" && setCategoryData('thumbnail', null)}
+            {mode == "blog" && setBlogData('Thumbnail', null)}
+          showNotification("Please upload a landscape image");
         }
       };
     };
-
     reader.readAsDataURL(file);
   };
+
+  useEffect(() => {
+    if (blogData.Thumbnail) {
+      const objectUrl = URL.createObjectURL(blogData.Thumbnail);
+      setPreviewUrl(objectUrl);
+      return () => URL.revokeObjectURL(objectUrl);
+    }
+  }, [blogData.Thumbnail]);
 
     
 
     return (<div className='w-[100%]'>
+        {/* {showSnackbar && (
+        <Notification
+          icon={snackbar.icon}
+          color={snackbar.color}
+          title="Error"
+          withCloseButton
+          onClose={() => setShowSnackbar(false)}
+          style={{ position: 'fixed', top: 10, right: 10, zIndex: 1000 }}
+        >
+          {snackbar.message}
+        </Notification>
+      )} */}
 
         {/* eto ung signup modal */}
         <Modal opened={signUpOpened} onClose={closeSignUp} title="Sign Up" centered>
             
-
+            
             <Group justify="center">
+                {showSnackbar && (
+                    <Notification
+                    icon={snackbar.icon}
+                    color={snackbar.color}
+                    title="Error"
+                    withCloseButton
+                    onClose={() => setShowSnackbar(false)}
+                    style={{ zIndex: 1000 }}
+                    className='w-full m-2'
+                    >
+                    {snackbar.message}
+                    </Notification>
+                )}
+                
                 <div className='flex flex-col justify-center items-center'>
                     <img src={DreamLog} className='h-[150px] ml-8 mr-8' />
                     <Text>Welcome To DreamLOG</Text>
@@ -196,7 +216,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
 
 
                 <Group justify="center" mt="md">
-                    <Button type="submit" color='rgba(250, 155, 155, 1)'>Submit</Button>
+                    <Button type="submit" color='rgba(250, 155, 155, 1)' disabled={ signUpData.email == "" || signUpData.password == "" || signUpData.name == ""}>Submit</Button>
                 </Group>
             </form>
         </Modal>
@@ -204,11 +224,27 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
         {/* log in modal */}
         <Modal opened={loginOpened} onClose={closeLogin} title="Log In" centered>
 
-            {/* <Group justify="center">
+            <Group justify="center">
+                {showSnackbar && (
+                    <Notification
+                    icon={snackbar.icon}
+                    color={snackbar.color}
+                    title="Error"
+                    withCloseButton
+                    onClose={() => setShowSnackbar(false)}
+                    style={{ zIndex: 1000 }}
+                    className='w-full m-2'
+                    >
+                    {snackbar.message}
+                    </Notification>
+                )}
+                
                 <div className='flex flex-col justify-center items-center'>
-                    <img src={DreamLog} className='h-[150px] ml-8' />
+                    <img src={DreamLog} className='h-[150px] ml-8 mr-8' />
+                    <Text>Welcome To DreamLOG</Text>
                 </div>
-            </Group> */}
+
+            </Group>
 
             <form onSubmit={logIN}>
                 <TextInput
@@ -218,6 +254,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
                     onChange={(e) => setLogInData('email', e.target.value)}
 
                 />
+                
 
                 <PasswordInput
                     withAsterisk
@@ -231,16 +268,17 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
 
                 <Group justify="center" mt="md">
                   
-                    <Button color="pink" type="submit">Submit</Button>
+                    <Button color="pink" type="submit" disabled={ logInData.email == "" || logInData.password == "" }>Submit</Button>
 
                 </Group>
             </form>
         </Modal>
 
         {/* kre eyt blag modal */}
-        <Modal opened={createBlogOpened} onClose={closeCreateBlog} title="Create Blog" centered>
+        <Modal opened={createBlogOpened} onClose={() =>{closeCreateBlog(); blogReset();}} title="Create Blog" centered>
 
             <Group justify="center">
+                
                 <div className='flex flex-col justify-center items-center'>
                     <img src={DreamLog} className='h-[150px] ml-8 mr-8' />
                 </div>
@@ -248,7 +286,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
 
             <div>
                     <div className='flex flex-row justify-between mb-4 '><span className='text-lg font-bold' >Create a Category?</span><span onClick={()=>setDropdown(!dropdown)}>+</span></div>
-                    {dropdown && <div className='w-[300px] bg-slate-50 flex flex-col gap-3'>
+                    {dropdown && <div className='w-[300px]  flex flex-col gap-3'>
                         <form onSubmit={submitCategory}>
                             <TextInput
                                 withAsterisk
@@ -263,12 +301,25 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
                                 label="Input Thumbnail"
                                 placeholder="Input png/jpeg"
                                 onChange={(file) => {setCategoryData('thumbnail', file)
-                                    handleFileChange(file)
+                                    handleFileChange(file,'category')
                                 }}
-                                error={error}
+                                
                                 
                                 />
                             <Button type='submit' color='rgba(250, 155, 155, 1)' className='mt-2 mb-5'>
+                                 {showSnackbar && (
+                                    <Notification
+                                    icon={snackbar.icon}
+                                    color={snackbar.color}
+                                    title="Error"
+                                    withCloseButton
+                                    onClose={() => setShowSnackbar(false)}
+                                    style={{ zIndex: 1000 }}
+                                    className='w-full m-2'
+                                    >
+                                    {snackbar.message}
+                                    </Notification>
+                                )}
                                 <span>Create Category</span>
                             </Button>
                         </form>
@@ -282,7 +333,9 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
                 <FileInput
                     label="Input Thumbnail"
                     placeholder="Input png/jpeg"
-                    onChange={(file) => setBlogData('Thumbnail', file)}
+                    onChange={(file) => {setBlogData('Thumbnail', file)
+                        handleFileChange(file,'blog')}
+                    }
                 />
                 <div className="flex flex-wrap gap-1">
                     {categories.map((category) => (
@@ -326,37 +379,28 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
 
 
                 <Group justify="center" mt="md">
+                     {showSnackbar && (
+                    <Notification
+                    icon={snackbar.icon}
+                    color={snackbar.color}
+                    title="Error"
+                    withCloseButton
+                    onClose={() => setShowSnackbar(false)}
+                    style={{ zIndex: 1000 }}
+                    className='w-full m-2'
+                    >
+                    {snackbar.message}
+                    </Notification>
+                )}
                     <Button type="submit" color='rgba(250, 155, 155, 1)'>Submit</Button>
                 </Group>
+                
             </form>
         </Modal>
 
 
 
-        <Modal opened={loginOpened} onClose={closeLogin} title="Log In" centered>
-            <form onSubmit={logIN}>
-                <TextInput
-                    withAsterisk
-                    label="Email"
-                    placeholder="your@email.com"
-                    onChange={(e) => setLogInData('email', e.target.value)}
-
-                />
-
-                <PasswordInput
-                    withAsterisk
-                    label="Password"
-                    defaultValue=""
-                    visible={visible}
-                    onVisibilityChange={toggle}
-                    onChange={(e) => setLogInData('password', e.target.value)}
-                />
-
-                <Group justify="center" mt="md">
-                    <Button type="submit">Submit</Button>
-                </Group>
-            </form>
-        </Modal>
+       
 
         <header className='w-full h-[90px] flex flex-row justify-between items-center sticky border border-b-gray-500 z-10'>
 

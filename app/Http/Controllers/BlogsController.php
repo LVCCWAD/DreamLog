@@ -16,39 +16,32 @@ use Illuminate\Support\Facades\Storage;
 
 class BlogsController extends Controller
 {
-    public function createBlog(Request $request){
-
-        $blog = $request->validate([
-            'BlogTitle'=>['required','string','max:50'],
-            'BlogDescription'=>['required','string',"max:100"],
-            'Thumbnail' => ['nullable', 'file', 'mimes:jpg,png,pdf,gif', 'max:51200'],
+    public function createBlog(Request $request)
+    {
+        $validated = $request->validate([
+            'BlogTitle' => ['required', 'string', 'max:50'],
+            'BlogDescription' => ['required', 'string', 'max:100'],
+            'Thumbnail' => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf,gif', 'max:51200'],
+            'categories' => ['nullable', 'array'],
+            'categories.*' => ['integer', 'exists:categories,id'],
         ]);
-
-        
 
         if ($request->hasFile('Thumbnail')) {
             $file = $request->file('Thumbnail');
-            $filePath = $file->store('Thumbnails', 'public'); 
-            $blog['Thumbnail'] = $filePath;
+            $filePath = $file->store('Thumbnails', 'public');
+            $validated['Thumbnail'] = $filePath;
         }
-        
-        $blog['user_id'] = auth()->guard('web')->id();
-        $blog['Visibility'] = "private";
 
-        $createdBlog = Blog::create($blog);
+        $validated['user_id'] = auth()->guard('web')->id();
+        $validated['Visibility'] = 'private';
 
-        
+        $createdBlog = Blog::create($validated);
 
-        $categories = $request->input('categories', []);
-        if (!empty($categories)) {
-            $createdBlog->categories()->attach($categories);
+        if (!empty($validated['categories'])) {
+            $createdBlog->categories()->attach($validated['categories']);
         }
-        
 
         return redirect("/editblog/{$createdBlog->id}");
-
-        
-
     }
 
     public function updateBlog(Request $request,Blog $blog){
@@ -177,7 +170,8 @@ class BlogsController extends Controller
         $components = $blog->Components;
         $blog->load(['Creator','Creator.followers','likes','Creator.profile','categories']);
         $categories = Category::all();
-        $blog->increment('view_count');
+        if($blog->Visibility == "public"){
+        $blog->increment('view_count');}
 
 
         return inertia('BlogPage',["blog"=>$blog,"components"=> $components, "categories"=> $categories]);

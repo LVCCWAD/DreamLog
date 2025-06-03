@@ -87,6 +87,7 @@ function Home({ blogs }) {
                   Thumbnail={blog.Thumbnail}
                   id={blog.id}
                   likes={blog.likes}
+                  view_count={blog.view_count}
                 />
               ))}
           </div>
@@ -104,7 +105,8 @@ function Home({ blogs }) {
                 Thumbnail={blog.Thumbnail}
                 id={blog.id}
 
-                likes={blog.likes} />
+                likes={blog.likes}
+                view_count={blog.view_count} />
             ))}
           </div>
 

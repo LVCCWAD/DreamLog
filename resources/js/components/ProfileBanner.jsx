@@ -75,13 +75,25 @@ function ProfileBanner({user}) {
     const handleFollow = () =>{
             router.post(`/profile/${authUser.id}/follow`, {
                           user_id: user.id
-                        });
+                        },
+                      {
+        preserveScroll: true,
+        preserveState: true,
+        replace: true,
+       
+        });
         }
     
         const handleUnFollow = () =>{
             router.post(`/profile/${authUser.id}/unfollow`, {
                           user_id: user.id
-                        });
+                        },
+                      {
+        preserveScroll: true,
+        preserveState: true,
+        replace: true,
+       
+        });
         }
 
       const handleFileChange = (file) => {

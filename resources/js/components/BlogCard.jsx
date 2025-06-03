@@ -9,7 +9,7 @@ function formatLikes(num) {
     return num.toString();
 }
 
-function BlogCard({Title, Description,Thumbnail , Creator, id,  likes}) {
+function BlogCard({Title, Description,Thumbnail , Creator, id,  likes, view_count}) {
     console.log(Creator)
 
     const { auth } = usePage().props;
@@ -19,26 +19,46 @@ function BlogCard({Title, Description,Thumbnail , Creator, id,  likes}) {
     const handleFollow = () =>{
         router.post(`/profile/${authUser.id}/follow`, {
                       user_id: Creator.id
-                    });
+                    },
+                {
+        preserveScroll: true,
+        preserveState: true,
+        replace: true,
+       
+        });
     }
 
     const handleUnFollow = () =>{
         router.post(`/profile/${authUser.id}/unfollow`, {
                       user_id: Creator.id
-                    });
+                    },
+                {
+        preserveScroll: true,
+        preserveState: true,
+        replace: true,
+       
+        });
     }
 
-    const handleLike = () =>{
-        router.post(`/like/blog`, {
-                      blog_id: id
-                    });
-    }
+   
+  const handleLike = () => {
+    router.post('/like/blog', { blog_id: id }, {
+      preserveScroll: true,
+      preserveState: true,
+      replace: true,
+      onSuccess: () => console.log('Liked!'),
+    });
+  };
 
-    const handleUnlike = () =>{
-        router.post(`/unlike/blog`, {
-                      blog_id: id
-                    });
+  const handleUnlike = () => {
+        router.post('/unlike/blog', { blog_id: id }, {
+        preserveScroll: true,
+        preserveState: true,
+        replace: true,
+        onSuccess: () => console.log('Unliked!'),
+        });
     }
+  
      
     const followed = authUser?.followings.some(following => following.id == Creator?.id)
     const isLiked = authUser?.liked_blogs?.some(blog => blog.id === id);
@@ -74,18 +94,7 @@ function BlogCard({Title, Description,Thumbnail , Creator, id,  likes}) {
             <Text size="md">
                 {Description}
             </Text>
-            <div className="flex items-center gap-1 text-gray-600 text-sm mt-1">
-            <div className="bg-gradient-to-r from-pink-500 to-red-500 rounded-full p-1">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" className="w-3 h-3">
-              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 
-              2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 
-              2.09C13.09 3.81 14.76 3 16.5 
-              3 19.58 3 22 5.42 22 8.5c0 
-              3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-            </svg>
-          </div>
-          <span>{formatLikes(likesCount)}</span>
-        </div>
+            
             
            
             <div className='flex flex-row justify-center items-center gap-4 m-1'>
@@ -117,7 +126,25 @@ function BlogCard({Title, Description,Thumbnail , Creator, id,  likes}) {
 
 
             </div>
-            
+            <Card.Section>
+                <div className='p-4 flex flex-row justify-between'>
+                    <div className="flex items-center gap-1 text-gray-600 text-sm mt-1">
+                        <div className="bg-gradient-to-r from-pink-500 to-red-500 rounded-full p-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" className="w-3 h-3">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 
+                        2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 
+                        2.09C13.09 3.81 14.76 3 16.5 
+                        3 19.58 3 22 5.42 22 8.5c0 
+                        3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                        </svg>
+                        </div>
+                        <span>{formatLikes(likesCount)}</span>
+                    </div>
+
+                    <span className='text-gray-600'>Views: {view_count}</span>
+                </div>
+
+            </Card.Section>
             
 
             
