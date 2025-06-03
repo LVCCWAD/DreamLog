@@ -10,6 +10,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
+use Inertia\Inertia;
 
 class UserAuth extends Controller
 {
@@ -31,7 +32,7 @@ class UserAuth extends Controller
 
             auth()->guard('web')->login($user);
 
-            return redirect('/')->with('success', 'Registration successful!');
+            return Inertia::location("/");
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['registration' => 'Registration failed: ' . $e->getMessage()])->withInput();
         }
@@ -47,14 +48,22 @@ class UserAuth extends Controller
         try {
             if (auth()->guard('web')->attempt(['email' => $login['email'], 'password' => $login['password']])) {
                 $request->session()->regenerate();
-                return redirect()->intended('/');
+                return Inertia::location("/");
             } else {
                 return redirect()->back()->withErrors([
                     'email' => 'Credentials do not match our records.',
                 ])->withInput($request->only('email'));
             }
+            
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['login' => 'Login failed: ' . $e->getMessage()])->withInput($request->only('email'));
         }
+    }
+
+     public function logout(){
+        Auth::logout();
+
+        return Inertia::location("/");
+        
     }
 }

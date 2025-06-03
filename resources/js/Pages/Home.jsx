@@ -38,7 +38,7 @@ function Card({ image, title, category, id }) {
 
 function Home({ blogs }) {
 
-  const { categories } = usePage().props;
+  const { categories, url } = usePage().props;
 
   return (
     <>
@@ -59,7 +59,7 @@ function Home({ blogs }) {
 
                 <Carousel.Slide>
                   <Card
-                    image={`http://localhost:8000/storage/${blog.Thumbnail}`}
+                    image={`${url}/storage/${blog.Thumbnail}`}
                     title={blog.BlogTitle}
                     category={blog.BlogCategory}
                     id={blog.id}

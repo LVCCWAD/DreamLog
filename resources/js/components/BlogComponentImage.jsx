@@ -4,7 +4,7 @@ import {router} from '@inertiajs/react';
 
 function BlogComponentImage({position, type="image", handleChange, deleteElement,content, id=null, componentEdit=true}) {
     const [image, setImage] = useState(null)
-    const [previewUrl, setPreviewUrl] = useState(content ? `http://localhost:8000/storage/${content}` : null)
+    const [previewUrl, setPreviewUrl] = useState(content ? `${url}/storage/${content}` : null)
     
     useEffect(() => {
         if (image) {

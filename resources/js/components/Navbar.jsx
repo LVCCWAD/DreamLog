@@ -9,7 +9,7 @@ import { useForm as useInertiaForm, router, usePage } from '@inertiajs/react';
 import { IconCheck, IconX } from '@tabler/icons-react';
 
 function Navbar({ Lopen = false, setLopen, inEdit = false }) {
-  const { auth, categories, blogs } = usePage().props;
+  const { auth, categories, blogs,url } = usePage().props;
   const isUser = !!auth.user;
   const authUser = auth.user;
   const notifications = authUser ? auth.user.notifications : [];
@@ -441,7 +441,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
                                                 onClick={() => window.location.href = `/blog/${blog.id}`}
                                             >
                                                 <img
-                                                    src={`http://localhost:8000/storage/${blog.Thumbnail}`}
+                                                    src={`${url}/storage/${blog.Thumbnail}`}
                                                     alt={blog.BlogTitle}
                                                     className="w-14 h-14 object-cover rounded-md"
                                                 />

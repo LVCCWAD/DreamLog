@@ -2,8 +2,10 @@ import React from 'react';
 import BlogCard from '../components/BlogCard';
 import Navbar from '../components/Navbar';
 import { BackgroundImage } from '@mantine/core';
+import { usePage } from '@inertiajs/react';
 
 function CategoryBlogs({ blogs, category }) {
+  const { url } = usePage().props;
   return (
     <div>
       <Navbar />
@@ -19,7 +21,7 @@ function CategoryBlogs({ blogs, category }) {
         <div className="h-[300px] mx-auto ">
           {/* Banner Image */}
           <BackgroundImage
-            src={`http://localhost:8000/storage/${category.thumbnail}`}
+            src={`${url}/storage/${category.thumbnail}`}
             radius="sm"
             className="w-full h-full object-cover"
           >

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
 
 class BlogsController extends Controller
 {
@@ -41,7 +42,7 @@ class BlogsController extends Controller
             $createdBlog->categories()->attach($validated['categories']);
         }
 
-        return redirect("/editblog/{$createdBlog->id}");
+       return Inertia::location("/editblog/{$createdBlog->id}");
     }
 
     public function updateBlog(Request $request,Blog $blog){
@@ -159,7 +160,8 @@ class BlogsController extends Controller
 
         Log::info('Incoming request data:', $request->all());
 
-        return redirect("/blog/{$blog->id}");
+       
+        return Inertia::location("/blog/{$blog->id}");
     }
 
     

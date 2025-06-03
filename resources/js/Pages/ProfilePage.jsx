@@ -7,7 +7,7 @@ import { usePage } from '@inertiajs/react';
 
 function ProfilePage({user, userBlogs, categories,}) {
 
-  const { auth } = usePage().props;
+  const { auth,url } = usePage().props;
   const authUser = auth.user;
   
     

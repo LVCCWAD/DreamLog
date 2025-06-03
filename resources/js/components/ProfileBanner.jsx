@@ -124,7 +124,7 @@ function ProfileBanner({user}) {
 
   {/* Banner Image */}
   <BackgroundImage
-    src={`http://localhost:8000/storage/${profile.banner}`}
+    src={`${url}/storage/${profile.banner}`}
     radius="sm"
     className="w-full h-96"
   >
@@ -188,7 +188,7 @@ function ProfileBanner({user}) {
   <div className="flex flex-row gap-6 items-start w-full px-6 mt-[-3rem] max-w-4xl bg-slate-200 p-4 rounded-lg ">
     {/* Avatar */}
     <Avatar
-      src={`http://localhost:8000/storage/${profile.profilePicture}`}
+      src={`${url}/storage/${profile.profilePicture}`}
       size={120}
       radius={999}
       alt={profile.userName}

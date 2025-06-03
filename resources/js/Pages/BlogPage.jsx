@@ -7,7 +7,7 @@ import { useForm as useInertiaForm, usePage } from '@inertiajs/react';
 
 function BlogPage({components, blog}) {
     console.log(blog)
-    const { auth } = usePage().props;
+    const { auth,url } = usePage().props;
     const [elements, setElements] = useState()
     const authUser = auth.user
 
@@ -64,7 +64,7 @@ function BlogPage({components, blog}) {
 
                           {/*d2 marga Blog Details */}
                           <div className='flex flex-col justify-center items-center p-4 rounded-lg'>
-                            <img src={`http://localhost:8000/storage/${blog.Thumbnail}`} alt="Example" className='w-full h-[500px]' />
+                            <img src={`${url}/storage/${blog.Thumbnail}`} alt="Example" className='w-full h-[500px]' />
                             <Title order={1} fw={1000}>{blog.BlogTitle}</Title>
                             <Text >{blog.BlogDescription}</Text>
                           </div>
@@ -83,7 +83,7 @@ function BlogPage({components, blog}) {
                               <a href={`/profile/${blog.creator?.id}`}>
                                               <div className='flex flex-row justify-center items-center gap-4 m-1'>
                                                   <Avatar
-                                                      src={`http://localhost:8000/storage/${blog.creator?.profile.profilePicture}`}
+                                                      src={`${url}/storage/${blog.creator?.profile.profilePicture}`}
                                                       size={50}
                                                       radius={999}
                                                       alt={blog.creator?.profile.userName}

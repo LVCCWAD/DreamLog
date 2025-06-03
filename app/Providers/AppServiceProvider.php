@@ -39,6 +39,7 @@ class AppServiceProvider extends ServiceProvider
         'blogs' => function () {
                 return Blog::where('Visibility', 'public')->with('Creator')->get();
             },
+            'url' => env('APP_URL'),
         
     ]);
     }

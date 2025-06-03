@@ -14,7 +14,7 @@ function EditBlog({blog, blogComponents: dbComponents, categories,}) {
     
 
     console.log(blog.categories)
-    const { auth } = usePage().props;
+    const { auth, url } = usePage().props;
 
     if (auth.user.id !== blog.creator.id) {
         return <Error404/>
@@ -338,7 +338,7 @@ function EditBlog({blog, blogComponents: dbComponents, categories,}) {
                                       </Group>
                                   </form>
                     </div>:<div className='flex flex-col justify-center items-center'>
-                      <img src={`http://localhost:8000/storage/${blog.Thumbnail}`} alt="Example" className='w-full h-[500px]' />
+                      <img src={`${url}/storage/${blog.Thumbnail}`} alt="Example" className='w-full h-[500px]' />
                       <Title order={1} fw={1000}>{blog.BlogTitle}</Title>
                       <Text >{blog.BlogDescription}</Text>
                       <Text>Categories: </Text>

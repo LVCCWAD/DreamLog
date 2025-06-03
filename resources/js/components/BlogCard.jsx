@@ -12,7 +12,7 @@ function formatLikes(num) {
 function BlogCard({Title, Description,Thumbnail , Creator, id,  likes, view_count}) {
     console.log(Creator)
 
-    const { auth } = usePage().props;
+    const { auth, url } = usePage().props;
 
     const authUser = auth.user;
 
@@ -71,7 +71,7 @@ function BlogCard({Title, Description,Thumbnail , Creator, id,  likes, view_coun
             <Card shadow="sm" padding="lg" radius="md" withBorder>
             <Card.Section>
                 <Image
-                    src={`http://localhost:8000/storage/${Thumbnail}`}
+                    src={`${url}/storage/${Thumbnail}`}
                     height={160}
                     className="object-cover w-full h-[200px]" 
                 />
@@ -101,7 +101,7 @@ function BlogCard({Title, Description,Thumbnail , Creator, id,  likes, view_coun
                  <a href={`/profile/${Creator?.id}`}>
                 <div className='flex flex-row justify-center items-center gap-4 m-1'>
                      <Avatar
-                        src={`http://localhost:8000/storage/${Creator.profile.profilePicture}`}
+                        src={`${url}/storage/${Creator.profile.profilePicture}`}
                         size={50}
                         radius={999}
                         alt={Creator.profile.userName}
