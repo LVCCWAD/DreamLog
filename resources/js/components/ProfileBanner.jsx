@@ -19,7 +19,7 @@ import { useDisclosure } from '@mantine/hooks';
 
 function ProfileBanner({user}) {
 
-    const { auth } = usePage().props;
+    const { auth,url } = usePage().props;
     const authUser = auth.user;
     const profile = user.profile
     const followings = user.followings.length
