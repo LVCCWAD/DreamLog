@@ -8,15 +8,15 @@ function CategoryBlogs({ blogs, category }) {
     <div>
       <Navbar />
 
-      <h1 className="text-9xl font-bold text-start text-gray-900 px-25 mt-6 mb-20 ml-20">
+      <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-start text-gray-900 px-24 mt-5 mb-10 ml-5">
         {category.categoryName}
       </h1>
 
 
-      <div className="max-w-full mx-auto ml-15 mr-15">
-        {/* Banner */}
+      <div className="max-w-full mx-auto ml-5 mr-5">
 
-        <div className="h-[500px] px-24">
+        {/* Banner */}
+        <div className="h-[300px] mx-auto ">
           {/* Banner Image */}
           <BackgroundImage
             src={`http://localhost:8000/storage/${category.thumbnail}`}
@@ -33,7 +33,7 @@ function CategoryBlogs({ blogs, category }) {
 
         {/* Blog Cards */}
         {/* <div className="max-w-6xl mx-auto py-10 px-4 grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 bg-pink-100"> */}
-        <div className="max-w-full mx-auto my-auto p-10 grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 bg-pink-100 mt-16 ml-25 mr-25">
+        <div className="max-w-full mx-auto p-6 sm:px-10 md:px-16 lg:px-24 py-5 grid gap-12 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 bg-pink-100 mt-10 mb-5 rounded-lg">
           {blogs.map((blog) => (
             <BlogCard
               key={blog.id}

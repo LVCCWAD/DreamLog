@@ -31,15 +31,27 @@ function LandingPage() {
 
       <section className='h-full flex flex-row justify-center items-center p-20'>
         <div className='w-[952px] flex flex-col gap-4'>
-          <Title order={1} className="text-5xl font-extrabold leading-tight text-gray-900 ">
+          {/* <Title order={1} className="text-5xl font-extrabold leading-tight text-gray-900 ">
             Unleash Your <span className="text-pink-600">Creativity</span>, One Post at a Time.
-          </Title>
+          </Title> */}
 
-          <Text className="w-[450px] text-lg text-gray-700  leading-relaxed">
+          <h1 className="text-6xl font-extrabold leading-tight text-gray-900 " >
+            Unleash Your <span className="text-pink-600">Creativity</span>, <br/> One Post at a Time.
+          </h1>
+
+          {/* <Text className="w-[450px] text-lg text-gray-700  leading-relaxed">
             To share valuable knowledge and innovative ideas across specific fields, offering expert insights,
             practical tips, and impactful concepts to inspire growth and personal development.
-          </Text>
+          </Text> */}
           <div>
+
+          <p className="w-[500px] text-lg text-gray-700  leading-relaxed mb-5">
+            To share valuable knowledge and innovative ideas across <br/>
+            specific fields, offering expert insights, practical tips, and <br/>
+            impactful concepts to inspire growth and personal <br/>
+            development.
+          </p>
+
             <Button radius="xl" size='xl' color="gray" onClick={() => getStarted()} ><span className='px-4'>Get Started</span></Button>
           </div>
 
@@ -82,7 +94,7 @@ function LandingPage() {
 
         </div>
 
-       
+
       </section>
 
       {/* d2 ung sa categories */}
@@ -100,23 +112,23 @@ function LandingPage() {
       </section> */}
 
       <section className='h-full flex flex-col items-start m-15'>
-          <div className="max-w-[1500px] w-full mx-auto px-6"> 
-            <Title order={2} className="text-3xl font-bold text-gray-900 mb-16">
-              Multiple Categories to Choose From
-            </Title>
-            <div className="flex flex-row flex-wrap gap-x-9 gap-y-9 mt-15">
-              {categories.map((category) => (        
-                  <CategoriesCard Category={category.categoryName} Thumbnail={category.thumbnail} className='m-3'/>                
-              ))}
-            </div>
+        <div className="max-w-[1500px] w-full mx-auto px-6">
+          <Title order={2} className="text-3xl font-bold text-gray-900 mb-16">
+            MULTIPLE CATEGORIES TO CHOOSE
+          </Title>
+          <div className="flex flex-row flex-wrap gap-x-9 gap-y-9 mt-15">
+            {categories.map((category) => (
+              <CategoriesCard Category={category.categoryName} Thumbnail={category.thumbnail} className='m-3' />
+            ))}
           </div>
-          </section>
+        </div>
+      </section>
 
 
 
       {/* d2 part ung about us */}
-      < section className='h-[300px] flex flex-col justify-center items-center gap-4 bg-pink-50 my-[100px]' >
-        <Title order={2} className="text-3xl font-bold text-gray-900 dark:text-black">
+      < section className='h-[450px] flex flex-col justify-center items-center gap-4 bg-pink-50 my-[100px]' >
+        {/* <Title order={2} className="text-3xl font-bold text-gray-900 dark:text-black">
           About Us
         </Title>
         <Text className="w-[600px] text-center text-gray-700  text-md leading-relaxed">
@@ -124,7 +136,20 @@ function LandingPage() {
           It offers expert insights, practical tips, and impactful content designed to inspire creativity, growth, and personal development.
           The site empowers users to unleash their creativity, one post at a time, giving everyone the freedom to express themselves
           and share their voice with the world.
-        </Text>
+        </Text> */}
+
+        <h1 className="text-4xl font-extrabold text-gray-900 dark:text-black">
+          ABOUT US
+        </h1>
+
+        <p className="w-[1000px] text-center text-gray-700  text-3xl  leading-relaxed">
+          This platform was created with a clear mission: to share valuable <br/>
+          knowledge and innovative ideas across various fields. It offers expert <br/>
+          insights, practical tips, and impactful content designed to inspire creativity, <br/>
+          growth, and personal development. The site empowers users to unleash <br/>
+          their creativity, one post at a time, giving everyone the freedom to express <br/>
+          themselves and share their voice with the world.
+        </p>
 
       </section >
 

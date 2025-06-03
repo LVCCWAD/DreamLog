@@ -196,8 +196,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
 
 
                 <Group justify="center" mt="md">
-                    <Button type="submit"
-                    >Submit</Button>
+                    <Button type="submit" color='rgba(250, 155, 155, 1)'>Submit</Button>
                 </Group>
             </form>
         </Modal>
@@ -231,7 +230,9 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
 
 
                 <Group justify="center" mt="md">
+                  
                     <Button color="pink" type="submit">Submit</Button>
+
                 </Group>
             </form>
         </Modal>
@@ -253,7 +254,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
                                 withAsterisk
                                 label="Category Name"
                                 placeholder="Category Name"
-                                onChange={(e) => setCategoryData('categoryName', e.target.value)}
+                                onChange={(e) => setCategoryData('categoryName', e.target.value.toUpperCase())}
                                 className='mb-2'
 
                             />
@@ -267,7 +268,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
                                 error={error}
                                 
                                 />
-                            <Button type='submit' className='mt-2 mb-5'>
+                            <Button type='submit' color='rgba(250, 155, 155, 1)' className='mt-2 mb-5'>
                                 <span>Create Category</span>
                             </Button>
                         </form>
@@ -487,7 +488,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false  ,}) {
                                     icon={<i className="bx bx-log-out text-red-600 dark:text-red-400"></i>}
                                     onClick={() => handleLogout()}
                                 >
-                                    LogOut
+                                    Log Out
                                 </Menu.Item>
                             </Menu.Dropdown>
                         </Menu>
