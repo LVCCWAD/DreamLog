@@ -63,6 +63,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
     await register('/register', {
     onSuccess: () => {
         router.visit('/');
+        window.location.href = '/';
     },
     });
     if(errors.name){
@@ -80,9 +81,10 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
     if (!validateEmail(logInData.email)) {
       return showNotification("Invalid email format");
     }
-    await register('/login', {
+    await logIn('/login', {
         onSuccess: () => {
             router.visit('/');
+            window.location.href = '/';
         },
         });
     if(logInErrors.name){
