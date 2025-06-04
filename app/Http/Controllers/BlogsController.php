@@ -99,6 +99,82 @@ class BlogsController extends Controller
 
          Gate::authorize('update', $blog);
 
+         if(!empty($request->Components)){
+            foreach($request->Components as $component){
+                if ($component["type"] == "text") {
+                    if (!empty($component["id"])) {
+                        
+                        $comp = Component::find($component["id"]);
+                    if ($comp && !empty($component["content"])) {
+                            $comp->Content = $component["content"];
+                            $comp->Position = $component["position"];
+                            $comp->save();
+                        }
+                    } else {
+                        
+                        Component::create([
+                            "Position" => $component["position"],
+                            "Type" => "text",
+                            "Content" => $component["content"],
+                            "blog_id" => $blog->id
+                        ]);
+                    }
+                }
+                else if ($component["type"] == "image") {
+                    if (!empty($component["id"])) {
+                        
+                        $comp = Component::find($component["id"]);
+                        if ($comp && isset($component['content']) && is_array($component['content']) &&
+                                isset($component['content']['file']) && $component['content']['file']->isValid()) {
+
+                                $file = $component['content']['file'];
+                                $filePath = $file->store('Component', 'public');
+                                $comp->Content = $filePath;
+                                $comp->save();
+                        }
+                    } else {
+                    
+                        $newComponent = [
+                            "Position" => $component["position"],
+                            "Type" => "image",
+                            "blog_id" => $blog->id,
+                            "Content" => null
+                        ];
+                
+                        if (isset($component['content']) && is_array($component['content']) &&
+                            isset($component['content']['file']) && $component['content']['file']->isValid()) {
+                            $file = $component['content']['file'];
+                            $filePath = $file->store('Component', 'public');
+                            $newComponent['Content'] = $filePath;
+                        }
+                
+                        Component::create($newComponent);
+                    }
+                }
+                
+            }
+         }else{
+             return redirect()->back()->withErrors([
+                    'empty_component' => 'Add a Component before Publising',
+                ]);
+         }
+        
+
+        $blog->Visibility = "public";
+        $blog->save();
+
+        BlogCreated::dispatch($blog);
+
+        Log::info('Incoming request data:', $request->all());
+
+       
+        return Inertia::location("/blog/{$blog->id}");
+    }
+
+    public function draftBlogComponents(Request $request,Blog $blog){
+
+         Gate::authorize('update', $blog);
+
         foreach($request->Components as $component){
             if ($component["type"] == "text") {
                 if (!empty($component["id"])) {
@@ -191,7 +267,8 @@ class BlogsController extends Controller
         BlogDeleted::dispatch($blog);
         $blog->delete();
 
-        return redirect('/');
+        
+        return Inertia::location("/");
     }
 
     

@@ -71,6 +71,9 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
     }else if (errors.email){
         return showNotification(errors.email);
     }
+    else if (errors.password){
+        return showNotification(errors.password);
+    }
   };
 
   const logIN = async (e) => {
@@ -87,27 +90,40 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
             window.location.href = '/';
         },
         });
-    if(logInErrors.name){
-        return showNotification(logInErrors.name);
+    if(logInErrors.password){
+        return showNotification(logInErrors.password);
     }else if (logInErrors.email){
         return showNotification(logInErrors.email);
     }
   };
 
-  const submitBlog = (e) => {
+  const submitBlog = async (e) => {
     e.preventDefault();
     if (!blogData.BlogTitle || !blogData.BlogDescription || !blogData.Thumbnail) {
       return showNotification("All blog fields are required");
     }
-    createBlog('/createblog', { forceFormData: true });
+    await createBlog('/createblog', { forceFormData: true });
+    if(BlogErrors.BlogTitle){
+        return showNotification(BlogErrors.BlogTitle);
+    }else if (BlogErrors.BlogDescription){
+        return showNotification(BlogErrors.BlogDescription);
+    }else if (BlogErrors.Thumbnail){
+        return showNotification(BlogErrors.Thumbnail);
+    }
+    
   };
 
-  const submitCategory = (e) => {
+  const submitCategory = async (e) => {
     e.preventDefault();
     if (!categoryData.categoryName || !categoryData.thumbnail) {
       return showNotification("Category name and thumbnail are required");
     }
-    createCategory('/createcategory', { forceFormData: true });
+    await createCategory('/createcategory', { forceFormData: true });
+    if(CategoryErrors.categoryName){
+        return showNotification(CategoryErrors.categoryName);
+    }else if (CategoryErrors.thumbnail){
+        return showNotification(CategoryErrors.thumbnail);
+    }
   };
 
   const handleLogout = () => {
@@ -288,7 +304,19 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
         <Modal opened={createBlogOpened} onClose={() =>{closeCreateBlog(); blogReset();}} title="Create Blog" centered>
 
             <Group justify="center">
-                
+                {showSnackbar && (
+                                    <Notification
+                                    icon={snackbar.icon}
+                                    color={snackbar.color}
+                                    title="Error"
+                                    withCloseButton
+                                    onClose={() => setShowSnackbar(false)}
+                                    style={{ zIndex: 1000 }}
+                                    className='w-full m-2'
+                                    >
+                                    {snackbar.message}
+                                    </Notification>
+                                )}                
                 <div className='flex flex-col justify-center items-center'>
                     <img src={DreamLog} className='h-[150px] ml-8 mr-8' />
                 </div>
@@ -316,20 +344,9 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
                                 
                                 
                                 />
+                                
                             <Button type='submit' color='rgba(250, 155, 155, 1)' className='mt-2 mb-5'>
-                                 {showSnackbar && (
-                                    <Notification
-                                    icon={snackbar.icon}
-                                    color={snackbar.color}
-                                    title="Error"
-                                    withCloseButton
-                                    onClose={() => setShowSnackbar(false)}
-                                    style={{ zIndex: 1000 }}
-                                    className='w-full m-2'
-                                    >
-                                    {snackbar.message}
-                                    </Notification>
-                                )}
+                                 
                                 <span>Create Category</span>
                             </Button>
                         </form>
@@ -389,19 +406,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
 
 
                 <Group justify="center" mt="md">
-                     {showSnackbar && (
-                    <Notification
-                    icon={snackbar.icon}
-                    color={snackbar.color}
-                    title="Error"
-                    withCloseButton
-                    onClose={() => setShowSnackbar(false)}
-                    style={{ zIndex: 1000 }}
-                    className='w-full m-2'
-                    >
-                    {snackbar.message}
-                    </Notification>
-                )}
+                     
                     <Button type="submit" color='rgba(250, 155, 155, 1)'>Submit</Button>
                 </Group>
                 

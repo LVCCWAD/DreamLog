@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string("categoryName");
             $table->string("thumbnail");
+            $table->string('user_id');
             $table->timestamps();
         });
     }

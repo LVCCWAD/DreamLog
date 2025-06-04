@@ -11,12 +11,12 @@ class HomeController extends Controller
 {
     
     public function Home(){
-        
-        $blogs = Blog::where('visibility', 'public')->get();
-        $blogs->load(['Creator','Creator.profile','likes']);
-        $categories = Category::all();
-        
 
+        if(Auth::check()){
+            $blogs = Blog::where('visibility', 'public')->get();
+            $blogs->load(['Creator','Creator.profile','likes']);
+            $categories = Category::all();
+        }
         
         return inertia('Home',['blogs'=>$blogs, 'categories'=>$categories]);
     }

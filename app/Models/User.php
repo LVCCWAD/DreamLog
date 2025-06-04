@@ -73,4 +73,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Notification::class, 'user_id');
     }
+
+    public function user_created_categories(){
+        return $this->hasMany(Category::class,'user_id');
+    }
 }
