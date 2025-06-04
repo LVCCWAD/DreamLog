@@ -242,7 +242,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
 
 
                 <Group justify="center" mt="md">
-                    <Button type="submit" color='rgba(250, 155, 155, 1)' disabled={ signUpData.email == "" || signUpData.password == "" || signUpData.name == ""}>Submit</Button>
+                    <Button type="submit" color='pink' disabled={ signUpData.email == "" || signUpData.password == "" || signUpData.name == ""}>Submit</Button>
                 </Group>
             </form>
         </Modal>
@@ -345,7 +345,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
                                 
                                 />
                                 
-                            <Button type='submit' color='rgba(250, 155, 155, 1)' className='mt-2 mb-5'>
+                            <Button type='submit' color='pink' className='mt-2 mb-5'> {/* rgba(250, 155, 155, 1) */}
                                  
                                 <span>Create Category</span>
                             </Button>
@@ -377,7 +377,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
                             }
                         }}
                         className={`${(blogData.categories || []).includes(category.id) ? "bg-slate-100":"bg-slate-200"} p-3 rounded-md w-[50px] m-1`}
-                        color={!(blogData.categories || []).includes(category.id) ? "gray" :  "rgba(250, 155, 155, 1)"}
+                        color={!(blogData.categories || []).includes(category.id) ? "gray" :  "pink"} /* rgba(250, 155, 155, 1) */
                         >
                         <span>{category.categoryName}</span>
                         </Button>
@@ -407,7 +407,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
 
                 <Group justify="center" mt="md">
                      
-                    <Button type="submit" color='rgba(250, 155, 155, 1)'>Submit</Button>
+                    <Button type="submit" color="pink"> Submit</Button> {/* rgba(250, 155, 155, 1) */}
                 </Group>
                 
             </form>
