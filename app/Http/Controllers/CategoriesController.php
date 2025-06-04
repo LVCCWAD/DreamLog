@@ -16,7 +16,7 @@ class CategoriesController extends Controller
                 'string',
                 'max:50',
                 function ($attribute, $value, $fail) {
-                    if (Category::whereRaw('LOWER(category_name) = ?', [strtolower($value)])->exists()) {
+                    if (Category::whereRaw('LOWER(categoryName) = ?', [strtolower($value)])->exists()) {
                         $fail('The category name has already been taken.');
                     }
                 }
