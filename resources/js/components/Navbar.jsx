@@ -26,12 +26,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
     const [snackbar, setSnackbar] = useState({ message: '', color: '', icon: null });
     const [showSnackbar, setShowSnackbar] = useState(false);
 
-<<<<<<< HEAD
-    const showNotification = (message, color = 'red', icon = <IconX size={16} />) => {
-        setSnackbar({ message, color, icon });
-        setShowSnackbar(true);
-        setTimeout(() => setShowSnackbar(false), 3000);
-=======
+
   const showNotification = (message, color = 'red', icon = <IconX size={16} />) => {
     setSnackbar({ message, color, icon });
     setShowSnackbar(true);
@@ -162,7 +157,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
           showNotification("Please upload a landscape image");
         }
       };
->>>>>>> 7d39090de7b16bd6abd43ee6d66975b6b8008ee8
+
     };
 
     useEffect(() => {
@@ -359,7 +354,9 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
 
 
                 <Group justify="center" mt="md">
-                    <Button type="submit" color='rgba(250, 155, 155, 1)' disabled={signUpData.email == "" || signUpData.password == "" || signUpData.name == ""}>Submit</Button>
+
+                    <Button type="submit" color='pink' disabled={ signUpData.email == "" || signUpData.password == "" || signUpData.name == ""}>Submit</Button>
+
                 </Group>
             </form>
         </Modal>
@@ -421,9 +418,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
         <Modal opened={createBlogOpened} onClose={() => { closeCreateBlog(); blogReset(); }} title="Create Blog" centered>
 
             <Group justify="center">
-<<<<<<< HEAD
 
-=======
                 {showSnackbar && (
                                     <Notification
                                     icon={snackbar.icon}
@@ -437,7 +432,6 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
                                     {snackbar.message}
                                     </Notification>
                                 )}                
->>>>>>> 7d39090de7b16bd6abd43ee6d66975b6b8008ee8
                 <div className='flex flex-col justify-center items-center'>
                     <img src={DreamLog} className='h-[150px] ml-8 mr-8' />
                 </div>
@@ -454,40 +448,6 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
                             onChange={(e) => setCategoryData('categoryName', e.target.value.toUpperCase())}
                             className='mb-2'
 
-<<<<<<< HEAD
-                        />
-                        <FileInput
-                            withAsterisk
-                            label="Input Thumbnail"
-                            placeholder="Input png/jpeg"
-                            onChange={(file) => {
-                                setCategoryData('thumbnail', file)
-                                handleFileChange(file, 'category')
-                            }}
-
-
-                        />
-                        <Button type='submit' color='rgba(250, 155, 155, 1)' className='mt-2 mb-5'>
-                            {showSnackbar && (
-                                <Notification
-                                    icon={snackbar.icon}
-                                    color={snackbar.color}
-                                    title="Error"
-                                    withCloseButton
-                                    onClose={() => setShowSnackbar(false)}
-                                    style={{ zIndex: 1000 }}
-                                    className='w-full m-2'
-                                >
-                                    {snackbar.message}
-                                </Notification>
-                            )}
-                            <span>Create Category</span>
-                        </Button>
-                    </form>
-                </div>}
-
-            </div>
-=======
                             />
                                 <FileInput
                                 withAsterisk
@@ -500,7 +460,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
                                 
                                 />
                                 
-                            <Button type='submit' color='rgba(250, 155, 155, 1)' className='mt-2 mb-5'>
+                            <Button type='submit' color='pink' className='mt-2 mb-5'> {/* rgba(250, 155, 155, 1) */}
                                  
                                 <span>Create Category</span>
                             </Button>
@@ -508,7 +468,6 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
                     </div>}
                     
                 </div>
->>>>>>> 7d39090de7b16bd6abd43ee6d66975b6b8008ee8
             <form onSubmit={submitBlog}>
                 {
                     blogData.Thumbnail && previewUrl ? <img src={previewUrl} /> : <></>
@@ -525,17 +484,18 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
                 <div className="flex flex-wrap gap-1">
                     {categories.map((category) => (
                         <Button
-                            key={category.id}
 
-                            onClick={() => {
-                                if (!(blogData.categories || []).includes(category.id)) {
-                                    setBlogData('categories', [...(blogData.categories || []), category.id]);
-                                } else {
-                                    setBlogData('categories', (blogData.categories || []).filter(catId => catId !== category.id));
-                                }
-                            }}
-                            className={`${(blogData.categories || []).includes(category.id) ? "bg-slate-100" : "bg-slate-200"} p-3 rounded-md w-[50px] m-1`}
-                            color={!(blogData.categories || []).includes(category.id) ? "gray" : "rgba(250, 155, 155, 1)"}
+                        key={category.id}
+                        
+                        onClick={() => {
+                            if (!(blogData.categories || []).includes(category.id)) {
+                                setBlogData('categories', [...(blogData.categories || []), category.id]);
+                            }else{
+                                setBlogData('categories', (blogData.categories || []).filter(catId => catId !== category.id));
+                            }
+                        }}
+                        className={`${(blogData.categories || []).includes(category.id) ? "bg-slate-100":"bg-slate-200"} p-3 rounded-md w-[50px] m-1`}
+                        color={!(blogData.categories || []).includes(category.id) ? "gray" :  "pink"} /* rgba(250, 155, 155, 1) */
                         >
                             <span>{category.categoryName}</span>
                         </Button>
@@ -575,7 +535,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
 
 
                 <Group justify="center" mt="md">
-<<<<<<< HEAD
+
                     {showSnackbar && (
                         <Notification
                             icon={snackbar.icon}
@@ -589,9 +549,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
                             {snackbar.message}
                         </Notification>
                     )}
-=======
-                     
->>>>>>> 7d39090de7b16bd6abd43ee6d66975b6b8008ee8
+
                     <Button type="submit" color='rgba(250, 155, 155, 1)'>Submit</Button>
                 </Group>
 
