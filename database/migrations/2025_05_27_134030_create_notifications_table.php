@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('type'); // Type of notification (e.g., 'like','follow')
             $table->string('message');
             $table->string('url')->nullable(); 
+            $table->boolean('is_read')->default(false);
             
             $table->timestamps();
         });

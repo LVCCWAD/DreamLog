@@ -8,12 +8,17 @@ class Category extends Model
 {
     protected $fillable = [
         'categoryName',
-        'thumbnail'
+        'thumbnail',
+        'user_id'
     ];
 
     public function blogs()
     {
         return $this->belongsToMany(Blog::class);
+    }
+
+    public function created_by(){
+        return $this->belongsTo(User::class);
     }
 
 

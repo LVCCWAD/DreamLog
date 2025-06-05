@@ -15,27 +15,25 @@ use Illuminate\Support\Facades\Storage;
 class ProfilesController extends Controller
 {
     public function Profile (User $user){
-        $user->load([
-        'profile',
-        'followings',
-        'followers',
-        'blogs.creator', 
-        'blogs.likes' ,
-        'blogs.creator.profile',    
-    ]);
 
-    $userBlogs = $user->blogs;
+        if(Auth::check()){
+             $user->load([
+                    'profile',
+                    'followings',
+                    'followings.profile',
+                    'followers',
+                    'followers.profile',
+                    'blogs.creator', 
+                    'blogs.likes' ,
+                    'blogs.creator.profile',    
+            ]);
+
+            $userBlogs = $user->blogs;
+        }
+       
 
     
-    
-
-    
-
-    
-        
-
-
-        return inertia('ProfilePage',['user'=>$user,'userBlogs'=>$userBlogs ]);
+    return inertia('ProfilePage',['user'=>$user,'userBlogs'=>$userBlogs ]);
     }
 
     public function updateProfile(Request $request)
@@ -104,14 +102,14 @@ class ProfilesController extends Controller
         $user->liked_blogs()->syncWithoutDetaching([$request->blog_id]);
         $blog = Blog::find($request->blog_id);
         UserLiked::dispatch($user,$blog);
-        return back();
+        
     }
 
     public function unlike(Request $request)
     {
         $user = Auth::user();
         $user->liked_blogs()->detach($request->blog_id);
-        return back();
+        
     }
 
 

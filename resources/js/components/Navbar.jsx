@@ -26,10 +26,143 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
     const [snackbar, setSnackbar] = useState({ message: '', color: '', icon: null });
     const [showSnackbar, setShowSnackbar] = useState(false);
 
+<<<<<<< HEAD
     const showNotification = (message, color = 'red', icon = <IconX size={16} />) => {
         setSnackbar({ message, color, icon });
         setShowSnackbar(true);
         setTimeout(() => setShowSnackbar(false), 3000);
+=======
+  const showNotification = (message, color = 'red', icon = <IconX size={16} />) => {
+    setSnackbar({ message, color, icon });
+    setShowSnackbar(true);
+    setTimeout(() => setShowSnackbar(false), 3000);
+  };
+
+  useEffect(() => {
+    if (Lopen) openLogin();
+    if (closeLogin && setLopen) setLopen(false);
+  }, [Lopen]);
+
+  const { data: signUpData, setData: setSignUpData, post: register, processing, errors } = useInertiaForm({
+    name: '', email: '', password: ''
+  });
+  const { data: logInData, setData: setLogInData, post: logIn, processing: logInProcessing, errors: logInErrors, reset: logInReset } = useInertiaForm({
+    email: '', password: ''
+  });
+  const { data: blogData, setData: setBlogData, post: createBlog, processing: BlogProcessing, errors: BlogErrors,reset: blogReset } = useInertiaForm({
+    BlogTitle: '', BlogDescription: '', Thumbnail: null, categories: []
+  });
+  const { data: categoryData, setData: setCategoryData, post: createCategory, processing: CategoryProcessing, errors: CategoryErrors } = useInertiaForm({
+    categoryName: '', thumbnail: null
+  });
+
+  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  const signUP = async (e) => {
+    e.preventDefault();
+    if (!signUpData.name || !signUpData.email || !signUpData.password) {
+      return showNotification("All fields are required");
+    }
+    if (!validateEmail(signUpData.email)) {
+      return showNotification("Invalid email format");
+    }
+    await register('/register', {
+    onSuccess: () => {
+        router.visit('/');
+        window.location.href = '/';
+    },
+    });
+    if(errors.name){
+        return showNotification(errors.name);
+    }else if (errors.email){
+        return showNotification(errors.email);
+    }
+    else if (errors.password){
+        return showNotification(errors.password);
+    }
+  };
+
+  const logIN = async (e) => {
+    e.preventDefault();
+    if (!logInData.email || !logInData.password) {
+      return showNotification("Email and password required");
+    }
+    if (!validateEmail(logInData.email)) {
+      return showNotification("Invalid email format");
+    }
+    await logIn('/login', {
+        onSuccess: () => {
+            router.visit('/');
+            window.location.href = '/';
+        },
+        });
+    if(logInErrors.password){
+        return showNotification(logInErrors.password);
+    }else if (logInErrors.email){
+        return showNotification(logInErrors.email);
+    }
+  };
+
+  const submitBlog = async (e) => {
+    e.preventDefault();
+    if (!blogData.BlogTitle || !blogData.BlogDescription || !blogData.Thumbnail) {
+      return showNotification("All blog fields are required");
+    }
+    await createBlog('/createblog', { forceFormData: true });
+    if(BlogErrors.BlogTitle){
+        return showNotification(BlogErrors.BlogTitle);
+    }else if (BlogErrors.BlogDescription){
+        return showNotification(BlogErrors.BlogDescription);
+    }else if (BlogErrors.Thumbnail){
+        return showNotification(BlogErrors.Thumbnail);
+    }
+    
+  };
+
+  const submitCategory = async (e) => {
+    e.preventDefault();
+    if (!categoryData.categoryName || !categoryData.thumbnail) {
+      return showNotification("Category name and thumbnail are required");
+    }
+    await createCategory('/createcategory', { forceFormData: true });
+    if(CategoryErrors.categoryName){
+        return showNotification(CategoryErrors.categoryName);
+    }else if (CategoryErrors.thumbnail){
+        return showNotification(CategoryErrors.thumbnail);
+    }
+  };
+
+  const handleLogout = () => {
+    router.post('/logout', {}, {
+      onSuccess: () => { window.location.href = '/'; }
+    });
+  };
+
+  const [query, setQuery] = useState('');
+  const [filteredBlogs, setFilteredBlogs] = useState([]);
+  useEffect(() => {
+    setFilteredBlogs(blogs.filter(blog =>
+      blog.BlogTitle.toLowerCase().includes(query.toLowerCase()) ||
+      blog.BlogDescription.toLowerCase().includes(query.toLowerCase())
+    ));
+  }, [query]);
+
+  const handleFileChange = (file, mode) => {
+    if (!file) return;
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      img.src = e.target.result;
+      img.onload = () => {
+        if (img.width > img.height) {
+          setCategoryData('thumbnail', file);
+        } else {
+            {mode == "category" && setCategoryData('thumbnail', null)}
+            {mode == "blog" && setBlogData('Thumbnail', null)}
+          showNotification("Please upload a landscape image");
+        }
+      };
+>>>>>>> 7d39090de7b16bd6abd43ee6d66975b6b8008ee8
     };
 
     useEffect(() => {
@@ -288,7 +421,23 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
         <Modal opened={createBlogOpened} onClose={() => { closeCreateBlog(); blogReset(); }} title="Create Blog" centered>
 
             <Group justify="center">
+<<<<<<< HEAD
 
+=======
+                {showSnackbar && (
+                                    <Notification
+                                    icon={snackbar.icon}
+                                    color={snackbar.color}
+                                    title="Error"
+                                    withCloseButton
+                                    onClose={() => setShowSnackbar(false)}
+                                    style={{ zIndex: 1000 }}
+                                    className='w-full m-2'
+                                    >
+                                    {snackbar.message}
+                                    </Notification>
+                                )}                
+>>>>>>> 7d39090de7b16bd6abd43ee6d66975b6b8008ee8
                 <div className='flex flex-col justify-center items-center'>
                     <img src={DreamLog} className='h-[150px] ml-8 mr-8' />
                 </div>
@@ -305,6 +454,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
                             onChange={(e) => setCategoryData('categoryName', e.target.value.toUpperCase())}
                             className='mb-2'
 
+<<<<<<< HEAD
                         />
                         <FileInput
                             withAsterisk
@@ -337,6 +487,28 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
                 </div>}
 
             </div>
+=======
+                            />
+                                <FileInput
+                                withAsterisk
+                                label="Input Thumbnail"
+                                placeholder="Input png/jpeg"
+                                onChange={(file) => {setCategoryData('thumbnail', file)
+                                    handleFileChange(file,'category')
+                                }}
+                                
+                                
+                                />
+                                
+                            <Button type='submit' color='rgba(250, 155, 155, 1)' className='mt-2 mb-5'>
+                                 
+                                <span>Create Category</span>
+                            </Button>
+                        </form>
+                    </div>}
+                    
+                </div>
+>>>>>>> 7d39090de7b16bd6abd43ee6d66975b6b8008ee8
             <form onSubmit={submitBlog}>
                 {
                     blogData.Thumbnail && previewUrl ? <img src={previewUrl} /> : <></>
@@ -403,6 +575,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
 
 
                 <Group justify="center" mt="md">
+<<<<<<< HEAD
                     {showSnackbar && (
                         <Notification
                             icon={snackbar.icon}
@@ -416,6 +589,9 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
                             {snackbar.message}
                         </Notification>
                     )}
+=======
+                     
+>>>>>>> 7d39090de7b16bd6abd43ee6d66975b6b8008ee8
                     <Button type="submit" color='rgba(250, 155, 155, 1)'>Submit</Button>
                 </Group>
 

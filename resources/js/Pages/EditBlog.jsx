@@ -2,7 +2,7 @@ import React, {useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
 import BlogComponentText from '../components/BlogComponentText';
 import BlogComponentImage from '../components/BlogComponentImage';
-import { Button, Text, Title,Drawer, FileInput, TextInput, Group, Modal} from '@mantine/core';
+import { Button, Text, Title,Drawer, FileInput, TextInput, Group, Modal, Notification} from '@mantine/core';
 import PencilIcon from '../assets/pencil-square.png';
 import ImageIcon from '../assets/image-plus.png';
 import { useForm as useInertiaForm, router, usePage} from '@inertiajs/react';
@@ -11,7 +11,14 @@ import { useDisclosure } from '@mantine/hooks';
 
 function EditBlog({blog, blogComponents: dbComponents, categories,}) {
 
+    const [snackbar, setSnackbar] = useState({ message: '', color: '', icon: null });
+      const [showSnackbar, setShowSnackbar] = useState(false);
     
+      const showNotification = (message, color = 'red', icon = <IconX size={16} />) => {
+        setSnackbar({ message, color, icon });
+        setShowSnackbar(true);
+        setTimeout(() => setShowSnackbar(false), 3000);
+      };
 
     console.log(blog.categories)
     const { auth, url } = usePage().props;
@@ -172,12 +179,20 @@ function EditBlog({blog, blogComponents: dbComponents, categories,}) {
     ]);
   }
 
+  
   const publish = () => {
     createBlogComponents(`/createcomponents/${blog.id}`, {
-        forceFormData: true,
-      });
-}
+      forceFormData: true,
+      preserveScroll: true,
+      onError: (BlogComponentsErrors) => {
+        if (BlogComponentsErrors.empty_components) {
+          showNotification(BlogComponentsErrors.empty_components);
+          console.log(BlogComponentsErrors)
+        }
 
+      },
+    });
+  };
           const { data: blogData, setData: setBlogData, post: updateBlog, processing: BlogProcessing, errors: BlogErrors } = useInertiaForm({
                 BlogTitle: blog.BlogTitle,
                 BlogDescription: blog.BlogDescription,
@@ -229,8 +244,8 @@ function EditBlog({blog, blogComponents: dbComponents, categories,}) {
        const [opened, { open, close }] = useDisclosure(false);
 
     
-  const isValidToPublish = blogComponents.Components.length > 0 &&
-    blogComponents.Components.every(c => c.content !== "" && c.content !== null);
+ 
+  
 
   return (
     <> 
@@ -249,9 +264,23 @@ function EditBlog({blog, blogComponents: dbComponents, categories,}) {
             <div className='flex flex-col justify-center items-center'>
               {/* d2 marga editing Blog */}
               <div className='flex flex-col justify-center items-center'>
+                 {showSnackbar && (
+                                    <Notification
+                                    icon={snackbar.icon}
+                                    color={snackbar.color}
+                                    title="Error"
+                                    withCloseButton
+                                    onClose={() => setShowSnackbar(false)}
+                                    style={{ zIndex: 1000 }}
+                                    className='w-full m-2'
+                                    >
+                                    {snackbar.message}
+                                    </Notification>
+                                )}
+                                
                 <div className=' border border-b-black w-[1250px] p-10'>
                     <div className="flex gap-2 mb-4">
-                    <Button color="pink" onClick={() => publish()} disabled={!isValidToPublish}> Publish </Button>
+                    <Button color="pink" onClick={() => publish()} > Publish </Button>
                     <Button color="pink" onClick={() => setIsBlogEdit(!isBlogEdit)}> Edit Blog </Button>
                     <Button color="red" onClick={open}> Delete Blog </Button>
 

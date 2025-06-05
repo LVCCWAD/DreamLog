@@ -3,6 +3,7 @@
 use App\Http\Controllers\BlogsController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\ProfilesController;
 use App\Http\Controllers\UserAuth;
 use App\Models\Blog;
@@ -40,5 +41,12 @@ Route::middleware('auth')->group(function (){
     Route::post('unlike/blog',[ProfilesController::class,'unLike']);
     Route::post('/profile/update', [ProfilesController::class, 'updateProfile']);
     Route::get('/category/{category}', [BlogsController::class, 'getBlogsByCategory']);
+
+
+    Route::get('/category/{category}/delete', [CategoriesController::class, 'deleteCategory']);
+    Route::post('/createcomponents/{blog}/draft',[BlogsController::class, 'draftBlogComponents']);
+    Route::post('/notification/{notification}/read',[NotificationsController::class, 'notificationRead']);
+
+    
 
 });

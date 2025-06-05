@@ -31,6 +31,8 @@ function ProfileBanner({user}) {
 
     const [previewUrlBanner, setPreviewUrlBanner] = useState()
     const [previewUrlProfilePicture, setPreviewUrlProfilePicture] = useState()
+    const [followingsModal, { open: openFollowings, close: closeFollowings }] = useDisclosure(false);
+    const [followersModal, { open: openFollowers, close: closeFollowers }] = useDisclosure(false);
 
     const { data, setData, post, processing, errors } = useInertiaForm({
             profilePicture: null,
@@ -121,6 +123,46 @@ function ProfileBanner({user}) {
     
   return (
     <div className="flex flex-col justify-center items-center bg-stone-100 w-full mb-10">
+       <Modal opened={followingsModal} onClose={closeFollowings} title="Followings" centered>
+        {
+          user.followings.map((following)=>(
+            <div className='flex flex-row justify-center items-center gap-4 m-1'>
+                     <Avatar
+                        src={`${url}/storage/${following.profile.profilePicture}`}
+                        size={50}
+                        radius={999}
+                        alt={following.profile.userName}
+                        className="border-4 border-white shadow-md"
+                        />
+                    <Text size="xs" c="dimmed">
+                        Created By: {following.name}
+                    </Text>
+                </div>
+          ))
+        }
+
+       </Modal>
+
+       <Modal opened={followersModal} onClose={closeFollowers} title="Followers" centered>
+                  
+        {
+          user.followings.map((following)=>(
+            <div className='flex flex-row justify-center items-center gap-4 m-1'>
+                     <Avatar
+                        src={`${url}/storage/${following.profile.profilePicture}`}
+                        size={50}
+                        radius={999}
+                        alt={following.profile.userName}
+                        className="border-4 border-white shadow-md"
+                        />
+                    <Text size="xs" c="dimmed">
+                        Created By: {following.name}
+                    </Text>
+                </div>
+          ))
+        }
+
+       </Modal>
 
   {/* Banner Image */}
   <BackgroundImage
@@ -219,6 +261,7 @@ function ProfileBanner({user}) {
           color="gray"
           compact
           className="bg-gray-100 text-gray-700 hover:bg-gray-200"
+          onClick={openFollowings}
         >
           {followings} Following
         </Button>
@@ -227,6 +270,7 @@ function ProfileBanner({user}) {
           color="gray"
           compact
           className="bg-gray-100 text-gray-700 hover:bg-gray-200"
+          onClick={openFollowers}
         >
           {followers} Followers
         </Button>
