@@ -323,7 +323,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
             </Group>
 
             <div>
-                    <div className='flex flex-row justify-between mb-4 '><span className='text-lg font-bold' >Create a Category?</span><span onClick={()=>setDropdown(!dropdown)}>+</span></div>
+                    <div className='flex flex-row justify-between mb-4 '><span className='text-lg font-bold' >Create a Category?</span><span onClick={()=>setDropdown(!dropdown)} className="text-3xl cursor-pointer">+</span></div>
                     {dropdown && <div className='w-full max-w-md mx-auto flex flex-col gap-3'>
                         <form onSubmit={submitCategory}>
                             <TextInput
