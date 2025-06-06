@@ -1,7 +1,7 @@
 import React from 'react'
 import { Card, Image, Text, Badge, Button, Group ,Avatar } from '@mantine/core';
 import { router, usePage } from '@inertiajs/react';
-
+import EyeImage from '../assets/eye-alt.png';
 
 function formatLikes(num) {
     if (num >= 1_000_000) return (num / 1_000_000).toFixed(1) + 'M';
@@ -77,81 +77,59 @@ function BlogCard({Title, Description,Thumbnail , Creator, id,  likes, view_coun
                 />
             </Card.Section>
             
-            <Group justify="space-between" mt="md" mb="xs"> {/*mb="xs"*/}
+        
                 
-                    <Text fw={800}><a href={`/blog/${id}`}>{Title}</a></Text>
+            <Text fw={700} size="lg" align="left" mt="md">
+              <a href={`/blog/${id}`}>{Title}</a> </Text>
                
-                {isLiked ? (
-                        <Badge color="red" onClick={handleUnlike} className="cursor-pointer">♥ Liked</Badge>
-                    ) : (
-                        <Badge color="gray" onClick={handleLike} className="cursor-pointer">♡ Like</Badge>
-                    )}
-            </Group>
-                                                                 
-                
-            
-
-            <Text size="md">
-                {Description}
-            </Text>
-            
-            
-           
-            <div className='flex flex-row justify-center items-center gap-4 m-1'>
+            <div className="flex justify-between items-center mt-2">
                  <a href={`/profile/${Creator?.id}`}>
-                <div className='flex flex-row justify-center items-center gap-4 m-1'>
+                <div className='flex items-center gap-2'>
                      <Avatar
                         src={`${url}/storage/${Creator.profile.profilePicture}`}
-                        size={50}
-                        radius={999}
+                        size={30}
+                        radius={"xl"}
                         alt={Creator.profile.userName}
-                        className="border-4 border-white shadow-md"
+                        className="border-2 border-white shadow-md"
                         />
                     <Text size="xs" c="dimmed">
                         Created By: {Creator.name}
                     </Text>
                 </div>
-                </a>
-                {authUser?.id !== Creator?.id && (
-                    <>
-                    {!followed ? (
-                        <Badge color="pink" onClick={handleFollow} className="cursor-pointer">Follow</Badge>
-                    ) : (
-                        <Badge color="pink" onClick={handleUnFollow} className="cursor-pointer">Unfollow</Badge>
-                    )}
+              </a>
+            
 
-                    
-                    </>
-                )}
-
-
-            </div>
-            <Card.Section>
-                <div className='p-4 flex flex-row justify-between'>
-                    <div className="flex items-center gap-1 text-gray-600 text-sm mt-1">
-                        <div className="bg-gradient-to-r from-pink-500 to-red-500 rounded-full p-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" className="w-3 h-3">
-                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 
-                        2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 
-                        2.09C13.09 3.81 14.76 3 16.5 
-                        3 19.58 3 22 5.42 22 8.5c0 
-                        3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                        </svg>
-                        </div>
-                        <span>{formatLikes(likesCount)}</span>
+            {authUser?.id !== Creator?.id && (
+                        !followed ? (
+                          <Button size="xs" color="red" variant="filled" onClick={handleFollow} radius="xl"> FOLLOW </Button>
+                        ) : (
+                          <Button size="xs" color="gray" variant="light" onClick={handleUnFollow} radius="xl">UNFOLLOW </Button>
+                        )
+                      )}
                     </div>
 
-                    <span className='text-gray-600'>Views: {view_count}</span>
-                </div>
+            <Text size="xs" mt={5} mb={10}>
+              <span className="flex flex-row items-center gap-1">
+                <img src={EyeImage} alt="Views" className="w-4 h-4" />
+                {view_count}
+              </span>
+            </Text>
 
-            </Card.Section>
-            
+            <div className="mt-2">
+              {isLiked ? (
+                <Badge
+                  color="pink" variant="filled" className="cursor-pointer px-3 py-1 text-sm" onClick={handleUnlike} radius="lg" > 
+                  ♥ Like {formatLikes(likesCount)}
+                </Badge>
+              ) : (
+                <Badge color="gray" variant="light" className="cursor-pointer px-3 py-1 text-sm" onClick={handleLike} radius="lg"> 
+                ♡ Like {formatLikes(likesCount)}
+                </Badge>
+              )}
+            </div>
+          </Card>
+        </div>
+      );
+    }
 
-            
-            </Card>
-        
-    </div>
-  )
-}
-
-export default BlogCard
+export default BlogCard;
