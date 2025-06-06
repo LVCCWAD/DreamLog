@@ -300,7 +300,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
             </form>
         </Modal>
 
-        {/* kre eyt blag modal */}
+        {/* Create Blog modal */}
         <Modal opened={createBlogOpened} onClose={() =>{closeCreateBlog(); blogReset();}} title="Create Blog" centered>
 
             <Group justify="center">
@@ -324,7 +324,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
 
             <div>
                     <div className='flex flex-row justify-between mb-4 '><span className='text-lg font-bold' >Create a Category?</span><span onClick={()=>setDropdown(!dropdown)}>+</span></div>
-                    {dropdown && <div className='w-[300px]  flex flex-col gap-3'>
+                    {dropdown && <div className='w-full max-w-md mx-auto flex flex-col gap-3'>
                         <form onSubmit={submitCategory}>
                             <TextInput
                                 withAsterisk
@@ -344,11 +344,11 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
                                 
                                 
                                 />
-                                
-                            <Button type='submit' color='pink' className='mt-2 mb-5'>
-                                 
-                                <span>Create Category</span>
-                            </Button>
+                            <div className="w-full flex justify-center mt-5">
+                                <Button color='pink' type='submit'  variant="filled" className='w-[200px]'>Create Category</Button>
+                                    
+                                  
+                            </div>
                         </form>
                     </div>}
                     
