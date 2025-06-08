@@ -131,6 +131,7 @@ function Home({ blogs }) {
     <span>© 2025 Dream Log. All Rights Reserved.</span>
   </footer>
 </>
+// adadassdsad
 
 
   )
