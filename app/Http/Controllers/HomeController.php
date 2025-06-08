@@ -14,7 +14,7 @@ class HomeController extends Controller
 
         if(Auth::check()){
             $blogs = Blog::where('visibility', 'public')->get();
-            $blogs->load(['Creator','Creator.profile','likes']);
+            $blogs->load(['Creator','Creator.profile','likes','categories']);
             $categories = Category::all();
         }
         

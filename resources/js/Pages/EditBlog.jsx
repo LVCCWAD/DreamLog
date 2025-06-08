@@ -193,6 +193,20 @@ function EditBlog({blog, blogComponents: dbComponents, categories,}) {
       },
     });
   };
+
+  const draft = () => {
+    createBlogComponents(`/createcomponents/${blog.id}/draft`, {
+      forceFormData: true,
+      preserveScroll: true,
+      onError: (BlogComponentsErrors) => {
+        if (BlogComponentsErrors.empty_components) {
+          showNotification(BlogComponentsErrors.empty_components);
+          console.log(BlogComponentsErrors)
+        }
+
+      },
+    });
+  };
           const { data: blogData, setData: setBlogData, post: updateBlog, processing: BlogProcessing, errors: BlogErrors } = useInertiaForm({
                 BlogTitle: blog.BlogTitle,
                 BlogDescription: blog.BlogDescription,
@@ -249,152 +263,155 @@ function EditBlog({blog, blogComponents: dbComponents, categories,}) {
 
   return (
     <> 
-        <Navbar  inEdit={true} />
-        
-        <div className='grid grid-cols-[20%_80%] my-5'>
+  <Navbar inEdit={true} />
 
-        {/* d2 marga toolbox */}
-        <div className="flex flex-col items-start bg-slate-0 rounded-sm border border-black pl-3 pt-10 space-y-4 min-h-full max-w-[120px]">
-        <Button variant="filled" color="pink" radius="lg" size="lg" onClick={addTextComponent}>
-        <img src={PencilIcon} alt="Pencil Icon" className="w-6 h-6" /></Button>
-          
-        <Button variant="filled" color="pink" radius="lg" size="lg" onClick={addImageComponent}>
-        <img src={ImageIcon} alt="Image Icon" className="w-6 h-6" /></Button> </div>
+  <div className="grid grid-cols-[15%_85%] my-5 min-h-screen">
+    {/* Sidebar Toolbox */}
+    <div className="flex flex-col items-center bg-white py-10 space-y-6 shadow-md">
+      <Button variant="filled" color="pink" radius="lg" size="lg" onClick={addTextComponent}>
+        <img src={PencilIcon} alt="Pencil Icon" className="w-6 h-6" />
+      </Button>
+      <Button variant="filled" color="pink" radius="lg" size="lg" onClick={addImageComponent}>
+        <img src={ImageIcon} alt="Image Icon" className="w-6 h-6" />
+      </Button>
+    </div>
 
-            <div className='flex flex-col justify-center items-center'>
-              {/* d2 marga editing Blog */}
-              <div className='flex flex-col justify-center items-center'>
-                 {showSnackbar && (
-                                    <Notification
-                                    icon={snackbar.icon}
-                                    color={snackbar.color}
-                                    title="Error"
-                                    withCloseButton
-                                    onClose={() => setShowSnackbar(false)}
-                                    style={{ zIndex: 1000 }}
-                                    className='w-full m-2'
-                                    >
-                                    {snackbar.message}
-                                    </Notification>
-                                )}
-                                
-                <div className=' border border-b-black w-[1250px] p-10'>
-                    <div className="flex gap-2 mb-4">
-                    <Button color="pink" onClick={() => publish()} > Publish </Button>
-                    <Button color="pink" onClick={() => setIsBlogEdit(!isBlogEdit)}> Edit Blog </Button>
-                    <Button color="red" onClick={open}> Delete Blog </Button>
+    {/* Main Editor Content */}
+    <div className="flex flex-col items-center">
+      <div className="w-full max-w-[1200px] p-6">
 
-                    <Modal opened={opened} onClose={close} title="Confirm Deletion" centered>
-                      <Text size="sm" mb="md">
-                        Are you sure you want to delete this blog? This action cannot be undone.
-                      </Text>
-                      <div className="flex justify-end gap-2">
-                        <Button variant="default" onClick={close}>
-                          Cancel
-                        </Button>
-                        <Button color="red" onClick={handleDelete}>
-                          Yes, Delete
-                        </Button>
-                      </div>
-                    </Modal>
-                  
-                </div>
-                    {/*d2 marga Blog Details */}
-                    {isBlogEdit ? <div className='flex flex-col gap-3'>
-                      {blogCategories?.map((category) => (
-                        <div className="bg-slate-300 p-4 w-[250px] flex justify-between items-center">
-                          <Button color="pink" className=" p-3">
-                            {category.categoryName}
-                          </Button>
-                          <Button color="red"
-                            onClick={() => removeCategory(category)}
-                            className=" text-white px-3"
-                          >
-                            X
-                          </Button>
-                        </div>
-                      ))}
-                      <form onSubmit={submitUpdateBlog}>
-                                      {
-                                          blogData.Thumbnail && previewUrl ? <img src={previewUrl} /> : <></>
-                                      }
-                                      <FileInput
-                                          label="Input Thumbnail"
-                                          placeholder="Input png/jpeg"
-                                          onChange={(file) => setBlogData('Thumbnail', file)}
-                                      />
-                                      <div className="flex flex-row space-x-3 py-2">
-                                          {categories?.map((category) => (
-                                              <Button color="pink"
-                                                  key={category.id}
-                                                  disabled={(blogCategories ?? []).some(c => c.id === category.id)}
-                                                  onClick={() => {
-                                                          if (!(blogData?.categories || []).includes(category.id)) {
-                                                          setBlogCategories((prev)=> [...prev, category])
-                                                          setBlogData('categories', [...(blogData?.categories || []), category.id]);
-                                                          }
-                                                      }}
-                                                  className="bg-slate-100 p-3 rounded-md w-[50px]"
-                                              >
-                                                  <span>{category.categoryName}</span>
-                                              </Button>
-                                          ))}
-                                          </div>
-                                      
-                                      <TextInput
-                                          withAsterisk
-                                          label="Blog Title"
-                                          placeholder="Blog Title"
-                                          value={blogData.BlogTitle}
-                                          onChange={(e) => setBlogData('BlogTitle', e.target.value)}
-                      
-                      
-                                      />
-                      
-                                      <TextInput
-                                          withAsterisk
-                                          label="Blog Description"
-                                          placeholder="Blog Description"
-                                          value={blogData.BlogDescription}
-                                          onChange={(e) => setBlogData('BlogDescription', e.target.value)}
-                      
-                                      />
-                      
-                      
-                      
-                                      <Group justify="center" mt="md">
-                                          <Button color="pink" type="submit">Submit</Button>
-                                      </Group>
-                                  </form>
-                    </div>:<div className='flex flex-col justify-center items-center'>
-                      <img src={`${url}/storage/${blog.Thumbnail}`} alt="Example" className='w-full h-[500px]' />
-                      <Title order={1} fw={1000}>{blog.BlogTitle}</Title>
-                      <Text >{blog.BlogDescription}</Text>
-                      <Text>Categories: </Text>
-                      <div className='flex flex-row gap-3'>
-                      {blog.categories?.map((category) => (
-                        <Button key={category.id} className='bg-slate-50 p-3 '>{category.categoryName}</Button>
-                      ))}
-                    </div>
-                    </div>}
-                    
+        {/* Snackbar Notification */}
+        {showSnackbar && (
+          <Notification
+            icon={snackbar.icon}
+            color={snackbar.color}
+            title="Error"
+            withCloseButton
+            onClose={() => setShowSnackbar(false)}
+            style={{ zIndex: 1000 }}
+            className='mb-4'
+          >
+            {snackbar.message}
+          </Notification>
+        )}
 
-                    
-                  </div>
-                </div>
-                {/* d2 marga components elements */}
-                    <div>
-                      {elements.map((element, index) => (
-                          <React.Fragment key={`element-${element.props.position}`}>
-                              {element}
-                          </React.Fragment>
-                      ))}
-                </div>
-              </div>
-              
+        {/* Blog Action Buttons */}
+        <div className="flex flex-wrap gap-3 mb-6">
+          <Button color="pink" onClick={publish}>Publish</Button>
+          {blog.Visibility !== 'public' && (
+            <Button color="pink" onClick={draft}>Draft</Button>
+          )}
+          <Button color="pink" onClick={() => setIsBlogEdit(!isBlogEdit)}>Edit Blog</Button>
+          <Button color="red" onClick={open}>Delete Blog</Button>
         </div>
-        
-    </>
+
+        {/* Delete Modal */}
+        <Modal opened={opened} onClose={close} title="Confirm Deletion" centered>
+          <Text size="sm" mb="md">
+            Are you sure you want to delete this blog? This action cannot be undone.
+          </Text>
+          <div className="flex justify-end gap-2">
+            <Button variant="default" onClick={close}>Cancel</Button>
+            <Button color="red" onClick={handleDelete}>Yes, Delete</Button>
+          </div>
+        </Modal>
+
+        {/* Blog Edit or View Mode */}
+        {isBlogEdit ? (
+          <div className="space-y-6">
+            {/* Selected Categories */}
+            {blogCategories?.map((category) => (
+              <div key={category.id} className="bg-pink-100 px-4 py-2 rounded-lg w-[250px] flex justify-between items-center">
+                <span className="font-medium">{category.categoryName}</span>
+                <Button color="red" onClick={() => removeCategory(category)} size="xs">X</Button>
+              </div>
+            ))}
+
+            {/* Blog Edit Form */}
+            <form onSubmit={submitUpdateBlog} className="space-y-4">
+              {blogData.Thumbnail && previewUrl && <img src={previewUrl} className="rounded-lg max-h-[300px]" />}
+
+              <FileInput
+                label="Input Thumbnail"
+                placeholder="Input png/jpeg"
+                onChange={(file) => setBlogData('Thumbnail', file)}
+              />
+
+              {/* Category Selection */}
+              <div className="flex flex-wrap gap-2">
+                {categories?.map((category) => (
+                  <Button
+                    color="pink"
+                    key={category.id}
+                    disabled={(blogCategories ?? []).some(c => c.id === category.id)}
+                    onClick={() => {
+                      if (!(blogData?.categories || []).includes(category.id)) {
+                        setBlogCategories((prev) => [...prev, category])
+                        setBlogData('categories', [...(blogData?.categories || []), category.id])
+                      }
+                    }}
+                    className="text-sm"
+                  >
+                    {category.categoryName}
+                  </Button>
+                ))}
+              </div>
+
+              <TextInput
+                withAsterisk
+                label="Blog Title"
+                placeholder="Blog Title"
+                value={blogData.BlogTitle}
+                onChange={(e) => setBlogData('BlogTitle', e.target.value)}
+              />
+
+              <TextInput
+                withAsterisk
+                label="Blog Description"
+                placeholder="Blog Description"
+                value={blogData.BlogDescription}
+                onChange={(e) => setBlogData('BlogDescription', e.target.value)}
+              />
+
+              <Group justify="center" mt="md">
+                <Button color="pink" type="submit">Submit</Button>
+              </Group>
+            </form>
+          </div>
+        ) : (
+          <div className='flex flex-col justify-center items-center space-y-4'>
+            <img src={`${url}/storage/${blog.Thumbnail}`} alt="Example" className='rounded-lg w-full max-h-[500px] object-cover' />
+            <Title order={1} fw={1000}>{blog.BlogTitle}</Title>
+            <Text>{blog.BlogDescription}</Text>
+            <Text className='font-medium'>Categories:</Text>
+            <div className='flex flex-wrap gap-2'>
+              {blog.categories?.map((category) => (
+                <Button
+                  key={category.id}
+                  size="xs"
+                  variant="light"
+                  color="pink"
+                >
+                  {category.categoryName}
+                </Button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Blog Dynamic Elements */}
+        <div className="mt-8 space-y-6">
+          {elements.map((element, index) => (
+            <React.Fragment key={`element-${element.props.position}`}>
+              {element}
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</>
+
   )
 }
 

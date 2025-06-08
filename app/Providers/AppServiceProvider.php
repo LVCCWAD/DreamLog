@@ -26,7 +26,14 @@ class AppServiceProvider extends ServiceProvider
          Inertia::share([
         'auth' => function () {
             return [
-                'user' => Auth::check() ? Auth::user()->load(['profile', 'followings', 'liked_blogs','notifications']) : null,
+                'user' => Auth::check() ? Auth::user()->load([
+                                                                            'profile',
+                                                                            'followings',
+                                                                            'liked_blogs',
+                                                                            'notifications' => function ($query) {
+                                                                                $query->orderBy('created_at', 'desc');
+                                                                            }
+                                                                        ]) : null,
                 'isUser' => Auth::check(),
                 
                 

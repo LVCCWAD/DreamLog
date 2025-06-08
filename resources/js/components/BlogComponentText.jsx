@@ -75,68 +75,63 @@ function BlogComponentText({position = componentPosition, type, handleChange, de
   }
 
   return (
-    <>
-    {/*d2 marga edit text component */}
-    {componentEdit ? <div className='flex flex-col items-start space-y-2 px-34'>
-      {
-        edit ? (
-          <div>
-            <RichTextEditor editor={editor}>
-              <RichTextEditor.Toolbar sticky stickyOffset={60}>
-                <RichTextEditor.ControlsGroup>
-                  <RichTextEditor.Bold />
-                  <RichTextEditor.Italic />
-                  <RichTextEditor.Underline />
-                  <RichTextEditor.Strikethrough />
-                  <RichTextEditor.ClearFormatting />
-                  <RichTextEditor.Highlight />
-                  <RichTextEditor.Code />
-                </RichTextEditor.ControlsGroup>
-    
-                <RichTextEditor.ControlsGroup>
-                  <RichTextEditor.H1 />
-                  <RichTextEditor.H2 />
-                  <RichTextEditor.H3 />
-                  <RichTextEditor.H4 />
-                </RichTextEditor.ControlsGroup>
-    
-                <RichTextEditor.ControlsGroup>
-                  <RichTextEditor.AlignLeft />
-                  <RichTextEditor.AlignCenter />
-                  <RichTextEditor.AlignJustify />
-                  <RichTextEditor.AlignRight />
-                </RichTextEditor.ControlsGroup>
-    
-                <RichTextEditor.ControlsGroup>
-                  <RichTextEditor.Undo />
-                  <RichTextEditor.Redo />
-                  
-                </RichTextEditor.ControlsGroup>
-                <Button onClick={() => handleDelete(position) } color='red'>X</Button>
-              </RichTextEditor.Toolbar>
-    
-              <RichTextEditor.Content />
-            </RichTextEditor>
-            
+    <div className="w-full">
+  {componentEdit ? (
+    <div className="flex flex-col items-start space-y-4 px-4">
+      {edit ? (
+        <div className="w-full">
+          <RichTextEditor editor={editor}>
+            <RichTextEditor.Toolbar sticky stickyOffset={60}>
+              <RichTextEditor.ControlsGroup>
+                <RichTextEditor.Bold />
+                <RichTextEditor.Italic />
+                <RichTextEditor.Underline />
+                <RichTextEditor.Strikethrough />
+                <RichTextEditor.ClearFormatting />
+                <RichTextEditor.Highlight />
+                <RichTextEditor.Code />
+              </RichTextEditor.ControlsGroup>
+
+              <RichTextEditor.ControlsGroup>
+                <RichTextEditor.H1 />
+                <RichTextEditor.H2 />
+                <RichTextEditor.H3 />
+                <RichTextEditor.H4 />
+              </RichTextEditor.ControlsGroup>
+
+              <RichTextEditor.ControlsGroup>
+                <RichTextEditor.AlignLeft />
+                <RichTextEditor.AlignCenter />
+                <RichTextEditor.AlignJustify />
+                <RichTextEditor.AlignRight />
+              </RichTextEditor.ControlsGroup>
+
+              <RichTextEditor.ControlsGroup>
+                <RichTextEditor.Undo />
+                <RichTextEditor.Redo />
+              </RichTextEditor.ControlsGroup>
+            </RichTextEditor.Toolbar>
+
+            <RichTextEditor.Content />
+          </RichTextEditor>
+
+          <div className="mt-3">
+            <Button onClick={() => handleDelete(position)} color="red" size="xs">
+              Delete Component
+            </Button>
           </div>
-        ) : (
-          <div>
-            <div className="rich-text-content">
-              {parsedContent()}
-            </div>
-          </div>
-        )
-      }    
-      <div className="flex space-x-2">
-      
-      
-      </div>
-    </div> : (
-      <div className="rich-text-content">
-        {parsedContent()}
-      </div>
-    )}
-    </>
+        </div>
+      ) : (
+        <div className="rich-text-content w-full">
+          {parsedContent()}
+        </div>
+      )}
+    </div>
+  ) : (
+    <div className="rich-text-content w-full">{parsedContent()}</div>
+  )}
+</div>
+
   )
 }
 

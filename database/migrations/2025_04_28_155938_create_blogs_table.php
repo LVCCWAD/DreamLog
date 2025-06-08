@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');;
             $table->string('BlogTitle');
-            $table->string('BlogDescription');
+            $table->longText('BlogDescription');
             $table->string('Thumbnail');
             $table->enum('Visibility', ['private', 'public']);
             $table->integer("view_count")->default(0);

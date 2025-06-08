@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {
   Button, Modal, Group, TextInput, PasswordInput, Text,
-  ActionIcon, FileInput, Menu, ScrollArea, Notification
+  ActionIcon, FileInput, Menu, ScrollArea, Notification,
+  Indicator
 } from '@mantine/core';
 import DreamLog from '../assets/DreamLog.png';
 import { useDisclosure } from '@mantine/hooks';
@@ -12,7 +13,12 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
   const { auth, categories, blogs,url } = usePage().props;
   const isUser = !!auth.user;
   const authUser = auth.user;
+
+  
   const notifications = authUser ? auth.user.notifications : [];
+  const unreadCount = (notifications || []).filter(n => !n.is_read).length;
+  console.log(unreadCount)
+
 
   const [logInOpen, setLogInOpen] = useState(false);
   const [signUpOpened, { open: openSignUp, close: closeSignUp }] = useDisclosure(false);
@@ -54,27 +60,29 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
 
   const signUP = async (e) => {
     e.preventDefault();
+
+    
     if (!signUpData.name || !signUpData.email || !signUpData.password) {
-      return showNotification("All fields are required");
+        return showNotification("All fields are required");
     }
+
     if (!validateEmail(signUpData.email)) {
-      return showNotification("Invalid email format");
+        return showNotification("Invalid email format");
     }
-    await register('/register', {
-    onSuccess: () => {
-        router.visit('/');
-        window.location.href = '/';
-    },
+
+    
+    register('/register', {
+        onSuccess: () => {
+        showNotification("Registration successful");
+        router.visit('/'); 
+        },
+        onError: (errors) => {
+        if (errors.name) return showNotification(errors.name);
+        if (errors.email) return showNotification(errors.email);
+        if (errors.password) return showNotification(errors.password);
+        }
     });
-    if(errors.name){
-        return showNotification(errors.name);
-    }else if (errors.email){
-        return showNotification(errors.email);
-    }
-    else if (errors.password){
-        return showNotification(errors.password);
-    }
-  };
+    };
 
   const logIN = async (e) => {
     e.preventDefault();
@@ -131,6 +139,9 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
       onSuccess: () => { window.location.href = '/'; }
     });
   };
+  const handleReadNotification = (id) => {
+    router.post(`/notification/${id}/read`, {}, );
+  };
 
   const [query, setQuery] = useState('');
   const [filteredBlogs, setFilteredBlogs] = useState([]);
@@ -171,81 +182,66 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
     
 
     return (<div className='w-[100%]'>
-        {/* {showSnackbar && (
-        <Notification
-          icon={snackbar.icon}
-          color={snackbar.color}
-          title="Error"
-          withCloseButton
-          onClose={() => setShowSnackbar(false)}
-          style={{ position: 'fixed', top: 10, right: 10, zIndex: 1000 }}
-        >
-          {snackbar.message}
-        </Notification>
-      )} */}
 
         {/* eto ung signup modal */}
         <Modal opened={signUpOpened} onClose={closeSignUp} title="Sign Up" centered>
-            
-            
             <Group justify="center">
                 {showSnackbar && (
-                    <Notification
+                <Notification
                     icon={snackbar.icon}
                     color={snackbar.color}
                     title="Error"
                     withCloseButton
                     onClose={() => setShowSnackbar(false)}
                     style={{ zIndex: 1000 }}
-                    className='w-full m-2'
-                    >
+                    className="w-full m-2"
+                >
                     {snackbar.message}
-                    </Notification>
+                </Notification>
                 )}
-                
-                <div className='flex flex-col justify-center items-center'>
-                    <img src={DreamLog} className='h-[150px] ml-8 mr-8' />
-                    <Text>Welcome To DreamLOG</Text>
-                </div>
 
+                <div className="flex flex-col justify-center items-center">
+                <img src={DreamLog} className="h-[150px] ml-8 mr-8" alt="DreamLOG" />
+                <Text>Welcome To DreamLOG</Text>
+                </div>
             </Group>
 
             <form onSubmit={signUP}>
-
-
                 <TextInput
-                    withAsterisk
-                    label="Email"
-                    placeholder="your@email.com"
-                    onChange={(e) => setSignUpData('email', e.target.value)}
-
+                withAsterisk
+                label="Email"
+                placeholder="your@email.com"
+                value={signUpData.email}
+                onChange={(e) => setSignUpData('email', e.target.value)}
+                mt="md"
                 />
 
-
                 <TextInput
-                    withAsterisk
-                    label="Name"
-                    placeholder="Name"
-                    onChange={(e) => setSignUpData('name', e.target.value)}
-
-
+                withAsterisk
+                label="Name"
+                placeholder="Name"
+                value={signUpData.name}
+                onChange={(e) => setSignUpData('name', e.target.value)}
+                mt="md"
                 />
 
                 <PasswordInput
-                    withAsterisk
-                    label="Password"
-                    defaultValue=""
-                    visible={visible}
-                    onVisibilityChange={toggle}
-                    onChange={(e) => (setSignUpData('password', e.target.value))}
+                withAsterisk
+                label="Password"
+                value={signUpData.password}
+                onChange={(e) => setSignUpData('password', e.target.value)}
+                visible={visible}
+                onVisibilityChange={toggle}
+                mt="md"
                 />
 
-
-                <Group justify="center" mt="md">
-                   <Button color="pink" variant="filled">Submit</Button>
+                <Group justify="center" mt="lg">
+                <Button color="pink" variant="filled" type="submit">
+                    Submit
+                </Button>
                 </Group>
             </form>
-        </Modal>
+            </Modal>
 
         {/* log in modal */}
         <Modal opened={loginOpened} onClose={closeLogin} title="Log In" centered>
@@ -301,124 +297,148 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
         </Modal>
 
         {/* Create Blog modal */}
-        <Modal opened={createBlogOpened} onClose={() =>{closeCreateBlog(); blogReset();}} title="Create Blog" centered>
-
+        <Modal
+            opened={createBlogOpened}
+            onClose={() => {
+                closeCreateBlog();
+                blogReset();
+            }}
+            title="Create Blog"
+            centered
+            >
             <Group justify="center">
                 {showSnackbar && (
-                                    <Notification
-                                    icon={snackbar.icon}
-                                    color={snackbar.color}
-                                    title="Error"
-                                    withCloseButton
-                                    onClose={() => setShowSnackbar(false)}
-                                    style={{ zIndex: 1000 }}
-                                    className='w-full m-2'
-                                    >
-                                    {snackbar.message}
-                                    </Notification>
-                                )}                
-                <div className='flex flex-col justify-center items-center'>
-                    <img src={DreamLog} className='h-[150px] ml-8 mr-8' />
+                <Notification
+                    icon={snackbar.icon}
+                    color={snackbar.color}
+                    title="Error"
+                    withCloseButton
+                    onClose={() => setShowSnackbar(false)}
+                    style={{ zIndex: 1000 }}
+                    className="w-full m-2"
+                >
+                    {snackbar.message}
+                </Notification>
+                )}
+                <div className="flex flex-col justify-center items-center">
+                <img src={DreamLog} className="h-[150px] ml-8 mr-8" alt="DreamLOG" />
                 </div>
             </Group>
 
-            <div>
-                    <div className='flex flex-row justify-between mb-4 '><span className='text-lg font-bold' >Create a Category?</span><span onClick={()=>setDropdown(!dropdown)} className="text-3xl cursor-pointer">+</span></div>
-                    {dropdown && <div className='w-full max-w-md mx-auto flex flex-col gap-3'>
-                        <form onSubmit={submitCategory}>
-                            <TextInput
-                                withAsterisk
-                                label="Category Name"
-                                placeholder="Category Name"
-                                onChange={(e) => setCategoryData('categoryName', e.target.value.toUpperCase())}
-                                className='mb-2'
-
-                            />
-                                <FileInput
-                                withAsterisk
-                                label="Input Thumbnail"
-                                placeholder="Input png/jpeg"
-                                onChange={(file) => {setCategoryData('thumbnail', file)
-                                    handleFileChange(file,'category')
-                                }}
-                                
-                                
-                                />
-                            <div className="w-full flex justify-center mt-5">
-                                <Button color='pink' type='submit'  variant="filled" className='w-[200px]'>Create Category</Button>
-                                    
-                                  
-                            </div>
-                        </form>
-                    </div>}
-                    
+            {/* Category Creation Section */}
+            <div className="mt-4">
+                <div className="flex flex-row justify-between mb-4">
+                <span className="text-lg font-bold">Create a Category?</span>
+                <button
+                    type="button"
+                    onClick={() => setDropdown(!dropdown)}
+                    className="text-3xl cursor-pointer"
+                >
+                    +
+                </button>
                 </div>
-            <form onSubmit={submitBlog}>
-                {
-                    blogData.Thumbnail && previewUrl ? <img src={previewUrl} /> : <></>
-                }
-                <FileInput
+
+                {dropdown && (
+                <form onSubmit={submitCategory} className="w-full max-w-md mx-auto flex flex-col gap-3">
+                    <TextInput
+                    required
+                    label="Category Name"
+                    placeholder="Category Name"
+                    onChange={(e) => setCategoryData('categoryName', e.target.value.toUpperCase())}
+                    />
+
+                    <FileInput
+                    required
                     label="Input Thumbnail"
                     placeholder="Input png/jpeg"
-                    onChange={(file) => {setBlogData('Thumbnail', file)
-                        handleFileChange(file,'blog')}
-                    }
-                />
-                <div className="flex flex-wrap gap-1">
-                    {categories.map((category) => (
-                        <Button
-                        key={category.id}
-                        
-                        onClick={() => {
-                            if (!(blogData.categories || []).includes(category.id)) {
-                                setBlogData('categories', [...(blogData.categories || []), category.id]);
-                            }else{
-                                setBlogData('categories', (blogData.categories || []).filter(catId => catId !== category.id));
-                            }
-                        }}
-                        className={`${(blogData.categories || []).includes(category.id) ? "bg-slate-100":"bg-slate-200"} p-3 rounded-md w-[50px] m-1`}
-                        color={!(blogData.categories || []).includes(category.id) ? "gray" :  "rgba(250, 155, 155, 1)"}
-                        >
-                        <span>{category.categoryName}</span>
-                        </Button>
-                    ))}
+                    accept="image/png,image/jpeg"
+                    onChange={(file) => {
+                        setCategoryData('thumbnail', file);
+                        handleFileChange(file, 'category');
+                    }}
+                    />
+
+                    <div className="w-full flex justify-center mt-5">
+                    <Button color="pink" type="submit" variant="filled" className="w-[200px]">
+                        Create Category
+                    </Button>
                     </div>
-                
+                </form>
+                )}
+            </div>
+
+            {/* Blog Form */}
+            <form onSubmit={submitBlog} className="mt-6">
+                {blogData.Thumbnail && previewUrl && (
+                <img src={previewUrl} alt="Thumbnail Preview" className="mb-3 rounded" />
+                )}
+
+                <FileInput
+                label="Input Blog Thumbnail"
+                placeholder="Input png/jpeg"
+                accept="image/png,image/jpeg"
+                onChange={(file) => {
+                    setBlogData('Thumbnail', file);
+                    handleFileChange(file, 'blog');
+                }}
+                />
+
+                {/* Categories Selection */}
+                <div className="flex flex-wrap gap-2 mt-4">
+                {categories.map((category) => {
+                    const selected = (blogData.categories || []).includes(category.id);
+                    return (
+                    <Button
+                        key={category.id}
+                        size="xs"
+                        variant={selected ? "light" : "default"}
+                        color={selected ? "pink" : "gray"}
+                        onClick={() => {
+                        if (!selected) {
+                            setBlogData('categories', [...(blogData.categories || []), category.id]);
+                        } else {
+                            setBlogData(
+                            'categories',
+                            (blogData.categories || []).filter((catId) => catId !== category.id)
+                            );
+                        }
+                        }}
+                    >
+                        {category.categoryName}
+                    </Button>
+                    );
+                })}
+                </div>
+
                 <TextInput
-                    withAsterisk
-                    label="Blog Title"
-                    placeholder="Blog Title"
-                    onChange={(e) => setBlogData('BlogTitle', e.target.value)}
-                    className='mt-5'
-
-
+                required
+                label="Blog Title"
+                placeholder="Blog Title"
+                onChange={(e) => setBlogData('BlogTitle', e.target.value)}
+                className="mt-5"
                 />
 
                 <TextInput
-                    withAsterisk
-                    label="Blog Description"
-                    placeholder="Blog Description"
-                    onChange={(e) => setBlogData('BlogDescription', e.target.value)}
-                    className='mt-2'
-
+                required
+                label="Blog Description"
+                placeholder="Blog Description"
+                onChange={(e) => setBlogData('BlogDescription', e.target.value)}
+                className="mt-2"
                 />
-
-
 
                 <Group justify="center" mt="md">
-                     
-                    <Button color="pink" variant="filled">Submit</Button>
-
+                <Button color="pink" variant="filled" type="submit">
+                    Submit
+                </Button>
                 </Group>
-                
             </form>
-        </Modal>
+            </Modal>
 
 
 
        
 
-        <header className='w-full h-[90px] flex flex-row justify-between items-center sticky border border-b-gray-500 z-10'>
+        <header className='w-full h-[90px] flex flex-row justify-between items-center mb-5'>
 
             <a href="/"><img src={DreamLog} className='h-[150px] ml-8' /></a>
             {
@@ -479,7 +499,18 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
 
                         {/* d2 ung notification */}
                         <Menu shadow="md" width={280}>
+                           
                             <Menu.Target>
+                            <Indicator
+                                disabled={unreadCount === 0}
+                                label={unreadCount > 99 ? '99+' : unreadCount}
+                                size={16}
+                                offset={5}
+                                position="top-end"
+                                color="red"
+                                radius="xl"
+                                withBorder
+                            >
                                 <ActionIcon
                                 variant="gradient"
                                 size="xl"
@@ -487,33 +518,50 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
                                 gradient={{ from: 'pink', to: 'red', deg: 120 }}
                                 className="hover-effect-icon"
                                 >
-                                 <i className="bx bx-bell text-xl text-white-800 dark:text-white transition duration-200"></i>
+                                <i className="bx bx-bell text-xl text-white-800 dark:text-white transition duration-200"></i>
                                 </ActionIcon>
+                            </Indicator>
                             </Menu.Target>
 
                             <Menu.Dropdown>
-                                <Menu.Label>Notifications</Menu.Label>
-                                <Menu.Divider />
+                            <Menu.Label>Notifications</Menu.Label>
+                            <Menu.Divider />
                                 <ScrollArea style={{ maxHeight: 250, overflowY: 'auto' }}>
-                                {notifications.length === 0 && (
+                                    {notifications.length === 0 && (
                                     <Text size="sm" color="dimmed" align="center" py="md">
-                                    No notifications
+                                        No notifications
                                     </Text>
-                                )}
-                                {notifications.map((notification) => (
-                                    <Menu.Item
-                                    key={notification.id}
-                                    component="a"
-                                    href={notification.url || '#'}
-                                    target="_blank"
-                                    styles={{ root: { whiteSpace: 'normal', lineHeight: 1.3 } }}
-                                    >
-                                    {notification.message}
-                                    <Text size="xs" color="dimmed" mt={4}>
-                                        {new Date(notification.created_at).toLocaleString()}
-                                    </Text>
-                                    </Menu.Item>
-                                ))}
+                                    )}
+                                    {notifications.map((notification) => {
+                                    const isUnread = !notification.is_read;
+
+                                    return (
+                                        <Menu.Item
+                                        key={notification.id}
+                                        component="a"
+                                        href={notification.url || '#'}
+                                        target="_blank"
+                                        styles={{
+                                            root: {
+                                            whiteSpace: 'normal',
+                                            lineHeight: 1.3,
+                                            backgroundColor: isUnread ? '#edf2ff' : 'transparent',
+                                            fontWeight: isUnread ? 600 : 400,
+                                            borderLeft: isUnread ? '3px solid #228be6' : 'none', // Optional left border
+                                            },
+                                        }}
+                                        onClick={()=>handleReadNotification(notification.id)}
+                                        >
+                                        <Group position="apart" noWrap>
+                                            <Text size="sm">{notification.message}</Text>
+                                            {isUnread && <div style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#228be6' }} />}
+                                        </Group>
+                                        <Text size="xs" color="dimmed" mt={4}>
+                                            {new Date(notification.created_at).toLocaleString()}
+                                        </Text>
+                                        </Menu.Item>
+                                    );
+                                    })}
                                 </ScrollArea>
                             </Menu.Dropdown>
                             </Menu>

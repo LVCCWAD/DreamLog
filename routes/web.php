@@ -43,7 +43,7 @@ Route::middleware('auth')->group(function (){
     Route::get('/category/{category}', [BlogsController::class, 'getBlogsByCategory']);
 
 
-    Route::get('/category/{category}/delete', [CategoriesController::class, 'deleteCategory']);
+    Route::post('/category/{category}/delete', [CategoriesController::class, 'deleteCategory']);
     Route::post('/createcomponents/{blog}/draft',[BlogsController::class, 'draftBlogComponents']);
     Route::post('/notification/{notification}/read',[NotificationsController::class, 'notificationRead']);
 

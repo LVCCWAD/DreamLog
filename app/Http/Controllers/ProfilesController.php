@@ -25,7 +25,10 @@ class ProfilesController extends Controller
                     'followers.profile',
                     'blogs.creator', 
                     'blogs.likes' ,
-                    'blogs.creator.profile',    
+                    'blogs.categories' ,
+                    'blogs.creator.profile',
+                    'user_created_categories',
+                    'user_created_categories.created_by'   
             ]);
 
             $userBlogs = $user->blogs;

@@ -45,6 +45,7 @@ function CategoryBlogs({ blogs, category }) {
               Thumbnail={blog.Thumbnail}
               id={blog.id}
               likes={blog.likes}
+              categories={blog.categories}
             />
           ))}
         </div>

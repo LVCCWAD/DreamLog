@@ -123,46 +123,38 @@ function ProfileBanner({user}) {
     
   return (
     <div className="flex flex-col justify-center items-center bg-stone-100 w-full mb-10">
-       <Modal opened={followingsModal} onClose={closeFollowings} title="Followings" centered>
-        {
-          user.followings.map((following)=>(
-            <div className='flex flex-row justify-center items-center gap-4 m-1'>
-                     <Avatar
-                        src={`${url}/storage/${following.profile.profilePicture}`}
-                        size={50}
-                        radius={999}
-                        alt={following.profile.userName}
-                        className="border-4 border-white shadow-md"
-                        />
-                    <Text size="xs" c="dimmed">
-                        Created By: {following.name}
-                    </Text>
-                </div>
-          ))
-        }
 
-       </Modal>
+  {/* Followings Modal */}
+  <Modal opened={followingsModal} onClose={closeFollowings} title="Followings" centered>
+    {user.followings.map((following, idx) => (
+      <div key={`following-${idx}`} className="flex items-center gap-4 p-2">
+        <Avatar
+          src={`${url}/storage/${following.profile.profilePicture}`}
+          size={50}
+          radius={999}
+          alt={following.profile.userName}
+          className="border-4 border-white shadow-md"
+        />
+        <Text size="sm" c="dimmed">{following.name}</Text>
+      </div>
+    ))}
+  </Modal>
 
-       <Modal opened={followersModal} onClose={closeFollowers} title="Followers" centered>
-                  
-        {
-          user.followings.map((following)=>(
-            <div className='flex flex-row justify-center items-center gap-4 m-1'>
-                     <Avatar
-                        src={`${url}/storage/${following.profile.profilePicture}`}
-                        size={50}
-                        radius={999}
-                        alt={following.profile.userName}
-                        className="border-4 border-white shadow-md"
-                        />
-                    <Text size="xs" c="dimmed">
-                        Created By: {following.name}
-                    </Text>
-                </div>
-          ))
-        }
-
-       </Modal>
+  {/* Followers Modal */}
+  <Modal opened={followersModal} onClose={closeFollowers} title="Followers" centered>
+    {user.followers.map((follower, idx) => (
+      <div key={`follower-${idx}`} className="flex items-center gap-4 p-2">
+        <Avatar
+          src={`${url}/storage/${follower.profile.profilePicture}`}
+          size={50}
+          radius={999}
+          alt={follower.profile.userName}
+          className="border-4 border-white shadow-md"
+        />
+        <Text size="sm" c="dimmed">{follower.name}</Text>
+      </div>
+    ))}
+  </Modal>
 
   {/* Banner Image */}
   <BackgroundImage
@@ -179,29 +171,37 @@ function ProfileBanner({user}) {
     </div>
   </BackgroundImage>
 
-  {/* Edit Modal */}
-      <Modal opened={updateOpened} onClose={close} title={
-        <div className="flex justify-center font-bold text-lg"> Update Profile </div>
-      } >
+  {/* Edit Profile Modal */}
+  <Modal
+    opened={updateOpened}
+    onClose={close}
+    title={<div className="text-center font-bold text-lg">Update Profile</div>}
+    centered
+  >
     <form onSubmit={updateProfile}>
       {data.banner && previewUrlBanner && (
         <img src={previewUrlBanner} alt="Banner preview" className="mb-4 rounded-md" />
       )}
       <FileInput
         label="Input Banner"
-        placeholder="Input png/jpeg"
-        onChange={(file) => {setData('banner', file)
-          handleFileChange(file)
+        placeholder="Upload PNG/JPEG"
+        onChange={(file) => {
+          setData('banner', file);
+          handleFileChange(file);
         }}
         error={error}
       />
 
       {data.profilePicture && previewUrlProfilePicture && (
-        <img src={previewUrlProfilePicture} alt="Profile preview" className="mt-4 mb-4 rounded-full w-24 h-24 object-cover" />
+        <img
+          src={previewUrlProfilePicture}
+          alt="Profile preview"
+          className="mt-4 mb-4 rounded-full w-24 h-24 object-cover"
+        />
       )}
       <FileInput
         label="Input Profile Picture"
-        placeholder="Input png/jpeg"
+        placeholder="Upload PNG/JPEG"
         onChange={(file) => setData('profilePicture', file)}
       />
 
@@ -226,8 +226,8 @@ function ProfileBanner({user}) {
     </form>
   </Modal>
 
-  {/* Profile Section */}
-  <div className="flex flex-row gap-6 items-start w-full px-6 mt-[-3rem] max-w-4xl bg-slate-200 p-4 rounded-lg ">
+  {/* Profile Card */}
+  <div className="flex flex-col sm:flex-row gap-6 items-start w-full max-w-4xl bg-slate-200 p-6 rounded-lg mt-[-3rem]">
     {/* Avatar */}
     <Avatar
       src={`${url}/storage/${profile.profilePicture}`}
@@ -237,24 +237,23 @@ function ProfileBanner({user}) {
       className="border-4 border-white shadow-md"
     />
 
-    {/* Info and Stats */}
-    <div className="flex flex-col">
-      <div className='flex flex-row justify-between items-center'>
+    {/* User Info */}
+    <div className="flex flex-col w-full">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
         <div>
-            <Text size="xl" weight={700}>{profile.userName}</Text>
-            <Text size="md" className="text-gray-600">Bio: {profile.bio}</Text>
+          <Text size="xl" weight={700}>{profile.userName}</Text>
+          <Text size="sm" className="text-gray-600">Bio: {profile.bio}</Text>
         </div>
         {authUser?.id !== user.id && (
-                          !followed ? (
-                              <Badge color="pink" onClick={handleFollow}>Follow</Badge>
-                          ) : (
-                              <Badge color="pink" onClick={handleUnFollow}>Unfollow</Badge>
-                          )
-                          )}
+          !followed ? (
+            <Badge color="pink" onClick={handleFollow} className="cursor-pointer">Follow</Badge>
+          ) : (
+            <Badge color="pink" onClick={handleUnFollow} className="cursor-pointer">Unfollow</Badge>
+          )
+        )}
       </div>
-      
-      
 
+      {/* Follow Buttons */}
       <Group mt="sm" spacing="xs">
         <Button
           variant="light"
@@ -275,10 +274,10 @@ function ProfileBanner({user}) {
           {followers} Followers
         </Button>
       </Group>
-      
     </div>
   </div>
 </div>
+
   )
 }
 

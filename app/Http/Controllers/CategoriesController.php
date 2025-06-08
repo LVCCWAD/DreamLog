@@ -9,8 +9,9 @@ use Illuminate\Support\Facades\Auth;
 
 class CategoriesController extends Controller
 {
-    public function createCategory(Request $request){
-        $category = $request->validate([
+   public function createCategory(Request $request)
+    {
+        $validated = $request->validate([
             'categoryName' => [
                 'required',
                 'string',
@@ -19,20 +20,22 @@ class CategoriesController extends Controller
                     if (Category::whereRaw('LOWER(categoryName) = ?', [strtolower($value)])->exists()) {
                         $fail('The category name has already been taken.');
                     }
-                }
+                },
             ],
-            'thumbnail' => ['nullable', 'file', 'mimes:jpg,png,pdf,gif', 'max:51200'],
+            'thumbnail' => ['nullable', 'file', 'mimes:jpg,png,pdf,gif', 'max:51200'], // 50MB
         ]);
 
-         if ($request->hasFile('thumbnail')) {
+        if ($request->hasFile('thumbnail')) {
             $file = $request->file('thumbnail');
             $filePath = $file->store('CategoryThumbnails', 'public'); 
-            $category['thumbnail'] = $filePath;
+            $validated['thumbnail'] = $filePath;
         }
 
-        $category['user_id'] = Auth::id();
+        $validated['user_id'] = Auth::id(); 
 
-        Category::create($category);
+        $category = Category::create($validated);
+
+       
     }
 
     public function removeCategory(Request $request, Blog $blog){

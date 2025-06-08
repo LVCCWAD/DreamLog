@@ -15,9 +15,7 @@ function CategoriesCard({Category, Thumbnail}) {
         {Category}
     </h1>
 
-    {/* <h1 className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-xl font-bold text-white z-10 ">
-        {Category}
-    </h1> */}
+    
     </div>
   )
 }

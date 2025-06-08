@@ -229,7 +229,7 @@ class BlogsController extends Controller
             
         }
 
-        $blog->Visibility = "public";
+        
         $blog->save();
 
         BlogCreated::dispatch($blog);
@@ -246,7 +246,7 @@ class BlogsController extends Controller
        
        
         $components = $blog->Components;
-        $blog->load(['Creator','Creator.followers','likes','Creator.profile','categories']);
+        $blog->load(['Creator','Creator.followers','likes','likes.profile','Creator.profile','categories']);
         $categories = Category::all();
         if($blog->Visibility == "public"){
         $blog->increment('view_count');}
@@ -275,7 +275,7 @@ class BlogsController extends Controller
 
     public function getBlogsByCategory(Category $category)
     {
-        $blogs = $category->blogs()->where('Visibility', 'public')->with(['Creator','Creator.profile', 'likes'])->get();
+        $blogs = $category->blogs()->where('Visibility', 'public')->with(['Creator','Creator.profile', 'likes','categories'])->get();
         return inertia('CategoryBlogs', ['blogs' => $blogs, 'category' => $category]);
     }
 

@@ -9,8 +9,8 @@ function formatLikes(num) {
     return num.toString();
 }
 
-function BlogCard({Title, Description,Thumbnail , Creator, id,  likes, view_count}) {
-    console.log(Creator)
+function BlogCard({Title, Description,Thumbnail , Creator, id,  likes, view_count,categories}) {
+    console.log(categories)
 
     const { auth, url } = usePage().props;
 
@@ -66,69 +66,116 @@ function BlogCard({Title, Description,Thumbnail , Creator, id,  likes, view_coun
     const likesCount = likes?.length || 0;
     
   return (
-    <div className='w-[300px] p-4 h-full'>
-       
-            <Card shadow="sm" padding="lg" radius="md" withBorder>
-            <Card.Section>
-                <Image
-                    src={`${url}/storage/${Thumbnail}`}
-                    height={160}
-                    className="object-cover w-full h-[200px]" 
-                />
-            </Card.Section>
-            
-        
-                
-            <Text fw={700} size="lg" align="left" mt="md">
-              <a href={`/blog/${id}`}>{Title}</a> </Text>
-               
-            <div className="flex justify-between items-center mt-2">
-                 <a href={`/profile/${Creator?.id}`}>
-                <div className='flex items-center gap-2'>
-                     <Avatar
-                        src={`${url}/storage/${Creator.profile.profilePicture}`}
-                        size={30}
-                        radius={"xl"}
-                        alt={Creator.profile.userName}
-                        className="border-2 border-white shadow-md"
-                        />
-                    <Text size="xs" c="dimmed">
-                        Created By: {Creator.name}
-                    </Text>
-                </div>
-              </a>
-            
+    <div className="w-[300px] p-4 h-full">
+      <Card shadow="sm" padding="lg" radius="md" withBorder>
+        {/* Thumbnail Section */}
+        <Card.Section>
+          <Image
+            src={`${url}/storage/${Thumbnail}`}
+            height={160}
+            className="object-cover w-full h-[200px]"
+          />
+        </Card.Section>
 
-            {authUser?.id !== Creator?.id && (
-                        !followed ? (
-                          <Button size="xs" color="red" variant="filled" onClick={handleFollow} radius="xl"> FOLLOW </Button>
-                        ) : (
-                          <Button size="xs" color="gray" variant="light" onClick={handleUnFollow} radius="xl">UNFOLLOW </Button>
-                        )
-                      )}
-                    </div>
+        {/* Title */}
+        <Text fw={700} size="lg" align="left" mt="md">
+          <a href={`/blog/${id}`}>{Title}</a>
+        </Text>
 
-            <Text size="xs" mt={5} mb={10}>
-              <span className="flex flex-row items-center gap-1">
-                <img src={EyeImage} alt="Views" className="w-4 h-4" />
-                {view_count}
-              </span>
-            </Text>
-
-            <div className="mt-2">
-              {isLiked ? (
-                <Badge
-                  color="pink" variant="filled" className="cursor-pointer px-3 py-1 text-sm" onClick={handleUnlike} radius="lg" > 
-                  ♥ Like {formatLikes(likesCount)}
-                </Badge>
-              ) : (
-                <Badge color="gray" variant="light" className="cursor-pointer px-3 py-1 text-sm" onClick={handleLike} radius="lg"> 
-                ♡ Like {formatLikes(likesCount)}
-                </Badge>
-              )}
+        {/* Creator and Follow Section */}
+        <div className="flex justify-between items-start mt-2">
+          <a href={`/profile/${Creator?.id}`}>
+            <div className="flex items-center gap-2">
+              <Avatar
+                src={`${url}/storage/${Creator.profile.profilePicture}`}
+                size={30}
+                radius="xl"
+                alt={Creator.profile.userName}
+                className="border-2 border-white shadow-md"
+              />
+              <Text size="xs" c="dimmed">
+                Created By: {Creator.name}
+              </Text>
             </div>
-          </Card>
+          </a>
+
+          {authUser?.id !== Creator?.id && (
+            !followed ? (
+              <Button
+                size="xs"
+                color="red"
+                variant="filled"
+                onClick={handleFollow}
+                radius="xl"
+              >
+                FOLLOW
+              </Button>
+            ) : (
+              <Button
+                size="xs"
+                color="gray"
+                variant="light"
+                onClick={handleUnFollow}
+                radius="xl"
+              >
+                UNFOLLOW
+              </Button>
+            )
+          )}
         </div>
+
+        {/* Tags Section */}
+        <div className="flex flex-wrap gap-[0.5em] mt-3">
+          {categories.map((category) => (
+            <a key={category.id} href={`category/${category.id}`} >
+            <Button
+                                    key={category.id}
+                                    size="xs"
+                                    variant="light" 
+                                    color= "pink"
+                                    
+                                >
+                                    {category.categoryName}
+                                </Button></a>
+          ))}
+        </div>
+
+        {/* Likes and Views */}
+        <div className="flex justify-between items-center mt-3">
+          <div>
+            {isLiked ? (
+              <Badge
+                color="pink"
+                variant="filled"
+                className="cursor-pointer px-3 py-1 text-sm"
+                onClick={handleUnlike}
+                radius="lg"
+              >
+                ♥ Like {formatLikes(likesCount)}
+              </Badge>
+            ) : (
+              <Badge
+                color="gray"
+                variant="light"
+                className="cursor-pointer px-3 py-1 text-sm"
+                onClick={handleLike}
+                radius="lg"
+              >
+                ♡ Like {formatLikes(likesCount)}
+              </Badge>
+            )}
+          </div>
+
+          <Text size="xs">
+            <span className="flex flex-row gap-1 text-gray-500">
+              <img src={EyeImage} alt="Views" className="w-4 h-4" />
+              {view_count}
+            </span>
+          </Text>
+        </div>
+      </Card>
+    </div>
+
       );
     }
 

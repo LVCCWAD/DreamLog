@@ -39,28 +39,43 @@ function BlogComponentImage({position, type="image", handleChange, deleteElement
       }
 
     return (
-        <>  
-            <div >
-                {componentEdit ? 
-                <><div className=''>
-                {/*d2 marga edit image component */}
-                {
-                    previewUrl ? <div className="flex justify-center object-contain w-full my-4"> <img src={previewUrl} alt="Preview" className="my-3 max-h-[300px]" /> </div>: <></>
-                }
-                <FileInput
-                    label="Input Image"
-                    placeholder="Input png/jpeg"
-                    accept="image/png,image/jpeg,image/jpg"
-                    onChange={handleFileChange}
-                />
-            </div>
-            
-            <Button onClick={() => handleDelete(position)}>Delete</Button></>:
-            <img src={previewUrl} alt="Preview" className="my-3 max-h-[300px]" />
-            }
-            </div>
-            
-        </>
+        <div className="w-full">
+  {componentEdit ? (
+    <div className="flex flex-col gap-4 items-start px-4 py-2">
+      {/* d2 marga edit image component */}
+      {previewUrl && (
+        <div className="flex justify-center w-full">
+          <img
+            src={previewUrl}
+            alt="Preview"
+            className="my-3 max-h-[300px] object-contain rounded shadow"
+          />
+        </div>
+      )}
+
+      <FileInput
+        label="Upload Image"
+        placeholder="Choose PNG or JPEG"
+        accept="image/png,image/jpeg,image/jpg"
+        onChange={handleFileChange}
+        className="w-full max-w-sm"
+      />
+
+      <Button onClick={() => handleDelete(position)} color="red" size="xs">
+        Delete Image
+      </Button>
+    </div>
+  ) : (
+    <div className="flex justify-center w-full">
+      <img
+        src={previewUrl}
+        alt="Preview"
+        className="my-3 max-h-[300px] object-contain rounded"
+      />
+    </div>
+  )}
+</div>
+
     )
 }
 
