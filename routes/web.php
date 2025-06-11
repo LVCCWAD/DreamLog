@@ -7,10 +7,10 @@ use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\ProfilesController;
 use App\Http\Controllers\UserAuth;
 use App\Models\Blog;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-
-
+use Illuminate\Support\Facades\Schedule;
 
 Route::middleware('guest')->group(function (){
 
@@ -50,3 +50,16 @@ Route::middleware('auth')->group(function (){
     
 
 });
+
+Schedule::call(function () {
+   $cutoff = Carbon::now()->subMonth();
+
+        $blogs = Blog::where('Visibility', 'private')
+            ->where('created_at', '<=', $cutoff)
+            ->get();
+
+        foreach ($blogs as $blog) {
+            $blog->delete();
+        }
+        
+})->monthly();
