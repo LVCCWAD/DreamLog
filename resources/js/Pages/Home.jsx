@@ -113,7 +113,7 @@ function Home({ blogs }) {
     {/* Categories Section */}
     <section className="w-full flex flex-col items-start bg-pink-50 rounded-xl pt-10">
       <Title order={2} className="p-10">MULTIPLE CATEGORIES TO CHOOSE</Title>
-      <div className="flex flex-wrap gap-5 px-10 pb-10">
+      <div className="flex flex-wrap gap-10 justify-center px-10 pb-10">
         {categories.map((category) => (
           <a key={category.id} href={`category/${category.id}`}>
             <CategoriesCard
