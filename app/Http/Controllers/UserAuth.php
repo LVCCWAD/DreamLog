@@ -40,24 +40,29 @@ class UserAuth extends Controller
 
     public function login(Request $request)
     {
-        $login = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+         $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required']
         ]);
 
-        try {
-            if (auth()->guard('web')->attempt(['email' => $login['email'], 'password' => $login['password']])) {
-                $request->session()->regenerate();
-                return Inertia::location("/");
-            } else {
-                return redirect()->back()->withErrors([
-                    'email' => 'Credentials do not match our records.',
-                ])->withInput($request->only('email'));
-            }
-            
-        } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['login' => 'Login failed: ' . $e->getMessage()])->withInput($request->only('email'));
+        $user = User::where('email', $credentials['email'])->first();
+
+        if (!$user) {
+            return back()->withErrors([
+                'email' => 'This email is not registered.',
+            ])->onlyInput('email');
         }
+
+        if (!Auth::guard('web')->attempt($credentials)) {
+            return back()->withErrors([
+                'password' => 'Incorrect password.',
+            ])->onlyInput('email');
+        }
+
+        $request->session()->regenerate();
+
+        return redirect()->intended('/');
+        
     }
 
      public function logout(){
