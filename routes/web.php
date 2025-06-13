@@ -47,6 +47,8 @@ Route::middleware('auth')->group(function (){
     Route::post('/createcomponents/{blog}/draft',[BlogsController::class, 'draftBlogComponents']);
     Route::post('/notification/{notification}/read',[NotificationsController::class, 'notificationRead']);
 
+    Route::post('/notification/{notification}/delete',[NotificationsController::class, 'deleteNotification']);
+
     
 
 });

@@ -7,7 +7,7 @@ import {
 import DreamLog from '../assets/DreamLog.png';
 import { useDisclosure } from '@mantine/hooks';
 import { useForm as useInertiaForm, router, usePage } from '@inertiajs/react';
-import { IconCheck, IconX } from '@tabler/icons-react';
+import { IconCheck, IconX, IconTrash } from '@tabler/icons-react';
 
 function Navbar({ Lopen = false, setLopen, inEdit = false }) {
     const { auth, categories, blogs, url } = usePage().props;
@@ -139,8 +139,24 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
             onSuccess: () => { window.location.href = '/'; }
         });
     };
+    
     const handleReadNotification = (id) => {
         router.post(`/notification/${id}/read`, {},);
+    };
+
+    // New delete notification function
+    const handleDeleteNotification = (id, event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        router.post(`/notification/${id}/delete`, {
+            onSuccess: () => {
+                showNotification("Notification deleted", "green", <IconCheck size={16} />);
+            },
+            onError: () => {
+                showNotification("Failed to delete notification");
+            }
+        });
     };
 
     const [query, setQuery] = useState('');
@@ -506,7 +522,7 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
 
 
                         {/* d2 ung notification */}
-                        <Menu shadow="md" width={280}>
+                        <Menu shadow="md" width={400}>
 
                             <Menu.Target>
                                 <Indicator
@@ -544,30 +560,44 @@ function Navbar({ Lopen = false, setLopen, inEdit = false }) {
                                         const isUnread = !notification.is_read;
 
                                         return (
-                                            <Menu.Item
-                                                key={notification.id}
-                                                component="a"
-                                                href={notification.url || '#'}
-                                                target="_blank"
-                                                styles={{
-                                                    root: {
-                                                        whiteSpace: 'normal',
-                                                        lineHeight: 1.3,
-                                                        backgroundColor: isUnread ? '#edf2ff' : 'transparent',
-                                                        fontWeight: isUnread ? 600 : 400,
-                                                        borderLeft: isUnread ? '3px solid #228be6' : 'none', // Optional left border
-                                                    },
-                                                }}
-                                                onClick={() => handleReadNotification(notification.id)}
-                                            >
-                                                <Group position="apart" noWrap>
-                                                    <Text size="sm">{notification.message}</Text>
-                                                    {isUnread && <div style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#228be6' }} />}
-                                                </Group>
-                                                <Text size="xs" color="dimmed" mt={4}>
-                                                    {new Date(notification.created_at).toLocaleString()}
-                                                </Text>
-                                            </Menu.Item>
+                                            <div key={notification.id} className="relative group flex flex-row justify-center items-center">
+                                                <Menu.Item
+                                                    component="a"
+                                                    href={notification.url || '#'}
+                                                    target="_blank"
+                                                    styles={{
+                                                        root: {
+                                                            whiteSpace: 'normal',
+                                                            lineHeight: 1.3,
+                                                            backgroundColor: isUnread ? '#edf2ff' : 'transparent',
+                                                            fontWeight: isUnread ? 600 : 400,
+                                                            borderLeft: isUnread ? '3px solid #228be6' : 'none',
+                                                            
+                                                        },
+                                                    }}
+                                                    onClick={() => handleReadNotification(notification.id)}
+                                                >
+                                                    <Group position="apart" noWrap>
+                                                        <Text size="sm">{notification.message}</Text>
+                                                        {isUnread && <div style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#228be6' }} />}
+                                                    </Group>
+                                                    <Text size="xs" color="dimmed" mt={4}>
+                                                        {new Date(notification.created_at).toLocaleString()}
+                                                    </Text>
+                                                </Menu.Item>
+                                                
+                                                {/* Delete button */}
+                                                <ActionIcon
+                                                    size="xs"
+                                                    color="red"
+                                                    variant="subtle"
+                                                    onClick={(e) => handleDeleteNotification(notification.id, e)}
+                                                    className="h-20 w-20 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                                                    title="Delete notification"
+                                                >
+                                                    <IconTrash size={200} />
+                                                </ActionIcon>
+                                            </div>
                                         );
                                     })}
                                 </ScrollArea>

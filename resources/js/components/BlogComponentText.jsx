@@ -13,7 +13,7 @@ import { domToReact } from 'html-react-parser';
 import {router} from '@inertiajs/react';
 
 
-function BlogComponentText({position = componentPosition, type, handleChange, deleteElement, content, id=null, componentEdit=true}) {
+function BlogComponentText({position = componentPosition, type, handleChange, deleteElement, content, id=null, componentEdit=true , ref}) {
   
   const [componentContent, setComponentContent] = useState(content)
   const [edit, setEdit] = useState(true)
@@ -75,7 +75,7 @@ function BlogComponentText({position = componentPosition, type, handleChange, de
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full" ref={ref}>
   {componentEdit ? (
     <div className="flex flex-col items-start space-y-4 px-4">
       {edit ? (

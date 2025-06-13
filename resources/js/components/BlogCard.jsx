@@ -2,6 +2,7 @@ import React from 'react'
 import { Card, Image, Text, Badge, Button, Group ,Avatar } from '@mantine/core';
 import { router, usePage } from '@inertiajs/react';
 import EyeImage from '../assets/eye-alt.png';
+import { IconHeart, IconHeartFilled } from '@tabler/icons-react';
 
 function formatLikes(num) {
     if (num >= 1_000_000) return (num / 1_000_000).toFixed(1) + 'M';
@@ -145,23 +146,25 @@ function BlogCard({Title, Description,Thumbnail , Creator, id,  likes, view_coun
           <div>
             {isLiked ? (
               <Button
+                leftSection={<IconHeartFilled size={20} color='white' />}
                 color="pink"
                 variant="filled"
                 className="cursor-pointer px-3 py-1 text-sm"
                 onClick={handleUnlike}
                 radius="lg"
               >
-                ♥ {formatLikes(likesCount)}
+                 {formatLikes(likesCount)}
               </Button>
             ) : (
               <Button
+                leftSection={<IconHeart size={20} />}
                 color="gray"
                 variant="light"
                 className="cursor-pointer px-3 py-1 text-sm"
                 onClick={handleLike}
                 radius="lg"
               >
-                ♡  {formatLikes(likesCount)}
+                 {formatLikes(likesCount)}
               </Button>
             )}
           </div>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from 'react'
+import React, {useEffect, useRef, useState } from 'react'
 import Navbar from '../components/Navbar'
 import BlogComponentText from '../components/BlogComponentText';
 import BlogComponentImage from '../components/BlogComponentImage';
@@ -10,7 +10,7 @@ import Error404 from './Error404';
 import { useDisclosure } from '@mantine/hooks';
 
 function EditBlog({blog, blogComponents: dbComponents, categories,}) {
-
+    const bottomRef = useRef(null);
     const [snackbar, setSnackbar] = useState({ message: '', color: '', icon: null });
       const [showSnackbar, setShowSnackbar] = useState(false);
     
@@ -107,8 +107,14 @@ function EditBlog({blog, blogComponents: dbComponents, categories,}) {
     
 
     useEffect(() => {
-      save()
+      save();
+
+      
+      if (bottomRef.current) {
+        bottomRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
     }, [elements]);
+
 
     const handleChange = (position, content) => {
       setBlogComponents((prevState) => ({
@@ -269,10 +275,10 @@ function EditBlog({blog, blogComponents: dbComponents, categories,}) {
     {/* Sidebar Toolbox */}
     <div className="flex flex-col items-center bg-white py-10 space-y-6 shadow-md">
       <Button variant="filled" color="pink" radius="lg" size="lg" onClick={addTextComponent}>
-        <img src={PencilIcon} alt="Pencil Icon" className="w-6 h-6" />
+        <img src={PencilIcon} alt="Pencil Icon" className="w-6 h-6 invert brightness-0" />
       </Button>
       <Button variant="filled" color="pink" radius="lg" size="lg" onClick={addImageComponent}>
-        <img src={ImageIcon} alt="Image Icon" className="w-6 h-6" />
+        <img src={ImageIcon} alt="Image Icon" className="w-6 h-6 invert brightness-0" />
       </Button>
     </div>
 
@@ -407,6 +413,7 @@ function EditBlog({blog, blogComponents: dbComponents, categories,}) {
             </React.Fragment>
           ))}
         </div>
+        <div ref={bottomRef} />
       </div>
     </div>
   </div>

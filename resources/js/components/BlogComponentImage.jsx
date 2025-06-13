@@ -2,7 +2,7 @@ import { Button, FileInput } from '@mantine/core';
 import React, { useEffect, useState } from 'react'
 import {router, usePage} from '@inertiajs/react';
 
-function BlogComponentImage({position, type="image", handleChange, deleteElement,content, id=null, componentEdit=true}) {
+function BlogComponentImage({position, type="image", handleChange, deleteElement,content, id=null, componentEdit=true , ref}) {
     const { url } = usePage().props;
     const [image, setImage] = useState(null)
     const [previewUrl, setPreviewUrl] = useState(content ? `${url}/storage/${content}` : null)
@@ -39,7 +39,7 @@ function BlogComponentImage({position, type="image", handleChange, deleteElement
       }
 
     return (
-        <div className="w-full">
+        <div className="w-full"  ref={ref}>
   {componentEdit ? (
     <div className="flex flex-col gap-4 items-start px-4 py-2">
       {/* d2 marga edit image component */}

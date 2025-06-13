@@ -4,6 +4,7 @@ import BlogComponentText from '../components/BlogComponentText';
 import BlogComponentImage from '../components/BlogComponentImage';
 import Navbar from '../components/Navbar';
 import { router, useForm as useInertiaForm, usePage } from '@inertiajs/react';
+import { IconHeart, IconHeartFilled } from '@tabler/icons-react';
 
 function formatLikes(num) {
     if (num >= 1_000_000) return (num / 1_000_000).toFixed(1) + 'M';
@@ -108,27 +109,29 @@ function BlogPage({components, blog}) {
             {blog.BlogTitle}
           </Title>
           <div>
-            {isLiked ? (
-              <Button
-                color="pink"
-                variant="filled"
-                className="cursor-pointer text-sm px-4 py-2"
-                onClick={ handleUnlike}
-                radius="lg"
-              >
-                ♥  {formatLikes(likesCount)}
-              </Button>
-            ) : (
-              <Button
-                color="gray"
-                variant="light"
-                className="cursor-pointer text-sm px-4 py-2"
-                onClick={handleLike}
-                radius="lg"
-              >
-                ♡  {formatLikes(likesCount)}
-              </Button>
-            )}
+                        {isLiked ? (
+                          <Button
+                            leftSection={<IconHeartFilled size={20} color='white' />}
+                            color="pink"
+                            variant="filled"
+                            className="cursor-pointer px-3 py-1 text-sm"
+                            onClick={handleUnlike}
+                            radius="lg"
+                          >
+                             {formatLikes(likesCount)}
+                          </Button>
+                        ) : (
+                          <Button
+                            leftSection={<IconHeart size={20} />}
+                            color="gray"
+                            variant="light"
+                            className="cursor-pointer px-3 py-1 text-sm"
+                            onClick={handleLike}
+                            radius="lg"
+                          >
+                             {formatLikes(likesCount)}
+                          </Button>
+                        )}
           </div>
         </div>
 
