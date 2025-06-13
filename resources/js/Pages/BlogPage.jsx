@@ -145,12 +145,14 @@ function BlogPage({components, blog}) {
           <span className="font-bold text-pink-800">Categories:</span>
           <div className="flex flex-wrap mt-2 gap-2">
             {blog.categories.map((category) => (
-              <span
-                key={category.id}
-                className="px-3 py-1 bg-pink-100 text-pink-800 rounded-full text-sm"
-              >
-                {category.categoryName}
-              </span>
+              <a href={`/category/${category.id}`}>
+                <span
+                  key={category.id}
+                  className="px-3 py-1 bg-pink-100 text-pink-800 rounded-full text-sm"
+                >
+                  {category.categoryName}
+                </span>
+              </a>
             ))}
           </div>
         </div>
