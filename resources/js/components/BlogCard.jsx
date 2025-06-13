@@ -128,7 +128,7 @@ function BlogCard({Title, Description,Thumbnail , Creator, id,  likes, view_coun
         {/* Tags Section */}
         <div className="flex flex-wrap gap-[0.5em] mt-3">
           {categories.map((category) => (
-            <a key={category.id} href={`category/${category.id}`} >
+            <a key={category.id} href={`/category/${category.id}`} >
             <Button
                                     key={category.id}
                                     size="xs"
