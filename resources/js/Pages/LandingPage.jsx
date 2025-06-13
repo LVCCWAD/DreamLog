@@ -116,7 +116,7 @@ function LandingPage() {
           <Title order={2} className="text-3xl font-bold text-gray-900 mb-16">
             MULTIPLE CATEGORIES TO CHOOSE
           </Title>
-          <div className="flex flex-row flex-wrap gap-x-9 gap-y-9 mt-15">
+          <div className="flex flex-row flex-wrap justify-center gap-10 mt-15">
             {categories.map((category) => (
               <CategoriesCard Category={category.categoryName} Thumbnail={category.thumbnail} className='m-3' />
             ))}
