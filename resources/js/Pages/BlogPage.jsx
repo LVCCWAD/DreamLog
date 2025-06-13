@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import BlogComponentText from '../components/BlogComponentText';
 import BlogComponentImage from '../components/BlogComponentImage';
 import Navbar from '../components/Navbar';
-import { useForm as useInertiaForm, usePage } from '@inertiajs/react';
+import { router, useForm as useInertiaForm, usePage } from '@inertiajs/react';
 
 function formatLikes(num) {
     if (num >= 1_000_000) return (num / 1_000_000).toFixed(1) + 'M';
@@ -57,7 +57,7 @@ function BlogPage({components, blog}) {
         }, []);
 
         const handleLike = () => {
-            router.post(`/like/blog/${blog.id}`, {
+            router.post('/like/blog', { blog_id: blog.id }, {
               preserveScroll: true,
               preserveState: true,
               replace: true,
@@ -66,7 +66,7 @@ function BlogPage({components, blog}) {
           };
         
           const handleUnlike = () => {
-                router.post(`/unlike/blog/${blog.id}`, {
+                router.post('/unlike/blog', { blog_id: blog.id }, {
                 preserveScroll: true,
                 preserveState: true,
                 replace: true,
@@ -109,25 +109,25 @@ function BlogPage({components, blog}) {
           </Title>
           <div>
             {isLiked ? (
-              <Badge
+              <Button
                 color="pink"
                 variant="filled"
                 className="cursor-pointer text-sm px-4 py-2"
-                onClick={handleUnlike}
+                onClick={ handleUnlike}
                 radius="lg"
               >
-                ♥ Like {formatLikes(likesCount)}
-              </Badge>
+                ♥  {formatLikes(likesCount)}
+              </Button>
             ) : (
-              <Badge
+              <Button
                 color="gray"
                 variant="light"
                 className="cursor-pointer text-sm px-4 py-2"
                 onClick={handleLike}
                 radius="lg"
               >
-                ♡ Like {formatLikes(likesCount)}
-              </Badge>
+                ♡  {formatLikes(likesCount)}
+              </Button>
             )}
           </div>
         </div>

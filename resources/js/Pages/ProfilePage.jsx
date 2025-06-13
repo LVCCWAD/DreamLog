@@ -102,7 +102,7 @@ function ProfilePage({ user, userBlogs, categories, }) {
           <div className="flex flex-wrap gap-10 justify-center px-5">
             {user_categories.map((category) => (
               <div key={category.id} className="relative group">
-                <a href={`category/${category.id}`}>
+                <a href={`/category/${category.id}`}>
                   <CategoriesCard
                     Category={category.categoryName}
                     Thumbnail={category.thumbnail}

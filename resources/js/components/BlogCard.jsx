@@ -144,25 +144,25 @@ function BlogCard({Title, Description,Thumbnail , Creator, id,  likes, view_coun
         <div className="flex justify-between items-center mt-3">
           <div>
             {isLiked ? (
-              <Badge
+              <Button
                 color="pink"
                 variant="filled"
                 className="cursor-pointer px-3 py-1 text-sm"
                 onClick={handleUnlike}
                 radius="lg"
               >
-                ♥ Like {formatLikes(likesCount)}
-              </Badge>
+                ♥ {formatLikes(likesCount)}
+              </Button>
             ) : (
-              <Badge
+              <Button
                 color="gray"
                 variant="light"
                 className="cursor-pointer px-3 py-1 text-sm"
                 onClick={handleLike}
                 radius="lg"
               >
-                ♡ Like {formatLikes(likesCount)}
-              </Badge>
+                ♡  {formatLikes(likesCount)}
+              </Button>
             )}
           </div>
 
