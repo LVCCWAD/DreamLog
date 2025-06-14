@@ -61,7 +61,7 @@ class UserAuth extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended('/');
+         return Inertia::location("/");
         
     }
 
